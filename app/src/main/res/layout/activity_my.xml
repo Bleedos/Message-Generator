@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="@string/remplir_champs" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="@string/bonjour" />
+
+    <!--EditText
+        android:id="@+id/edit_accueil"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_accueil"
+        android:layout_gravity="top" /-->
+
+    <EditText
+        android:id="@+id/edit_nom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_nom"
+        android:layout_gravity="top" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="@string/aujoudhui" />
+    <EditText
+        android:id="@+id/edit_fin_message"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:hint="@string/edit_fin_message"
+        android:layout_gravity="top" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="290dp"
+        android:text="@string/button_play"
+        android:onClick="playMessage"/>
+
+    <!--Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_save"
+        android:onClick="savePrefs"/-->
+
+
+
+</LinearLayout>

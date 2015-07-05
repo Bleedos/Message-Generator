@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Message Shebnerator</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="edit_accueil">Entrer l\'accueil</string>
+    <string name="edit_nom">Entrer votre nom</string>
+    <string name="edit_fin_message">Entrer la fin du message à partir de \"je suis au bureau...\"</string>
+    
+    <string name="button_play">Jouer</string>
+    <string name="button_save">Sauvegarder</string>
+    <string name="title_activity_display_message">Message généré</string>
+
+
+
+    <string name="remplir_champs">Remplir chaque champ</string>
+    <string name="bonjour">Bonjour, ici</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="aujoudhui">aujoud\'hui &lt;jour semaine&gt; le &lt;jour mois&gt; &lt;mois&gt; je suis au bureau...</string>
+
+    <string name="un_choix">Un choix</string>
+</resources>
