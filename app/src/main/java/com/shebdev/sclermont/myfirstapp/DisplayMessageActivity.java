@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -47,14 +48,15 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
 
         // Create the text view
-        TextView textView = new TextView(this);
+        /*TextView textView = new TextView(this);
         textView.setTextSize(40);
-        textView.setText(sb.toString());
+        textView.setText(sb.toString());*/
 
         text = sb.toString();
 
-        // Set the text view as the activity layout
-        setContentView(textView);
+       // Set the text view as the activity layout
+        //setContentView(textView);
+        setContentView(R.layout.activity_display_message);
 
         tts=new TextToSpeech(DisplayMessageActivity.this, new TextToSpeech.OnInitListener() {
 
@@ -68,8 +70,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         Log.e("error", "This Language is not supported");
                     }
                     else{
-                        tts.setPitch(0.8f);
-                        convertTextToSpeech(text);
+                        tts.setPitch(0.6f);
+                        //convertTextToSpeech(text);
                     }
                 }
                 else
@@ -108,6 +110,13 @@ public class DisplayMessageActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        TextView txtContenuMsg = (TextView) findViewById(R.id.contenu_message);
+        txtContenuMsg.setText(text);
+    }
 
     private void convertTextToSpeech(String text) {
         if(text==null||"".equals(text)) {
@@ -118,5 +127,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         }
 
+    }
+
+    public void jouerMessage(View view) {
+        convertTextToSpeech(text);
     }
 }

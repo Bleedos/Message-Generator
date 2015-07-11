@@ -8,7 +8,7 @@
     <string name="edit_fin_message">Entrer la fin du message à partir de \"je suis au bureau...\"</string>
     
     <string name="button_play">Jouer</string>
-    <string name="button_save">Sauvegarder</string>
+    <string name="button_generer">Générer</string>
     <string name="title_activity_display_message">Message généré</string>
 
 

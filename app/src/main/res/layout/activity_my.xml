@@ -45,15 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="290dp"
-        android:text="@string/button_play"
-        android:onClick="playMessage"/>
-
-    <!--Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_save"
-        android:onClick="savePrefs"/-->
-
-
+        android:text="@string/button_generer"
+        android:onClick="genererMessage"/>
 
 </LinearLayout>

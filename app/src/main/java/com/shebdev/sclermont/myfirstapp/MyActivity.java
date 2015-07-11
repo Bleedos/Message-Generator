@@ -81,7 +81,7 @@ public class MyActivity extends ActionBarActivity {
     }
 
     /** Called when the user clicks the Send button */
-    public void playMessage(View view) {
+    public void genererMessage(View view) {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         //EditText editAccueil = (EditText) findViewById(R.id.edit_accueil);
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
