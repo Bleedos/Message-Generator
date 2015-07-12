@@ -15,8 +15,21 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/bouton_arreter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="@string/button_arreter"
+        android:onClick="arreterMessage"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/bouton_jouer"
+        android:layout_toStartOf="@+id/bouton_jouer" />
+
+    <Button
+        android:id="@+id/bouton_jouer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
         android:text="@string/button_play"
         android:onClick="jouerMessage"
         android:layout_alignParentBottom="true"

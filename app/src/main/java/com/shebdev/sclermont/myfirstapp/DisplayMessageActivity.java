@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,9 +26,6 @@ public class DisplayMessageActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
             // Get the message from the intent
         Intent intent = getIntent();
         ArrayList<String> message = intent.getStringArrayListExtra(MyActivity.EXTRA_MESSAGE);
@@ -38,24 +36,15 @@ public class DisplayMessageActivity extends ActionBarActivity {
         String[] dayOWeek = {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"};
         String[] month = {"janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août"};
 
-
         sb.append("Bonjour, ici " + message.get(0));
         sb.append(", aujourd'hui " + dayOWeek[greg.get(GregorianCalendar.DAY_OF_WEEK)-1] );
         sb.append(" le " + (greg.get(GregorianCalendar.DAY_OF_MONTH)));
         sb.append(" " + month[greg.get(GregorianCalendar.MONTH)]);
         sb.append(" " + message.get(1));
 
-
-
-        // Create the text view
-        /*TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        textView.setText(sb.toString());*/
-
         text = sb.toString();
 
        // Set the text view as the activity layout
-        //setContentView(textView);
         setContentView(R.layout.activity_display_message);
 
         tts=new TextToSpeech(DisplayMessageActivity.this, new TextToSpeech.OnInitListener() {
@@ -64,7 +53,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
             public void onInit(int status) {
                 // TODO Auto-generated method stub
                 if(status == TextToSpeech.SUCCESS){
-                    int result=tts.setLanguage(Locale.FRANCE);
+                    int result=tts.setLanguage(Locale.CANADA_FRENCH);
                     if(result==TextToSpeech.LANG_MISSING_DATA ||
                             result==TextToSpeech.LANG_NOT_SUPPORTED){
                         Log.e("error", "This Language is not supported");
@@ -78,7 +67,6 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     Log.e("error", "Initilization Failed!");
             }
         });
-
 
         Log.e("info", "ggnennenn   nenenenn!");
 
@@ -116,6 +104,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
         TextView txtContenuMsg = (TextView) findViewById(R.id.contenu_message);
         txtContenuMsg.setText(text);
+
+        Button btn = (Button) findViewById(R.id.bouton_jouer);
+        btn.setEnabled(true);
     }
 
     private void convertTextToSpeech(String text) {
@@ -129,7 +120,21 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     }
 
+    public void arreterMessage(View view) {
+        Button btnArreter = (Button) findViewById(R.id.bouton_arreter);
+        btnArreter.setEnabled(false);
+        Button btnJouer = (Button) findViewById(R.id.bouton_jouer);
+        btnJouer.setEnabled(true);
+        if (tts != null && tts.isSpeaking()) {
+            tts.stop();
+        }
+    }
+
     public void jouerMessage(View view) {
+        Button btnArreter = (Button) findViewById(R.id.bouton_arreter);
+        btnArreter.setEnabled(true);
+        Button btnJouer = (Button) findViewById(R.id.bouton_jouer);
+        btnJouer.setEnabled(false);
         convertTextToSpeech(text);
     }
 }
