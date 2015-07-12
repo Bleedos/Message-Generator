@@ -1,25 +1,21 @@
 package com.shebdev.sclermont.myfirstapp;
 
 import android.content.Intent;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 
 public class DisplayMessageActivity extends ActionBarActivity {
 
-    TextToSpeech tts;
+
     String text;
 
     @Override
@@ -47,28 +43,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
        // Set the text view as the activity layout
         setContentView(R.layout.activity_display_message);
 
-        tts=new TextToSpeech(DisplayMessageActivity.this, new TextToSpeech.OnInitListener() {
-
-            @Override
-            public void onInit(int status) {
-                // TODO Auto-generated method stub
-                if(status == TextToSpeech.SUCCESS){
-                    int result=tts.setLanguage(Locale.CANADA_FRENCH);
-                    if(result==TextToSpeech.LANG_MISSING_DATA ||
-                            result==TextToSpeech.LANG_NOT_SUPPORTED){
-                        Log.e("error", "This Language is not supported");
-                    }
-                    else{
-                        tts.setPitch(0.6f);
-                        //convertTextToSpeech(text);
-                    }
-                }
-                else
-                    Log.e("error", "Initilization Failed!");
-            }
-        });
-
-        Log.e("info", "ggnennenn   nenenenn!");
+        //Toast.makeText(this, "Message généré", Toast.LENGTH_LONG).show();
 
     }
 
@@ -87,16 +62,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-        if(tts != null) {
 
-            tts.stop();
-            tts.shutdown();
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -110,13 +76,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
     }
 
     private void convertTextToSpeech(String text) {
-        if(text==null||"".equals(text)) {
-            text = "Content not available";
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-        }
-        else {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-        }
+
+        MyApplication myapp = (MyApplication) getApplication();
+        myapp.bus.post(text);
 
     }
 
@@ -125,9 +87,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
         btnArreter.setEnabled(false);
         Button btnJouer = (Button) findViewById(R.id.bouton_jouer);
         btnJouer.setEnabled(true);
-        if (tts != null && tts.isSpeaking()) {
-            tts.stop();
-        }
+        MyApplication myapp = (MyApplication) getApplication();
+        myapp.bus.post("STOP");
     }
 
     public void jouerMessage(View view) {
