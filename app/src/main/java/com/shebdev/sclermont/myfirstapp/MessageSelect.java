@@ -71,7 +71,7 @@ public class MessageSelect extends ListActivity {
 
             // Bind to our new adapter.
             setListAdapter(adapter);
-            ListView listView = getListView();
+            final ListView listView = getListView();
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
@@ -92,27 +92,27 @@ public class MessageSelect extends ListActivity {
 // How you want the results sorted in the resulting Cursor
                     String sortOrder =
                             MessageContract.MessagePart.COLUMN_NAME_TXT + " DESC";
+                    String whereCols = MessageContract.MessagePart._ID + " = ?";
+                    String[] whereVals = { Long.toString(id) };
 
                     Cursor c = db.query(
                             MessageContract.MessagePart.TABLE_NAME,  // The table to query
                             projection,                               // The columns to return
-                            null,                                // The columns for the WHERE clause
-                            null,                            // The values for the WHERE clause
+                            whereCols,                                // The columns for the WHERE clause
+                            whereVals,                            // The values for the WHERE clause
                             null,                                     // don't group the rows
                             null,                                     // don't filter by row groups
                             sortOrder                                 // The sort order
                     );
 
-                    c.moveToPosition(position);
-                    long itemId = c.getLong(
-                            c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)
-                    );
 
+                    c.moveToFirst();
                     String txt = c.getString( c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT));
+                    c.close();
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("message",txt);
-                    setResult(RESULT_OK,returnIntent);
+                    setResult(RESULT_OK, returnIntent);
                     finish();
                 }
             });
@@ -128,14 +128,17 @@ public class MessageSelect extends ListActivity {
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
                     // Define 'where' part of query.
-                    /*String selection = MessageContract.MessagePart.COLUMN_NAME_PART_ID + " LIKE ?";
-// Specify arguments in placeholder order.
-                    String[] selectionArgs = { String.valueOf(id) };
-// Issue SQL statement.
-                    db.delete(MessageContract.MessagePart.TABLE_NAME, selection, selectionArgs);*/
+                    String selection = MessageContract.MessagePart._ID + " = ?";
+                    String[] selectionArgs = {String.valueOf(id)};
+
+                    db.delete(MessageContract.MessagePart.TABLE_NAME, selection, selectionArgs);
+
+                    view.setAlpha(0.3f);
+                    view.setOnClickListener(null);
+
 
                     Toast.makeText(MessageSelect.this,
-                            "Item in position " + position + " clicked",
+                            "Item in position " + position + " clicked id : " + id,
                             Toast.LENGTH_LONG).show();
                     // Return true to consume the click event. In this case the
                     // onListItemClick listener is not called anymore.

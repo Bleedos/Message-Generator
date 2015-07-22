@@ -90,9 +90,6 @@ public class MyActivity extends ActionBarActivity {
         editNom.setText(settings.getString("editNom",""));
         editFinMsg.setText(settings.getString("editFinMsg", ""));
 
-
-
-
     }
 
     /** Called when the user clicks the Send button */
@@ -153,13 +150,13 @@ public class MyActivity extends ActionBarActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 String message = data.getStringExtra("message");;
-                Toast.makeText(getApplicationContext(),
-                        message, Toast.LENGTH_LONG)
-                        .show();
-
                 EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("editFinMsg", message);
 
-                editFinMsg.setText(message);
+                // Commit the edits!
+                editor.commit();
             }
         }
     }
