@@ -37,15 +37,38 @@
     <EditText
         android:id="@+id/edit_fin_message"
         android:layout_width="fill_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:hint="@string/edit_fin_message"
         android:layout_gravity="top" />
+
+    <Button
+        android:id="@+id/bouton_sauvegarder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="@string/button_sauvegarder"
+        android:onClick="sauvegarderMessage"
+        android:layout_alignParentBottom="true" />
+
+    <Button
+        android:id="@+id/bouton_charger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="@string/button_charger"
+        android:onClick="chargerMessage"
+        android:layout_above="@+id/bouton_sauvegarder"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/bouton_sauvegarder"
+        android:layout_alignEnd="@+id/bouton_sauvegarder" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="290dp"
         android:text="@string/button_generer"
-        android:onClick="genererMessage"/>
+        android:onClick="genererMessage"
+        android:layout_gravity="right" />
 
 </LinearLayout>

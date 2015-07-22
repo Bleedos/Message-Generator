@@ -32,15 +32,16 @@ public class MyApplication extends Application {
                     int result=tts.setLanguage(Locale.CANADA_FRENCH);
                     if(result==TextToSpeech.LANG_MISSING_DATA ||
                             result==TextToSpeech.LANG_NOT_SUPPORTED){
-                        Log.e("error", "This Language is not supported");
+                        //Log.e("error", "This Language is not supported");
                     }
                     else{
-                        tts.setPitch(0.6f);
+                        tts.setPitch(0.7f);
                         //convertTextToSpeech(text);
                     }
                 }
-                else
-                    Log.e("error", "Initilization Failed!");
+                else {
+                    //Log.e("error", "Initilization Failed!");
+                }
             }
         });
 

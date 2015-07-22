@@ -1,7 +1,10 @@
 package com.shebdev.sclermont.myfirstapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,6 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.shebdev.sclermont.myfirstapp.db.MessageContract;
+import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
 
 import java.util.ArrayList;
 
@@ -81,7 +88,11 @@ public class MyActivity extends ActionBarActivity {
         EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
 
         editNom.setText(settings.getString("editNom",""));
-        editFinMsg.setText(settings.getString("editFinMsg",""));
+        editFinMsg.setText(settings.getString("editFinMsg", ""));
+
+
+
+
     }
 
     /** Called when the user clicks the Send button */
@@ -96,6 +107,82 @@ public class MyActivity extends ActionBarActivity {
         message.add(editFinMsg.getText().toString());
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
+
+        MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePart._ID,
+                MessageContract.MessagePart.COLUMN_NAME_PART_ID,
+                MessageContract.MessagePart.COLUMN_NAME_TXT
+        };
+
+// How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePart.COLUMN_NAME_TXT + " DESC";
+
+        Cursor c = db.query(
+                MessageContract.MessagePart.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        c.moveToFirst();
+        long itemId = c.getLong(
+                c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)
+        );
+
+        String txt = c.getString( c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT));
+    }
+
+    public void chargerMessage(View view) {
+        Intent intent = new Intent(this, MessageSelect.class);
+        startActivityForResult(intent, 666); // TODO: Mettre une constante
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 666) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                String message = data.getStringExtra("message");;
+                Toast.makeText(getApplicationContext(),
+                        message, Toast.LENGTH_LONG)
+                        .show();
+
+                EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+
+                editFinMsg.setText(message);
+            }
+        }
+    }
+
+    public void sauvegarderMessage(View view) {
+
+        MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(MessageContract.MessagePart.COLUMN_NAME_PART_ID, System.currentTimeMillis());
+
+
+        EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+        values.put(MessageContract.MessagePart.COLUMN_NAME_TXT, editFinMsg.getText().toString());
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId;
+        newRowId = db.insert(
+                MessageContract.MessagePart.TABLE_NAME,
+                null,
+                values);
     }
 
     public void savePrefs(View view) {

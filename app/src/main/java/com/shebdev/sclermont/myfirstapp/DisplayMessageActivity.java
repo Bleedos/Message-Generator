@@ -1,6 +1,8 @@
 package com.shebdev.sclermont.myfirstapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.shebdev.sclermont.myfirstapp.db.MessageContract;
+import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -48,6 +53,14 @@ public class DisplayMessageActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        MyApplication myapp = (MyApplication) getApplication();
+        myapp.bus.post("STOP");
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -81,6 +94,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
         myapp.bus.post(text);
 
     }
+
+
 
     public void arreterMessage(View view) {
         Button btnArreter = (Button) findViewById(R.id.bouton_arreter);

@@ -6,7 +6,10 @@
     <string name="edit_accueil">Entrer l\'accueil</string>
     <string name="edit_nom">Entrer votre nom</string>
     <string name="edit_fin_message">Entrer la fin du message à partir de \"je suis au bureau...\"</string>
-    
+
+
+    <string name="button_charger">Charger</string>
+    <string name="button_sauvegarder">Sauvegarder</string>
     <string name="button_play">Jouer</string>
     <string name="button_arreter">Arrêter</string>
     <string name="button_generer">Générer</string>
@@ -20,4 +23,5 @@
     <string name="aujoudhui">aujoud\'hui &lt;jour semaine&gt; le &lt;jour mois&gt; &lt;mois&gt; je suis au bureau...</string>
 
     <string name="un_choix">Un choix</string>
+    <string name="title_activity_message_select">MessageSelect</string>
 </resources>
