@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,38 +8,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30dp"
-        android:text="@string/remplir_champs" />
+        android:text="@string/remplir_champs"
+        android:id="@+id/txtRemplirChamps" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:text="@string/bonjour" />
-
-    <!--EditText
-        android:id="@+id/edit_accueil"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/edit_accueil"
-        android:layout_gravity="top" /-->
+        android:text="@string/bonjour"
+        android:id="@+id/textView"
+        android:layout_below="@+id/txtRemplirChamps"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:id="@+id/edit_nom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/edit_nom"
-        android:layout_gravity="top" />
+        android:layout_gravity="top"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="12dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:text="@string/aujoudhui" />
+        android:text="@string/aujoudhui"
+        android:id="@+id/textView2"
+        android:layout_above="@+id/edit_fin_message"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
     <EditText
         android:id="@+id/edit_fin_message"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:hint="@string/edit_fin_message"
-        android:layout_gravity="top" />
+        android:layout_gravity="bottom"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/bouton_charger"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/bouton_sauvegarder"
@@ -48,7 +59,10 @@
         android:enabled="true"
         android:text="@string/button_sauvegarder"
         android:onClick="sauvegarderMessage"
-        android:layout_alignParentBottom="true" />
+        android:layout_marginBottom="31dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView" />
 
     <Button
         android:id="@+id/bouton_charger"
@@ -57,18 +71,19 @@
         android:enabled="true"
         android:text="@string/button_charger"
         android:onClick="chargerMessage"
-        android:layout_above="@+id/bouton_sauvegarder"
+        android:layout_alignTop="@+id/bouton_sauvegarder"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/bouton_sauvegarder"
-        android:layout_alignEnd="@+id/bouton_sauvegarder" />
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="290dp"
         android:text="@string/button_generer"
         android:onClick="genererMessage"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:layout_alignTop="@+id/bouton_charger"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.shebdev.sclermont.myfirstapp;
 
+import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.shebdev.sclermont.myfirstapp.db.MessageContract;
 import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
+import com.shebdev.sclermont.myfirstapp.dialog.EmptyMessagePartDialogFragment;
+import com.shebdev.sclermont.myfirstapp.dialog.EmptyNameDialogFragment;
 
 import java.util.ArrayList;
 
@@ -87,17 +90,31 @@ public class MyActivity extends ActionBarActivity {
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
         EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
 
-        editNom.setText(settings.getString("editNom",""));
+        editNom.setText(settings.getString("editNom", ""));
         editFinMsg.setText(settings.getString("editFinMsg", ""));
 
     }
 
     /** Called when the user clicks the Send button */
     public void genererMessage(View view) {
+
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         //EditText editAccueil = (EditText) findViewById(R.id.edit_accueil);
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
         EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+
+        if (editNom == null || editNom.length() == 0) {
+            DialogFragment newFragment = new EmptyNameDialogFragment();
+            newFragment.show(getFragmentManager(), "emptyname");
+            return;
+        }
+
+        if (editFinMsg == null || editFinMsg.length() == 0) {
+            DialogFragment newFragment = new EmptyMessagePartDialogFragment();
+            newFragment.show(getFragmentManager(), "emptymessagepart");
+            return;
+        }
+
         ArrayList<String> message = new ArrayList<String>();
         //message.add(editAccueil.getText().toString());
         message.add(editNom.getText().toString());
