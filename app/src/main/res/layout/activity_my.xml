@@ -38,19 +38,26 @@
         android:textSize="20dp"
         android:text="@string/aujoudhui"
         android:id="@+id/textView2"
-        android:layout_above="@+id/edit_fin_message"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/edit_nom"
+        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button" />
     <EditText
         android:id="@+id/edit_fin_message"
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:hint="@string/edit_fin_message"
         android:layout_gravity="bottom"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/bouton_charger"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/textView2"
+        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:scrollbars="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/edit_fin_message"
+        android:layout_above="@+id/bouton_sauvegarder" />
 
     <Button
         android:id="@+id/bouton_sauvegarder"

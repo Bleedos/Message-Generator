@@ -9,19 +9,24 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.shebdev.sclermont.myfirstapp.adapter.MessagePartRecyclerAdapter;
 import com.shebdev.sclermont.myfirstapp.db.MessageContract;
 import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
 import com.shebdev.sclermont.myfirstapp.dialog.EmptyMessagePartDialogFragment;
 import com.shebdev.sclermont.myfirstapp.dialog.EmptyNameDialogFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MyActivity extends ActionBarActivity {
@@ -29,10 +34,24 @@ public class MyActivity extends ActionBarActivity {
     public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
     public static final String PREFS_NAME = "MyPrefsFile";
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+
+        String[] dset = {"1","2","3","4","5","6","7","8","9","10"};
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new MessagePartRecyclerAdapter(dset);
+        mRecyclerView.setAdapter(mAdapter);
+
+
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.phone);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
