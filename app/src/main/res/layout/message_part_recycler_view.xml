@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:textSize="20sp">
+    android:textSize="25sp">
     <TextView
         android:id="@+id/recycler_view_text"
-        android:layout_width="300sp"
+        android:layout_width="270sp"
         android:layout_height="match_parent" />
     <ImageView
-        android:id="@+id/recycler_view_image"
+        android:id="@+id/recycler_view_move_down"
         android:layout_toRightOf="@id/recycler_view_text"
-        android:layout_width="50sp"
-        android:layout_height="match_parent"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
+        android:src="@drawable/ic_trending_down_white_24dp"/>
+    <ImageView
+        android:id="@+id/recycler_view_move_up"
+        android:layout_toRightOf="@id/recycler_view_move_down"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
+        android:src="@drawable/ic_trending_up_white_24dp"/>
+    <ImageView
+        android:id="@+id/recycler_view_image"
+        android:layout_toRightOf="@id/recycler_view_move_up"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
         android:src="@drawable/ic_delete_white_24dp"/>
 
 </RelativeLayout>

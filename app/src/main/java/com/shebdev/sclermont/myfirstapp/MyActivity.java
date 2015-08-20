@@ -43,14 +43,25 @@ public class MyActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-        String[] dset = {"1","2","3","4","5","6","7","8","9","10"};
+        ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
+        dset.add(new StringBuilder("1"));
+        dset.add(new StringBuilder("2"));
+        dset.add(new StringBuilder("3"));
+        dset.add(new StringBuilder("4"));
+        dset.add(new StringBuilder("5"));
+        dset.add(new StringBuilder("6"));
+        dset.add(new StringBuilder("7"));
+        dset.add(new StringBuilder("8"));
+        dset.add(new StringBuilder("9"));
+        dset.add(new StringBuilder("10"));
+        dset.add(new StringBuilder("11"));
+        dset.add(new StringBuilder("12"));
+        dset.add(new StringBuilder("13"));
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MessagePartRecyclerAdapter(dset);
         mRecyclerView.setAdapter(mAdapter);
-
-
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.phone);
@@ -146,6 +157,10 @@ public class MyActivity extends ActionBarActivity {
     public void chargerMessage(View view) {
         Intent intent = new Intent(this, MessageSelect.class);
         startActivityForResult(intent, 666); // TODO: Mettre une constante
+    }
+
+    public void ajouterLigne(View view) {
+        ((MessagePartRecyclerAdapter)mAdapter).addLine(new StringBuilder("derniereligne"));
     }
 
     @Override
