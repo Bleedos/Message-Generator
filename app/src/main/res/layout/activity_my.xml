@@ -35,7 +35,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:text="@string/aujoudhui"
         android:id="@+id/textView2"
         android:layout_below="@+id/edit_nom"
@@ -44,12 +44,13 @@
     <EditText
         android:id="@+id/edit_fin_message"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:hint="@string/edit_fin_message"
         android:layout_gravity="bottom"
         android:layout_below="@+id/textView2"
         android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button" />
+        android:layout_alignEnd="@+id/button"
+        android:gravity="top"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"

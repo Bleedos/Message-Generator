@@ -145,10 +145,18 @@ public class MyActivity extends ActionBarActivity {
             return;
         }
 
+        ArrayList<StringBuilder> dataSet = ((MessagePartRecyclerAdapter) mAdapter).getMDataset();
+        StringBuilder sbd = new StringBuilder();
+
         ArrayList<String> message = new ArrayList<String>();
         //message.add(editAccueil.getText().toString());
         message.add(editNom.getText().toString());
-        message.add(editFinMsg.getText().toString());
+        for (StringBuilder sb : dataSet) {
+            sbd.append(sb.toString());
+            sbd.append(" ");
+        }
+        message.add(sbd.toString());
+        //message.add(editFinMsg.getText().toString());
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
 
@@ -160,7 +168,8 @@ public class MyActivity extends ActionBarActivity {
     }
 
     public void ajouterLigne(View view) {
-        ((MessagePartRecyclerAdapter)mAdapter).addLine(new StringBuilder("derniereligne"));
+        Intent intent = new Intent(this, MessagePartEdit.class);
+        startActivityForResult(intent, 555);    // TODO: Mettre une constante
     }
 
     @Override
@@ -169,7 +178,7 @@ public class MyActivity extends ActionBarActivity {
         if (requestCode == 666) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                String message = data.getStringExtra("message");;
+                String message = data.getStringExtra("message");
                 EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
@@ -177,6 +186,13 @@ public class MyActivity extends ActionBarActivity {
 
                 // Commit the edits!
                 editor.commit();
+            }
+        }
+        else if (requestCode == 555) {
+            if (resultCode == RESULT_OK) {
+                String messagePart = data.getStringExtra("messagePart");
+                ((MessagePartRecyclerAdapter)mAdapter).addLine(new StringBuilder(messagePart));
+                mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
             }
         }
     }

@@ -86,6 +86,10 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
         notifyItemInserted(mDataset.size());
     }
 
+    public ArrayList<StringBuilder> getMDataset() {
+        return mDataset;
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public MessagePartRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
