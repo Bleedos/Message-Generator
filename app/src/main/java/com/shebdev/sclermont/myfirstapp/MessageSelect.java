@@ -125,17 +125,10 @@ public class MessageSelect extends ListActivity {
 
 
                     MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
-                    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                    // Define 'where' part of query.
-                    String selection = MessageContract.MessagePart._ID + " = ?";
-                    String[] selectionArgs = {String.valueOf(id)};
-
-                    db.delete(MessageContract.MessagePart.TABLE_NAME, selection, selectionArgs);
+                    dbHelper.deleteMessagePart(id);
 
                     view.setAlpha(0.3f);
                     view.setOnClickListener(null);
-
 
                     Toast.makeText(MessageSelect.this,
                             "Item in position " + position + " clicked id : " + id,

@@ -199,23 +199,9 @@ public class MyActivity extends ActionBarActivity {
 
     public void sauvegarderMessage(View view) {
 
-        MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(MessageContract.MessagePart.COLUMN_NAME_PART_ID, System.currentTimeMillis());
-
-
         EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
-        values.put(MessageContract.MessagePart.COLUMN_NAME_TXT, editFinMsg.getText().toString());
-
-        // Insert the new row, returning the primary key value of the new row
-        long newRowId;
-        newRowId = db.insert(
-                MessageContract.MessagePart.TABLE_NAME,
-                null,
-                values);
+        MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
+        dbHelper.createMessagePart(editFinMsg.getText().toString());
     }
 
     public void savePrefs(View view) {
