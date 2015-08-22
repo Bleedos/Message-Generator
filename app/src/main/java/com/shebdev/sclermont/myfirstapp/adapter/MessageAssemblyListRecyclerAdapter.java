@@ -1,13 +1,19 @@
 package com.shebdev.sclermont.myfirstapp.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.shebdev.sclermont.myfirstapp.MessageAssemblyListActivity;
 import com.shebdev.sclermont.myfirstapp.R;
+import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyData;
+import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
 
 import java.util.ArrayList;
 
@@ -16,7 +22,7 @@ import java.util.ArrayList;
  */
 public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<MessageAssemblyListRecyclerAdapter.ViewHolder> {
 
-    private ArrayList<StringBuilder> mDataset;
+    private ArrayList<MessageAssemblyData> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -31,7 +37,6 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
             mTextView = (TextView) itemLayoutView.findViewById(R.id.assembly_list_recycler_view_text);
             mListener = listener;
             mTextView.setOnClickListener(this);
-
         }
 
         @Override
@@ -52,7 +57,7 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MessageAssemblyListRecyclerAdapter(ArrayList<StringBuilder> myDataset) {
+    public MessageAssemblyListRecyclerAdapter(ArrayList<MessageAssemblyData> myDataset) {
         mDataset = myDataset;
     }
 
@@ -66,8 +71,12 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v, new MessageAssemblyListRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
             public void onClickMessagePart(TextView txtView, int position) {
-                mDataset.get(position).append("bob");
-                notifyItemChanged(position);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("assemblyId", ((MessageAssemblyData)mDataset.get(position)).get_id());
+                Activity host = (Activity) txtView.getContext();
+                host.setResult(host.RESULT_OK, returnIntent);
+                host.finish();
+
                 // TODO: Au lieu d'appender bob, retourner l'id ou l'obj au complet pour affichage
                 // dans la page principale (remplacer recyclder view de page principale par nouveau
                 // contenu sélectionné
@@ -81,7 +90,7 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position));
+        holder.mTextView.setText(mDataset.get(position).getTitle());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

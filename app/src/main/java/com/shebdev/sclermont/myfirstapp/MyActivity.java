@@ -20,8 +20,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.shebdev.sclermont.myfirstapp.adapter.MessagePartRecyclerAdapter;
+import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyLinkData;
 import com.shebdev.sclermont.myfirstapp.db.MessageContract;
 import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
+import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
 import com.shebdev.sclermont.myfirstapp.dialog.EmptyMessagePartDialogFragment;
 import com.shebdev.sclermont.myfirstapp.dialog.EmptyNameDialogFragment;
 
@@ -35,7 +37,7 @@ public class MyActivity extends ActionBarActivity {
     public static final String PREFS_NAME = "MyPrefsFile";
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private MessagePartRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
@@ -43,25 +45,7 @@ public class MyActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-        ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
-        dset.add(new StringBuilder("1"));
-        dset.add(new StringBuilder("2"));
-        dset.add(new StringBuilder("3"));
-        dset.add(new StringBuilder("4"));
-        dset.add(new StringBuilder("5"));
-        dset.add(new StringBuilder("6"));
-        dset.add(new StringBuilder("7"));
-        dset.add(new StringBuilder("8"));
-        dset.add(new StringBuilder("9"));
-        dset.add(new StringBuilder("10"));
-        dset.add(new StringBuilder("11"));
-        dset.add(new StringBuilder("12"));
-        dset.add(new StringBuilder("13"));
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MessagePartRecyclerAdapter(dset);
-        mRecyclerView.setAdapter(mAdapter);
+
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.phone);
@@ -122,6 +106,37 @@ public class MyActivity extends ActionBarActivity {
 
         editNom.setText(settings.getString("editNom", ""));
         editFinMsg.setText(settings.getString("editFinMsg", ""));
+        long assemblyId = settings.getLong("assemblyId", -1l);
+        assemblyId = 4l;  // TODO: Retirer et conserver la valeur chargee a partir des prefs
+
+        //Toast.makeText(this, "AssId" + assemblyId, Toast.LENGTH_LONG).show();
+
+        if (mAdapter == null) {
+
+            //Toast.makeText(this, "adapter null", Toast.LENGTH_LONG).show();
+
+
+            mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+            mLayoutManager = new LinearLayoutManager(this);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+
+            if (assemblyId < 0) {
+
+                ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
+                dset.add(new StringBuilder("1"));
+                dset.add(new StringBuilder("2"));
+                dset.add(new StringBuilder("3"));
+                dset.add(new StringBuilder("4"));
+                mAdapter = new MessagePartRecyclerAdapter(dset, -1l);
+            }
+            else {
+                //Toast.makeText(this, "load existing assembly", Toast.LENGTH_LONG).show();
+                ArrayList<StringBuilder> dset = loadAssemblyLinkData(assemblyId);
+                mAdapter = new MessagePartRecyclerAdapter(dset, assemblyId);
+            }
+
+            mRecyclerView.setAdapter(mAdapter);
+        }
 
     }
 
@@ -145,7 +160,7 @@ public class MyActivity extends ActionBarActivity {
             return;
         }
 
-        ArrayList<StringBuilder> dataSet = ((MessagePartRecyclerAdapter) mAdapter).getMDataset();
+        ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
         StringBuilder sbd = new StringBuilder();
 
         ArrayList<String> message = new ArrayList<String>();
@@ -196,10 +211,37 @@ public class MyActivity extends ActionBarActivity {
         else if (requestCode == 555) {
             if (resultCode == RESULT_OK) {
                 String messagePart = data.getStringExtra("messagePart");
-                ((MessagePartRecyclerAdapter)mAdapter).addLine(new StringBuilder(messagePart));
+                mAdapter.addLine(new StringBuilder(messagePart));
                 mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
             }
         }
+        else if (requestCode == 444) {
+            long assemblyId = data.getLongExtra("assemblyId", -1l);
+            Toast.makeText(getBaseContext(), "assid 444::"+assemblyId, Toast.LENGTH_LONG).show();
+            if (assemblyId >= 0) {
+                mAdapter.changeMDataSet(loadAssemblyLinkData(assemblyId));
+            }
+
+        }
+        else {
+            long assemblyId = data.getLongExtra("assemblyId", -1l);
+            Toast.makeText(getBaseContext(), "assid inconnu::"+assemblyId, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private ArrayList<StringBuilder> loadAssemblyLinkData(long assemblyId) {
+        ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
+        MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
+        ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId);
+
+        for (MessageAssemblyLinkData mald : dataSet) {
+            //Toast.makeText(this, "mpd::"+mald.getId(), Toast.LENGTH_LONG).show();
+            MessagePartData mpd = dbHelper.getMessagePart(Long.parseLong(mald.getPartId()));
+
+            dset.add(new StringBuilder(mpd.getText()));
+        }
+
+        return dset;
     }
 
     public void sauvegarderMessage(View view) {
@@ -208,7 +250,7 @@ public class MyActivity extends ActionBarActivity {
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
         long mPartId;
 
-        ArrayList<StringBuilder> dataSet = ((MessagePartRecyclerAdapter) mAdapter).getMDataset();
+        ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
 
         long ts = System.currentTimeMillis();
         long assemblyId = dbHelper.createPartAssembly("title "+ts, "desc "+ts);

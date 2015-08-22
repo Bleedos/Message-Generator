@@ -31,7 +31,7 @@ public class MessageAssemblyListActivity extends ActionBarActivity {
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
         ArrayList<MessageAssemblyData> mpdList = dbHelper.getAllAssembly();
         for (MessageAssemblyData mpd : mpdList) {
-            list.add(new StringBuilder(mpd.getTitle()));
+            list.add(new StringBuilder(mpd.getTitle() + "::"+mpd.get_id()));
             // TODO: Au lieu d'ajouter juste les "title", ajouter l'objet au complet et modifier l'adapter
             // pour recevoir les obj au complet.  le dataset devra tout contenir car sur un click, on pourra
             // vouloir obtenir une information non affichée et s'en servir
@@ -39,9 +39,9 @@ public class MessageAssemblyListActivity extends ActionBarActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.message_assembly_list_recycler_view);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MessageAssemblyListRecyclerAdapter(list);
+        mAdapter = new MessageAssemblyListRecyclerAdapter(mpdList);
         mRecyclerView.setAdapter(mAdapter);
-
+        //assemblyId
     }
 
     @Override

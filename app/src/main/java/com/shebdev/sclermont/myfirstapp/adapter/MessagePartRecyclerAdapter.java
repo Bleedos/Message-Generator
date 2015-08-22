@@ -17,6 +17,13 @@ import java.util.ArrayList;
 public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePartRecyclerAdapter.ViewHolder> {
 
     private ArrayList<StringBuilder> mDataset;
+    private long assemblyId;
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public MessagePartRecyclerAdapter(ArrayList<StringBuilder> mDatasetValue, long assemblyIdValue) {
+        mDataset = mDatasetValue;
+        assemblyId = assemblyIdValue;
+    }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -76,20 +83,6 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
 
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public MessagePartRecyclerAdapter(ArrayList<StringBuilder> myDataset) {
-        mDataset = myDataset;
-    }
-
-    public void addLine(StringBuilder sb) {
-        mDataset.add(sb);
-        notifyItemInserted(mDataset.size());
-    }
-
-    public ArrayList<StringBuilder> getMDataset() {
-        return mDataset;
-    }
-
     // Create new views (invoked by the layout manager)
     @Override
     public MessagePartRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -141,6 +134,29 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    // Methodes utilitaires
+    public void addLine(StringBuilder sb) {
+        mDataset.add(sb);
+        notifyItemInserted(mDataset.size());
+    }
+
+    public ArrayList<StringBuilder> getMDataset() {
+        return mDataset;
+    }
+
+    public void changeMDataSet(ArrayList<StringBuilder> mDatasetValue) {
+        mDataset = mDatasetValue;
+        notifyDataSetChanged();
+    }
+
+    public long getAssemblyId() {
+        return assemblyId;
+    }
+
+    public void setAssemblyId(long assemblyId) {
+        this.assemblyId = assemblyId;
     }
 
 }
