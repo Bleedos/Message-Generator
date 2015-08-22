@@ -2,8 +2,11 @@ package com.shebdev.sclermont.myfirstapp.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 /**
  * Created by sclermont on 13/07/15.
@@ -55,8 +58,8 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PART_ASSEMBLY_LINK);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_CREATE_PART_ASSEMBLY);
-        db.execSQL(SQL_CREATE_PART_ASSEMBLY_LINK);
+        db.execSQL(SQL_DELETE_MESSAGE_PART);
+        onCreate(db);
     }
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_PART_ASSEMBLY);
@@ -110,5 +113,150 @@ public class MessageDbHelper extends SQLiteOpenHelper {
 
         return db.insert(MessageContract.MessagePartAssemblyLink.TABLE_NAME, null, values);
     }
+
+    public MessagePartData getMessagePart(long id) {
+
+        MessagePartData mpd = new MessagePartData();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePart._ID,
+                MessageContract.MessagePart.COLUMN_NAME_PART_ID,
+                MessageContract.MessagePart.COLUMN_NAME_TXT
+        };
+
+// How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePart.COLUMN_NAME_TXT + " DESC";
+        String whereCols = MessageContract.MessagePart._ID + " = ?";
+        String[] whereVals = { Long.toString(id) };
+
+        Cursor c = db.query(
+                MessageContract.MessagePart.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                whereCols,                                // The columns for the WHERE clause
+                whereVals,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+
+        c.moveToFirst();
+        mpd.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)));
+        mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
+        mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
+        c.close();
+
+        return mpd;
+    }
+
+    public ArrayList<MessagePartData> getAllMessagePart() {
+
+        ArrayList<MessagePartData> messagePartDatas = new ArrayList<MessagePartData>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePart._ID,
+                MessageContract.MessagePart.COLUMN_NAME_PART_ID,
+                MessageContract.MessagePart.COLUMN_NAME_TXT
+        };
+
+// How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePart.COLUMN_NAME_TXT + " DESC";
+
+        Cursor c = db.query(
+                MessageContract.MessagePart.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                MessagePartData mpd = new MessagePartData();
+                mpd.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)));
+                mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
+                mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
+
+                messagePartDatas.add(mpd);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+
+        return messagePartDatas;
+
+    }
+
+    public ArrayList<MessagePartData> getAllMessagePartExcept(ArrayList<Long> excludedMessageList) {
+        return null;
+        //TODO: coder methode  en fait mettre le code de la methode getAllMessagePart ici
+        // et de l'autre méthode, appeler getAllMessagePartExcept en passant null
+        // si la liste d'exception est nulle, on ne filtre rien, sinon, on n'ajoute pas les éléments filtrés
+
+        //TODO: Est-ce qu'on pourrait faire un template pour gérer les méthodes getAll vu que probablement
+        // juste les objets changent?  Ensuite avec la reflexion on call tous les setter?  Est-ce que
+        // ça vaut la peine?
+
+    }
+
+    public ArrayList<MessageAssemblyData> getAllAssembly() {
+
+        ArrayList<MessageAssemblyData> MessageAssemblyDatas = new ArrayList<MessageAssemblyData>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePartAssembly._ID,
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_ID,
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE,
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION
+        };
+
+// How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE + " ASC";
+
+        Cursor c = db.query(
+                MessageContract.MessagePartAssembly.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                MessageAssemblyData mad = new MessageAssemblyData();
+                mad.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly._ID)));
+                mad.setAssemblyId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_ID)));
+                mad.setTitle(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE)));
+                mad.setDescription(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION)));
+
+                MessageAssemblyDatas.add(mad);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+
+        return MessageAssemblyDatas;
+    }
+
+
+
 
 }

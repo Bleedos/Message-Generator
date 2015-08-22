@@ -15,6 +15,7 @@
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
+
     <!--
 android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -58,6 +59,14 @@ android:uses-permission
         <activity
             android:name=".MessagePartEdit"
             android:label="@string/title_activity_message_part_edit"
+            android:parentActivityName=".MyActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shebdev.sclermont.myfirstapp.MyActivity" />
+        </activity>
+        <activity
+            android:name=".MessageAssemblyListActivity"
+            android:label="@string/title_activity_message_assembly_list"
             android:parentActivityName=".MyActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

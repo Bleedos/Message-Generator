@@ -31,4 +31,5 @@
     <string name="empty_message_part">Veuillez entrer la fin du message</string>
     <string name="OK">OK</string>
     <string name="title_activity_message_part_edit">MessagePartEdit</string>
+    <string name="title_activity_message_assembly_list">MessageAssemblyListActivity</string>
 </resources>

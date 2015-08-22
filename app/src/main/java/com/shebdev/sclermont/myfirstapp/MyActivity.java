@@ -167,6 +167,11 @@ public class MyActivity extends ActionBarActivity {
         startActivityForResult(intent, 666); // TODO: Mettre une constante
     }
 
+    public void chargerAssembly(View view) {
+        Intent intent = new Intent(this, MessageAssemblyListActivity.class);
+        startActivityForResult(intent, 444); // TODO: Mettre une constante
+    }
+
     public void ajouterLigne(View view) {
         Intent intent = new Intent(this, MessagePartEdit.class);
         startActivityForResult(intent, 555);    // TODO: Mettre une constante
@@ -199,9 +204,20 @@ public class MyActivity extends ActionBarActivity {
 
     public void sauvegarderMessage(View view) {
 
-        EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+        //EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
-        dbHelper.createMessagePart(editFinMsg.getText().toString());
+        long mPartId;
+
+        ArrayList<StringBuilder> dataSet = ((MessagePartRecyclerAdapter) mAdapter).getMDataset();
+
+        long ts = System.currentTimeMillis();
+        long assemblyId = dbHelper.createPartAssembly("title "+ts, "desc "+ts);
+        long po = 1l;
+
+        for (StringBuilder sb : dataSet) {
+            mPartId = dbHelper.createMessagePart(sb.toString());
+            dbHelper.createPartAssemblyLink(assemblyId, mPartId, po++);
+        }
     }
 
     public void savePrefs(View view) {
