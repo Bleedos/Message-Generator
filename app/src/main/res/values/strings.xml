@@ -5,7 +5,8 @@
     <string name="action_search">Search</string>
     <string name="edit_accueil">Entrer l\'accueil</string>
     <string name="edit_nom">Entrer votre nom</string>
-    <string name="edit_fin_message">Entrer la fin du message à partir de \"je suis au bureau...\"</string>
+    <string name="edit_titre_assemblage">Entrer le titre de l\'assemblage</string>
+    <string name="edit_description_assemblage">Entrer la description de l\'assemblage</string>
 
 
     <string name="button_charger">Charger</string>
@@ -32,4 +33,5 @@
     <string name="OK">OK</string>
     <string name="title_activity_message_part_edit">MessagePartEdit</string>
     <string name="title_activity_message_assembly_list">MessageAssemblyListActivity</string>
+    <string name="title_activity_message_part_select">MessagePartSelectActivity</string>
 </resources>

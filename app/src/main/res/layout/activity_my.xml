@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="16dp"
         android:text="@string/bonjour"
         android:id="@+id/textView"
         android:layout_below="@+id/txtRemplirChamps"
@@ -29,25 +29,24 @@
         android:layout_gravity="top"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="12dp"/>
-    <TextView
-        android:layout_width="wrap_content"
+        android:layout_alignParentStart="true"/>
+    <EditText
+        android:id="@+id/edit_assembly_title"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="@string/aujoudhui"
-        android:id="@+id/textView2"
+        android:hint="@string/edit_titre_assemblage"
+        android:layout_gravity="bottom"
         android:layout_below="@+id/edit_nom"
         android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button" />
+        android:layout_alignEnd="@+id/button"
+        android:gravity="top"/>
     <EditText
-        android:id="@+id/edit_fin_message"
+        android:id="@+id/edit_assembly_description"
         android:layout_width="fill_parent"
-        android:layout_height="80dp"
-        android:hint="@string/edit_fin_message"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_description_assemblage"
         android:layout_gravity="bottom"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/edit_assembly_title"
         android:layout_alignRight="@+id/button"
         android:layout_alignEnd="@+id/button"
         android:gravity="top"/>
@@ -57,47 +56,45 @@
         android:scrollbars="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/edit_fin_message"
+        android:layout_below="@+id/edit_assembly_description"
         android:layout_above="@+id/bouton_sauvegarder" />
+
+    <!-- TODO: ramener les strings partout @string/... -->
+    <Button
+        android:id="@+id/bouton_charger_assembly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="@string/button_charger"
+        android:textSize="9dp"
+        android:onClick="chargerAssembly"
+        android:layout_alignTop="@+id/bouton_sauvegarder"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView" />
 
     <Button
         android:id="@+id/bouton_sauvegarder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="true"
-        android:text="Sauv."
+        android:text="@string/button_sauvegarder"
         android:textSize="9dp"
         android:onClick="sauvegarderMessage"
-        android:layout_marginBottom="29dp"
+        android:layout_marginBottom="19dp"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/bouton_charger"
-        android:layout_toLeftOf="@+id/bouton_charger_assembly"
-        android:layout_toStartOf="@+id/bouton_charger_assembly" />
-
-    <!-- TODO: ramener les strings partout @string/... -->
-    <Button
-        android:id="@+id/bouton_charger"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="true"
-        android:text="Charg."
-        android:textSize="9dp"
-        android:onClick="chargerMessage"
-        android:layout_alignTop="@+id/bouton_sauvegarder"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toRightOf="@+id/bouton_charger_assembly" />
 
     <Button
-        android:id="@+id/bouton_charger_assembly"
-        android:layout_width="wrap_content"
+        android:id="@+id/bouton_ajouter_ligne_existante"
+        android:layout_width="50sp"
         android:layout_height="wrap_content"
         android:enabled="true"
-        android:text="Charg. assem."
+        android:text="+X"
         android:textSize="9dp"
-        android:onClick="chargerAssembly"
+        android:onClick="ajouterLigneExistante"
         android:layout_below="@+id/my_recycler_view"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_toLeftOf="@+id/bouton_ajouter_ligne"
+        android:layout_toStartOf="@+id/button" />
     <Button
         android:id="@+id/bouton_ajouter_ligne"
         android:layout_width="50sp"
@@ -113,14 +110,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gen"
+        android:text="@string/button_generer"
         android:textSize="9dp"
         android:onClick="genererMessage"
         android:layout_gravity="right"
-        android:layout_alignTop="@+id/bouton_charger"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:id="@+id/button"
-        android:layout_toEndOf="@+id/txtRemplirChamps" />
+        android:layout_alignTop="@+id/bouton_sauvegarder"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

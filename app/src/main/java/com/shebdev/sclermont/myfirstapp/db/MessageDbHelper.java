@@ -91,43 +91,20 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         db.delete(MessageContract.MessagePart.TABLE_NAME, selection, selectionArgs);
     }
 
-    public long createPartAssembly(String title, String description) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_ID, System.currentTimeMillis());
-        values.put(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE, title);
-        values.put(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION, title);
-
-        return db.insert(MessageContract.MessagePartAssembly.TABLE_NAME, null, values);
-    }
-
-    public long createPartAssemblyLink(long assemblyId, long partId, long partOrder) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_LINK_ID, System.currentTimeMillis());
-        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID, assemblyId);
-        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID, partId);
-        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER, partOrder);
-
-        return db.insert(MessageContract.MessagePartAssemblyLink.TABLE_NAME, null, values);
-    }
-
     public MessagePartData getMessagePart(long id) {
 
         MessagePartData mpd = new MessagePartData();
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Define a projection that specifies which columns from the database
-// you will actually use after this query.
+        // you will actually use after this query.
         String[] projection = {
                 MessageContract.MessagePart._ID,
                 MessageContract.MessagePart.COLUMN_NAME_PART_ID,
                 MessageContract.MessagePart.COLUMN_NAME_TXT
         };
 
-// How you want the results sorted in the resulting Cursor
+        // How you want the results sorted in the resulting Cursor
         String sortOrder =
                 MessageContract.MessagePart.COLUMN_NAME_TXT + " DESC";
         String whereCols = MessageContract.MessagePart._ID + " = ?";
@@ -152,6 +129,149 @@ public class MessageDbHelper extends SQLiteOpenHelper {
 
         return mpd;
     }
+
+    public MessagePartData getMessagePartWhereTextIs(String text) {
+
+        MessagePartData mpd = new MessagePartData();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePart._ID,
+                MessageContract.MessagePart.COLUMN_NAME_PART_ID,
+                MessageContract.MessagePart.COLUMN_NAME_TXT
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePart.COLUMN_NAME_TXT + " ASC";
+        String whereCols = MessageContract.MessagePart.COLUMN_NAME_TXT + " = ?";
+        String[] whereVals = { text };
+
+        Cursor c = db.query(
+                MessageContract.MessagePart.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                whereCols,                                // The columns for the WHERE clause
+                whereVals,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            mpd.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)));
+            mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
+            mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
+        }
+        else {
+            mpd = null;
+        }
+        c.close();
+
+        return mpd;
+    }
+
+    public long createPartAssembly(String title, String description) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_ID, System.currentTimeMillis());
+        values.put(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE, title);
+        values.put(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION, description);
+
+        return db.insert(MessageContract.MessagePartAssembly.TABLE_NAME, null, values);
+    }
+
+    public void deletePartAssembly(long id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = MessageContract.MessagePartAssembly._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        db.delete(MessageContract.MessagePartAssembly.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public int updatePartAssembly(long id, String description) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selection = MessageContract.MessagePartAssembly._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        ContentValues values = new ContentValues();
+        values.put(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION, description);
+
+        // updating row
+        return db.update(MessageContract.MessagePartAssembly.TABLE_NAME, values, selection, selectionArgs);
+    }
+
+    public long createPartAssemblyLink(long assemblyId, long partId, long partOrder) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_LINK_ID, System.currentTimeMillis());
+        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID, assemblyId);
+        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID, partId);
+        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER, partOrder);
+
+        return db.insert(MessageContract.MessagePartAssemblyLink.TABLE_NAME, null, values);
+    }
+
+    public void deletePartAssemblyLink(long linkId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = MessageContract.MessagePartAssemblyLink._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(linkId)};
+
+        db.delete(MessageContract.MessagePartAssemblyLink.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public void deletePartAssemblyLinkWhereAssemblyIdIs(String assemblyId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID + " = ?";
+        String[] selectionArgs = {assemblyId};
+
+        db.delete(MessageContract.MessagePartAssemblyLink.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public int updatePartAssemblyLink(long id, long order) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selection = MessageContract.MessagePartAssemblyLink._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        ContentValues values = new ContentValues();
+        values.put(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER, order);
+
+        // updating row
+        return db.update(MessageContract.MessagePartAssemblyLink.TABLE_NAME, values, selection, selectionArgs);
+    }
+
+    public void deletePartAssemblyLinkFromMessagePartId(long id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        db.delete(MessageContract.MessagePartAssemblyLink.TABLE_NAME, selection, selectionArgs);
+
+        // TODO: il faudrait peut etre faire le menage dans les assembly si ne contien plus aucune ligne
+        // TODO: meme chose a la sauvegarde, si aucune ligne, on affiche une erreur au lieu de sauvegarder du vide
+    }
+
+
 
     public ArrayList<MessagePartData> getAllMessagePart() {
 
@@ -210,6 +330,90 @@ public class MessageDbHelper extends SQLiteOpenHelper {
 
     }
 
+    public MessageAssemblyData getAssemblyData(long id) {
+
+        MessageAssemblyData mad = new MessageAssemblyData();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePartAssembly._ID,
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE,
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE + " DESC";
+        String whereCols = MessageContract.MessagePartAssembly._ID + " = ?";
+        String[] whereVals = { Long.toString(id) };
+
+        Cursor c = db.query(
+                MessageContract.MessagePartAssembly.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                whereCols,                                // The columns for the WHERE clause
+                whereVals,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+
+        c.moveToFirst();
+        mad.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly._ID)));
+        mad.setTitle(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE)));
+        mad.setDescription(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION)));
+        c.close();
+
+        return mad;
+    }
+
+    public MessageAssemblyData getAssemblyDataWhereTitleIs(String title) {
+
+        MessageAssemblyData mad = new MessageAssemblyData();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePartAssembly._ID,
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE,
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE + " DESC";
+        String whereCols = MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE + " = ?";
+        String[] whereVals = { title };
+
+        Cursor c = db.query(
+                MessageContract.MessagePartAssembly.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                whereCols,                                // The columns for the WHERE clause
+                whereVals,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            mad.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly._ID)));
+            mad.setTitle(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE)));
+            mad.setDescription(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION)));
+        }
+        else {
+            mad = null;
+        }
+        c.close();
+
+        return mad;
+    }
+    
+
+    // TODO: voir a mettre un filtre dans getall et si filtre = null on renvoie tout, sinon on garde juste ce qui match
     public ArrayList<MessageAssemblyData> getAllAssembly() {
 
         ArrayList<MessageAssemblyData> MessageAssemblyDatas = new ArrayList<MessageAssemblyData>();
@@ -302,6 +506,51 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         c.close();
 
         return msgAssemDatas;
+    }
+
+    public MessageAssemblyLinkData getAssemblyLinkDataWhereAssemblyIdPartId(String assemblyId, String partId) {
+
+        MessageAssemblyLinkData mald = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                MessageContract.MessagePartAssemblyLink._ID,
+                MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID,
+                MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID,
+                MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER + " ASC";
+        String whereCols = MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID + " = ? AND " +
+                           MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID + " = ?";
+        String[] whereVals = { assemblyId, partId };
+
+        Cursor c = db.query(
+                MessageContract.MessagePartAssemblyLink.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                whereCols,                                // The columns for the WHERE clause
+                whereVals,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            mald = new MessageAssemblyLinkData();
+            mald.setId(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePartAssemblyLink._ID)));
+            mald.setAssemblyId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID)));
+            mald.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID)));
+            mald.setPartOrder(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER)));
+        }
+
+        c.close();
+
+        return mald;
     }
 
 

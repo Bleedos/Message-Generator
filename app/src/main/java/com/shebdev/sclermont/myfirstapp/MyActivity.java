@@ -1,12 +1,8 @@
 package com.shebdev.sclermont.myfirstapp;
 
 import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,20 +11,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.shebdev.sclermont.myfirstapp.adapter.MessagePartRecyclerAdapter;
+import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyData;
 import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyLinkData;
-import com.shebdev.sclermont.myfirstapp.db.MessageContract;
 import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
 import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
 import com.shebdev.sclermont.myfirstapp.dialog.EmptyMessagePartDialogFragment;
 import com.shebdev.sclermont.myfirstapp.dialog.EmptyNameDialogFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MyActivity extends ActionBarActivity {
@@ -85,7 +79,7 @@ public class MyActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = settings.edit();
 
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
-        EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+        EditText editFinMsg = (EditText) findViewById(R.id.edit_assembly_title);
 
         editor.putString("editNom", editNom.getText().toString());
         editor.putString("editFinMsg", editFinMsg.getText().toString());
@@ -102,31 +96,23 @@ public class MyActivity extends ActionBarActivity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
-        EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+        EditText editFinMsg = (EditText) findViewById(R.id.edit_assembly_title);
 
         editNom.setText(settings.getString("editNom", ""));
-        editFinMsg.setText(settings.getString("editFinMsg", ""));
+        //editFinMsg.setText(settings.getString("editFinMsg", ""));
         long assemblyId = settings.getLong("assemblyId", -1l);
-        assemblyId = 4l;  // TODO: Retirer et conserver la valeur chargee a partir des prefs
 
         //Toast.makeText(this, "AssId" + assemblyId, Toast.LENGTH_LONG).show();
 
         if (mAdapter == null) {
 
             //Toast.makeText(this, "adapter null", Toast.LENGTH_LONG).show();
-
-
             mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
 
             if (assemblyId < 0) {
-
                 ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
-                dset.add(new StringBuilder("1"));
-                dset.add(new StringBuilder("2"));
-                dset.add(new StringBuilder("3"));
-                dset.add(new StringBuilder("4"));
                 mAdapter = new MessagePartRecyclerAdapter(dset, -1l);
             }
             else {
@@ -146,7 +132,7 @@ public class MyActivity extends ActionBarActivity {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         //EditText editAccueil = (EditText) findViewById(R.id.edit_accueil);
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
-        EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+        EditText editFinMsg = (EditText) findViewById(R.id.edit_assembly_title);
 
         if (editNom == null || editNom.length() == 0) {
             DialogFragment newFragment = new EmptyNameDialogFragment();
@@ -177,11 +163,6 @@ public class MyActivity extends ActionBarActivity {
 
     }
 
-    public void chargerMessage(View view) {
-        Intent intent = new Intent(this, MessageSelect.class);
-        startActivityForResult(intent, 666); // TODO: Mettre une constante
-    }
-
     public void chargerAssembly(View view) {
         Intent intent = new Intent(this, MessageAssemblyListActivity.class);
         startActivityForResult(intent, 444); // TODO: Mettre une constante
@@ -192,40 +173,46 @@ public class MyActivity extends ActionBarActivity {
         startActivityForResult(intent, 555);    // TODO: Mettre une constante
     }
 
+    public void ajouterLigneExistante(View view) {
+        Intent intent = new Intent(this, MessagePartSelectActivity.class);
+        startActivityForResult(intent, 666); // TODO: Mettre une constante
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == 666) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                String message = data.getStringExtra("message");
-                EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("editFinMsg", message);
+        if (data != null) {
+            if (requestCode == 666) {
+                // Make sure the request was successful
+                if (resultCode == RESULT_OK) {
+                    String message = data.getStringExtra("message");
+                    mAdapter.addLine(new StringBuilder(message));
+                    mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
+                }
+            } else if (requestCode == 555) {
+                if (resultCode == RESULT_OK) {
+                    String messagePart = data.getStringExtra("messagePart");
+                    mAdapter.addLine(new StringBuilder(messagePart));
+                    mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
+                }
+            } else if (requestCode == 444) {
 
-                // Commit the edits!
-                editor.commit();
-            }
-        }
-        else if (requestCode == 555) {
-            if (resultCode == RESULT_OK) {
-                String messagePart = data.getStringExtra("messagePart");
-                mAdapter.addLine(new StringBuilder(messagePart));
-                mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
-            }
-        }
-        else if (requestCode == 444) {
-            long assemblyId = data.getLongExtra("assemblyId", -1l);
-            Toast.makeText(getBaseContext(), "assid 444::"+assemblyId, Toast.LENGTH_LONG).show();
-            if (assemblyId >= 0) {
-                mAdapter.changeMDataSet(loadAssemblyLinkData(assemblyId));
-            }
+                long assemblyId = data.getLongExtra("assemblyId", -1l);
+                Toast.makeText(getBaseContext(), "assid 444::" + assemblyId, Toast.LENGTH_LONG).show();
+                if (assemblyId >= 0) {
+                    MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
+                    MessageAssemblyData mad = dbHelper.getAssemblyData(assemblyId);
+                    EditText editAssemblyTitle = (EditText) findViewById(R.id.edit_assembly_title);
+                    EditText editAssemblyDescription = (EditText) findViewById(R.id.edit_assembly_description);
+                    editAssemblyTitle.setText(mad.getTitle());
+                    editAssemblyDescription.setText(mad.getDescription());
+                    mAdapter.changeMDataSet(loadAssemblyLinkData(assemblyId));
+                }
 
-        }
-        else {
-            long assemblyId = data.getLongExtra("assemblyId", -1l);
-            Toast.makeText(getBaseContext(), "assid inconnu::"+assemblyId, Toast.LENGTH_LONG).show();
+            } else {
+                long assemblyId = data.getLongExtra("assemblyId", -1l);
+                Toast.makeText(getBaseContext(), "assid inconnu::" + assemblyId, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -246,27 +233,70 @@ public class MyActivity extends ActionBarActivity {
 
     public void sauvegarderMessage(View view) {
 
-        //EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+        String editAssemblyTitle = ((EditText) findViewById(R.id.edit_assembly_title)).getText().toString();
+        String editAssemblyDescription = ((EditText) findViewById(R.id.edit_assembly_description)).getText().toString();
+
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
         long mPartId;
+        long assemblyId;
+        long linkId;
 
         ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
 
         long ts = System.currentTimeMillis();
-        long assemblyId = dbHelper.createPartAssembly("title "+ts, "desc "+ts);
+
+        MessageAssemblyData mad = dbHelper.getAssemblyDataWhereTitleIs(editAssemblyTitle);
+        if (mad == null) {
+            assemblyId = dbHelper.createPartAssembly(editAssemblyTitle, editAssemblyDescription);
+        }
+        else {
+            assemblyId = mad.get_id();
+            if (!mad.getDescription().equals(editAssemblyDescription)) {
+                dbHelper.updatePartAssembly(assemblyId, editAssemblyDescription);
+            }
+        }
         long po = 1l;
 
+        // TODO: Utiliser les MessagePartData directement dans la liste pour mieux gérer la persistance en bd
+        ArrayList<Long> listIdLink = new ArrayList<Long>();
         for (StringBuilder sb : dataSet) {
-            mPartId = dbHelper.createMessagePart(sb.toString());
-            dbHelper.createPartAssemblyLink(assemblyId, mPartId, po++);
+            MessagePartData mpd = dbHelper.getMessagePartWhereTextIs(sb.toString());
+            if (mpd == null) {
+                mPartId = dbHelper.createMessagePart(sb.toString());
+            }
+            else {
+                mPartId = mpd.get_id();
+            }
+            MessageAssemblyLinkData mald = dbHelper.getAssemblyLinkDataWhereAssemblyIdPartId(String.valueOf(assemblyId),
+                    String.valueOf(mPartId));
+            if (mald == null) {
+                linkId = dbHelper.createPartAssemblyLink(assemblyId, mPartId, po);
+            }
+            else {
+                linkId = mald.getId();
+                if (po != Long.parseLong(mald.getPartOrder())) {
+                    dbHelper.updatePartAssemblyLink(mald.getId(), po);
+                }
+            }
+            listIdLink.add(linkId);
+            po++;
         }
+
+        // Faire un cleanup de link inutiles
+        ArrayList<MessageAssemblyLinkData> almald = dbHelper.getAssemblyLinkData(assemblyId);
+        for(MessageAssemblyLinkData mald : almald) {
+            if (!listIdLink.contains(mald.getId())) {
+                dbHelper.deletePartAssemblyLink(mald.getId());
+            }
+        }
+
     }
 
     public void savePrefs(View view) {
 //        Intent intent = new Intent(this, DisplayMessageActivity.class);
 //        //EditText editAccueil = (EditText) findViewById(R.id.edit_accueil);
 //        EditText editNom = (EditText) findViewById(R.id.edit_nom);
-//        EditText editFinMsg = (EditText) findViewById(R.id.edit_fin_message);
+//        EditText editFinMsg = (EditText) findViewById(R.id.edit_assembly_title);
 //        ArrayList<String> message = new ArrayList<String>();
 //        //message.add(editAccueil.getText().toString());
 //        message.add(editNom.getText().toString());

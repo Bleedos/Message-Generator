@@ -49,14 +49,6 @@ android:uses-permission
                 android:value="com.shebdev.sclermont.myfirstapp.MyActivity" />
         </activity>
         <activity
-            android:name=".MessageSelect"
-            android:label="@string/title_activity_message_select"
-            android:parentActivityName=".MyActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.shebdev.sclermont.myfirstapp.MyActivity" />
-        </activity>
-        <activity
             android:name=".MessagePartEdit"
             android:label="@string/title_activity_message_part_edit"
             android:parentActivityName=".MyActivity" >
@@ -67,6 +59,14 @@ android:uses-permission
         <activity
             android:name=".MessageAssemblyListActivity"
             android:label="@string/title_activity_message_assembly_list"
+            android:parentActivityName=".MyActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shebdev.sclermont.myfirstapp.MyActivity" />
+        </activity>
+        <activity
+            android:name=".MessagePartSelectActivity"
+            android:label="@string/title_activity_message_part_select"
             android:parentActivityName=".MyActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

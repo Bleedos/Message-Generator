@@ -10,17 +10,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shebdev.sclermont.myfirstapp.R;
-import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyData;
 import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
+import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
 
 import java.util.ArrayList;
 
 /**
  * Created by sclermont on 17/08/15.
  */
-public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<MessageAssemblyListRecyclerAdapter.ViewHolder> {
+public class MessagePartSelectRecyclerAdapter extends RecyclerView.Adapter<MessagePartSelectRecyclerAdapter.ViewHolder> {
 
-    private ArrayList<MessageAssemblyData> mDataset;
+    private ArrayList<MessagePartData> mDataset;
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public MessagePartSelectRecyclerAdapter(ArrayList<MessagePartData> mDatasetValue) {
+        mDataset = mDatasetValue;
+    }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -33,11 +38,12 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
 
         public ViewHolder(View itemLayoutView, IMyViewHolderClicks listener) {
             super(itemLayoutView);
-            mTextView = (TextView) itemLayoutView.findViewById(R.id.assembly_list_recycler_view_text);
-            mDeleteImageView = (ImageView) itemLayoutView.findViewById(R.id.assembly_list_recycler_view_image);
+            mTextView = (TextView) itemLayoutView.findViewById(R.id.message_part_select_recycler_view_text);
+            mDeleteImageView = (ImageView) itemLayoutView.findViewById(R.id.message_part_select_recycler_view_image);
             mListener = listener;
-            mTextView.setOnClickListener(this);
             mDeleteImageView.setOnClickListener(this);
+            mTextView.setOnClickListener(this);
+
         }
 
         @Override
@@ -47,49 +53,39 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
 //                    Toast.LENGTH_LONG).show();
 
             if (v instanceof TextView) {
-                mListener.onClickMessageAssembly((TextView) v, getPosition());
+                mListener.onClickMessagePart((TextView) v, getPosition());
             }
             else if (v instanceof ImageView) {
-                mListener.onClickMessageAssemblyDelete((ImageView) v, getPosition());
+                mListener.onClickDelete((ImageView) v, getPosition());
             }
         }
 
         public static interface IMyViewHolderClicks {
-            public void onClickMessageAssembly(TextView txtView, int position);
-            public void onClickMessageAssemblyDelete(ImageView imgView, int position);
+            public void onClickMessagePart(TextView txtView, int position);
+            public void onClickDelete(ImageView imgView, int position);
         }
 
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public MessageAssemblyListRecyclerAdapter(ArrayList<MessageAssemblyData> myDataset) {
-        mDataset = myDataset;
-    }
-
     // Create new views (invoked by the layout manager)
     @Override
-    public MessageAssemblyListRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public MessagePartSelectRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.assembly_list_recycler_view_layout, parent, false);
+                .inflate(R.layout.message_part_select_recycler_view, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v, new MessageAssemblyListRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
-            public void onClickMessageAssembly(TextView txtView, int position) {
+        ViewHolder vh = new ViewHolder(v, new MessagePartSelectRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
+            public void onClickMessagePart(TextView txtView, int position) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("assemblyId", mDataset.get(position).get_id());
-                Activity host = (Activity) txtView.getContext();
-                host.setResult(host.RESULT_OK, returnIntent);
-                host.finish();
-
-                // TODO: Au lieu d'appender bob, retourner l'id ou l'obj au complet pour affichage
-                // dans la page principale (remplacer recyclder view de page principale par nouveau
-                // contenu sélectionné
+                returnIntent.putExtra("message",(mDataset.get(position).getText()));
+                ((Activity)txtView.getContext()).setResult(((Activity)txtView.getContext()).RESULT_OK, returnIntent);
+                ((Activity)txtView.getContext()).finish();
             };
-            public void onClickMessageAssemblyDelete(ImageView imgView, int position) {
+            public void onClickDelete(ImageView imgView, int position) {
                 MessageDbHelper dbHelper = new MessageDbHelper(imgView.getContext());
-                dbHelper.deletePartAssemblyLinkWhereAssemblyIdIs(mDataset.get(position).getAssemblyId());
-                dbHelper.deletePartAssembly(mDataset.get(position).get_id());
+                dbHelper.deletePartAssemblyLinkFromMessagePartId(mDataset.get(position).get_id());
+                dbHelper.deleteMessagePart(mDataset.get(position).get_id());
                 mDataset.remove(position);
                 notifyItemRemoved(position);
             }
@@ -102,13 +98,22 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position).getTitle()+"\n"+mDataset.get(position).getDescription());
+        holder.mTextView.setText(mDataset.get(position).getText());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    public ArrayList<MessagePartData> getMDataset() {
+        return mDataset;
+    }
+
+    public void changeMDataSet(ArrayList<MessagePartData> mDatasetValue) {
+        mDataset = mDatasetValue;
+        notifyDataSetChanged();
     }
 
 }
