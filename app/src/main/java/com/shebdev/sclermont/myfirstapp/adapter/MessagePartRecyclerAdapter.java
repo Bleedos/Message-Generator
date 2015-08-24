@@ -101,18 +101,18 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
                     StringBuilder tmp = mDataset.get(position+1);
                     mDataset.set(position+1, mDataset.get(position));
                     mDataset.set(position, tmp);
+                    notifyItemChanged(position);
+                    notifyItemChanged(position + 1);
                 }
-                notifyItemChanged(position);
-                notifyItemChanged(position+1);
             };
             public void onClickMoveUp(ImageView imgView, int position) {
                 if (position > 0) {
                     StringBuilder tmp = mDataset.get(position-1);
                     mDataset.set(position-1, mDataset.get(position));
                     mDataset.set(position, tmp);
+                    notifyItemChanged(position);
+                    notifyItemChanged(position-1);
                 }
-                notifyItemChanged(position);
-                notifyItemChanged(position-1);
             };
             public void onClickDelete(ImageView imgView, int position) {
                 mDataset.remove(position);

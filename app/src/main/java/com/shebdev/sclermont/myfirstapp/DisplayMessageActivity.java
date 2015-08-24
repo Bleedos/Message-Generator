@@ -28,19 +28,24 @@ public class DisplayMessageActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
             // Get the message from the intent
+        StringBuilder sb = new StringBuilder();
         Intent intent = getIntent();
         ArrayList<String> message = intent.getStringArrayListExtra(MyActivity.EXTRA_MESSAGE);
-
-        GregorianCalendar greg = new GregorianCalendar();
-        StringBuilder sb = new StringBuilder();
-
-        String[] dayOWeek = {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"};
-        String[] month = {"janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août"};
+        boolean addDateToMessage = intent.getBooleanExtra(MyActivity.EXTRA_ADD_DATE, false);
 
         sb.append("Bonjour, ici " + message.get(0));
-        sb.append(", aujourd'hui " + dayOWeek[greg.get(GregorianCalendar.DAY_OF_WEEK)-1] );
-        sb.append(" le " + (greg.get(GregorianCalendar.DAY_OF_MONTH)));
-        sb.append(" " + month[greg.get(GregorianCalendar.MONTH)]);
+
+        if (addDateToMessage) {
+            GregorianCalendar greg = new GregorianCalendar();
+
+            String[] dayOWeek = {"dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
+            String[] month = {"janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août"};
+
+            sb.append(", aujourd'hui " + dayOWeek[greg.get(GregorianCalendar.DAY_OF_WEEK) - 1]);
+            sb.append(" le " + (greg.get(GregorianCalendar.DAY_OF_MONTH)));
+            sb.append(" " + month[greg.get(GregorianCalendar.MONTH)]);
+        }
+
         sb.append(" " + message.get(1));
 
         text = sb.toString();

@@ -2,8 +2,6 @@ package com.shebdev.sclermont.myfirstapp;
 
 import android.app.Application;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -27,7 +25,6 @@ public class MyApplication extends Application {
 
             @Override
             public void onInit(int status) {
-                // TODO Auto-generated method stub
                 if(status == TextToSpeech.SUCCESS){
                     int result=tts.setLanguage(Locale.CANADA_FRENCH);
                     if(result==TextToSpeech.LANG_MISSING_DATA ||
@@ -44,8 +41,6 @@ public class MyApplication extends Application {
                 }
             }
         });
-
-        //Toast.makeText(this, "App started", Toast.LENGTH_LONG).show();
 
         bus.register(this);
     }

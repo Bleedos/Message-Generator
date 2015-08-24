@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class MyActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.shebdev.sclermont.myfirstapp.MESSAGE";
+    public final static String EXTRA_ADD_DATE = "com.shebdev.sclermont.myfirstapp.ADD_DATE";
     public final static String ERROR_MESSAGE = "com.shebdev.sclermont.myfirstapp.ERROR_MESSAGE";
     public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -135,7 +137,7 @@ public class MyActivity extends ActionBarActivity {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
         EditText editAssemblytitle = (EditText) findViewById(R.id.edit_assembly_title);
-        EditText eidtAsssemblyDescription = (EditText) findViewById(R.id.edit_assembly_description);
+        CheckBox addDateToMessage = (CheckBox) findViewById(R.id.checkbox_add_date);
 
         if (editNom == null || editNom.length() == 0) {
             Bundle bundle = new Bundle();
@@ -143,20 +145,6 @@ public class MyActivity extends ActionBarActivity {
             showErrorDialog(bundle);
             return;
         }
-
-        if (editAssemblytitle == null || editAssemblytitle.length() == 0) {
-            Bundle bundle = new Bundle();
-            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly_title));
-            showErrorDialog(bundle);
-            return;
-        }
-
-//        if (eidtAsssemblyDescription == null || eidtAsssemblyDescription.length() == 0) {
-//            Bundle bundle = new Bundle();
-//            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly_description));
-//            showErrorDialog(bundle);
-//            return;
-//        }
 
         ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
         StringBuilder sbd = new StringBuilder();
@@ -169,6 +157,7 @@ public class MyActivity extends ActionBarActivity {
         }
         message.add(sbd.toString());
         intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra(EXTRA_ADD_DATE, addDateToMessage.isChecked());
         startActivity(intent);
 
     }
@@ -205,7 +194,6 @@ public class MyActivity extends ActionBarActivity {
                     break;
                 case REQUEST_CODE_ASSEMBLY_LIST:
                     long assemblyId = data.getLongExtra("assemblyId", -1l);
-                    Toast.makeText(getBaseContext(), "assid 444::" + assemblyId, Toast.LENGTH_LONG).show();
                     if (assemblyId >= 0) {
                         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
                         MessageAssemblyData mad = dbHelper.getAssemblyData(assemblyId);

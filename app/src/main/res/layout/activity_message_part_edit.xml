@@ -19,7 +19,7 @@
         android:layout_below="@id/entete_msg_edit"
         android:layout_above="@+id/bouton_annuler_msg_edit"
         android:autoText="false"
-        android:inputType="text|textCapSentences|textAutoComplete|textAutoCorrect" />
+        android:inputType="text|textAutoComplete|textAutoCorrect" />
 
     <Button
         android:id="@+id/bouton_annuler_msg_edit"

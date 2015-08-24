@@ -20,9 +20,9 @@ public class ErrorDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = this.getArguments();
-        // TODO: mettre une icône
-        //builder.setIcon(R.drawable.alert_dialog_icon);
         String myValue = bundle.getString(MyActivity.ERROR_MESSAGE);
+
+        builder.setIcon(R.drawable.ic_error_outline_white_24dp);
         builder.setTitle(getString(R.string.error_dialog));
         builder.setMessage(myValue)
                 .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {

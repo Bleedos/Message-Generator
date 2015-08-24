@@ -7,14 +7,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:text="@string/remplir_champs"
         android:id="@+id/txtRemplirChamps" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:text="@string/bonjour"
         android:id="@+id/textView"
         android:layout_below="@+id/txtRemplirChamps"
@@ -38,23 +38,23 @@
         android:layout_height="wrap_content"
         android:hint="@string/edit_titre_assemblage"
         android:layout_gravity="bottom"
-        android:layout_below="@+id/edit_nom"
-        android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button"
         android:gravity="top"
         android:autoText="false"
-        android:inputType="text|textCapSentences|textAutoComplete|textAutoCorrect" />
+        android:inputType="text|textCapSentences|textAutoComplete|textAutoCorrect"
+        android:layout_below="@+id/checkbox_add_date"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
     <EditText
         android:id="@+id/edit_assembly_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/edit_description_assemblage"
         android:layout_gravity="bottom"
-        android:layout_below="@+id/edit_assembly_title"
-        android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button"
         android:gravity="top"
-        android:inputType="text|textCapSentences|textAutoComplete|textAutoCorrect" />
+        android:inputType="text|textCapSentences|textAutoComplete|textAutoCorrect"
+        android:layout_below="@+id/edit_assembly_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:enabled="true"
         android:text="@string/button_charger"
-        android:textSize="9dp"
+        android:textSize="9sp"
         android:onClick="chargerAssembly"
         android:layout_alignTop="@+id/bouton_sauvegarder"
         android:layout_alignRight="@+id/textView"
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:enabled="true"
         android:text="+X"
-        android:textSize="9dp"
+        android:textSize="9sp"
         android:onClick="ajouterLigneExistante"
         android:layout_below="@+id/my_recycler_view"
         android:layout_toLeftOf="@+id/bouton_ajouter_ligne"
@@ -106,7 +106,7 @@
         android:layout_height="wrap_content"
         android:enabled="true"
         android:text="+"
-        android:textSize="9dp"
+        android:textSize="9sp"
         android:onClick="ajouterLigne"
         android:layout_below="@+id/my_recycler_view"
         android:layout_toLeftOf="@+id/button"
@@ -116,12 +116,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_generer"
-        android:textSize="9dp"
+        android:textSize="9sp"
         android:onClick="genererMessage"
         android:layout_gravity="right"
         android:id="@+id/button"
         android:layout_alignTop="@+id/bouton_sauvegarder"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_date_to_message"
+        android:id="@+id/checkbox_add_date"
+        android:layout_below="@+id/edit_nom"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

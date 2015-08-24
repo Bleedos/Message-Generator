@@ -37,4 +37,5 @@
     <string name="title_activity_message_part_edit">MessagePartEdit</string>
     <string name="title_activity_message_assembly_list">MessageAssemblyListActivity</string>
     <string name="title_activity_message_part_select">MessagePartSelectActivity</string>
+    <string name="add_date_to_message">Ajouter la date au message</string>
 </resources>
