@@ -28,8 +28,11 @@
 
     <string name="entrer_partie_message">Entrer ici la partie de votre message</string>
 
+    <string name="error_dialog">ERREUR!</string>
+    
     <string name="empty_name">Veuillez entrer un nom</string>
-    <string name="empty_message_part">Veuillez entrer la fin du message</string>
+    <string name="empty_assembly_title">Veuillez entrer un titre pour l\'assemblage</string>
+    <string name="empty_assembly_description">Veuillez entrer la description de l\'assemblage</string>
     <string name="OK">OK</string>
     <string name="title_activity_message_part_edit">MessagePartEdit</string>
     <string name="title_activity_message_assembly_list">MessageAssemblyListActivity</string>

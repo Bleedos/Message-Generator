@@ -40,7 +40,7 @@ public class MessagePartEdit extends ActionBarActivity {
     }
 
     public void annulerMessageEdit(View view) {
-        finish();  // TODO: Voir si c'est la meilleur manière de revenir en arrière
+        finish();
     }
 
     public void okMessageEdit(View view) {

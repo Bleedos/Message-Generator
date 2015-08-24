@@ -17,24 +17,29 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/entete_msg_edit"
-        android:layout_above="@+id/bouton_annuler_msg_edit"/>
+        android:layout_above="@+id/bouton_annuler_msg_edit"
+        android:autoText="false"
+        android:inputType="text|textCapSentences|textAutoComplete|textAutoCorrect" />
 
     <Button
         android:id="@+id/bouton_annuler_msg_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="31dp"
-        android:layout_alignParentBottom="true"
         android:onClick="annulerMessageEdit"
-        android:text="Annuler"/>
+        android:text="Annuler"
+        android:textSize="9dp"
+        android:layout_alignTop="@+id/bouton_ok"
+        android:layout_toLeftOf="@+id/bouton_ok"
+        android:layout_toStartOf="@+id/bouton_ok" />
     <Button
         android:id="@+id/bouton_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="31dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/bouton_annuler_msg_edit"
         android:onClick="okMessageEdit"
-        android:text="OK"/>
+        android:text="OK"
+        android:textSize="9dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/message_part_edit"
+        android:layout_alignEnd="@+id/message_part_edit" />
 
 </RelativeLayout>

@@ -27,16 +27,19 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
-        public TextView mTextView;
+        public TextView mTitleTextView;
+        public TextView mDescriptionTextView;
         public ImageView mDeleteImageView;
         public IMyViewHolderClicks mListener;
 
         public ViewHolder(View itemLayoutView, IMyViewHolderClicks listener) {
             super(itemLayoutView);
-            mTextView = (TextView) itemLayoutView.findViewById(R.id.assembly_list_recycler_view_text);
+            mTitleTextView = (TextView) itemLayoutView.findViewById(R.id.assembly_list_recycler_view_text);
+            mDescriptionTextView = (TextView) itemLayoutView.findViewById(R.id.assembly_list_recycler_view_description);
             mDeleteImageView = (ImageView) itemLayoutView.findViewById(R.id.assembly_list_recycler_view_image);
             mListener = listener;
-            mTextView.setOnClickListener(this);
+            mTitleTextView.setOnClickListener(this);
+            mDescriptionTextView.setOnClickListener(this);
             mDeleteImageView.setOnClickListener(this);
         }
 
@@ -72,7 +75,7 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.assembly_list_recycler_view_layout, parent, false);
+                .inflate(R.layout.recycler_view_assembly_list, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v, new MessageAssemblyListRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
             public void onClickMessageAssembly(TextView txtView, int position) {
@@ -81,10 +84,6 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
                 Activity host = (Activity) txtView.getContext();
                 host.setResult(host.RESULT_OK, returnIntent);
                 host.finish();
-
-                // TODO: Au lieu d'appender bob, retourner l'id ou l'obj au complet pour affichage
-                // dans la page principale (remplacer recyclder view de page principale par nouveau
-                // contenu sélectionné
             };
             public void onClickMessageAssemblyDelete(ImageView imgView, int position) {
                 MessageDbHelper dbHelper = new MessageDbHelper(imgView.getContext());
@@ -102,7 +101,8 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position).getTitle()+"\n"+mDataset.get(position).getDescription());
+        holder.mTitleTextView.setText(mDataset.get(position).getTitle());
+        holder.mDescriptionTextView.setText(mDataset.get(position).getDescription());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

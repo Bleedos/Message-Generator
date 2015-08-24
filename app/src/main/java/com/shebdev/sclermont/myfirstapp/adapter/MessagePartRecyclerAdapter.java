@@ -89,7 +89,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_part_recycler_view, parent, false);
+                .inflate(R.layout.recycler_view_message_part_in_assembly, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v, new MessagePartRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
             public void onClickMessagePart(TextView txtView, int position) {
