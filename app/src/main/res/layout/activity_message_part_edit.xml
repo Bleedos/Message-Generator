@@ -19,7 +19,7 @@
         android:layout_below="@id/entete_msg_edit"
         android:layout_above="@+id/bouton_annuler_msg_edit"
         android:autoText="false"
-        android:inputType="text|textAutoComplete|textAutoCorrect" />
+        android:inputType="text|textMultiLine|textLongMessage|textAutoComplete|textAutoCorrect" />
 
     <Button
         android:id="@+id/bouton_annuler_msg_edit"
@@ -27,7 +27,8 @@
         android:layout_height="wrap_content"
         android:onClick="annulerMessageEdit"
         android:text="Annuler"
-        android:textSize="9dp"
+        android:textSize="9sp"
+        android:layout_alignParentBottom="true"
         android:layout_alignTop="@+id/bouton_ok"
         android:layout_toLeftOf="@+id/bouton_ok"
         android:layout_toStartOf="@+id/bouton_ok" />
@@ -37,7 +38,7 @@
         android:layout_height="wrap_content"
         android:onClick="okMessageEdit"
         android:text="OK"
-        android:textSize="9dp"
+        android:textSize="9sp"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/message_part_edit"
         android:layout_alignEnd="@+id/message_part_edit" />

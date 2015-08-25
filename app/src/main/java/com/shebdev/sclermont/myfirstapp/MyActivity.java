@@ -147,6 +147,13 @@ public class MyActivity extends ActionBarActivity {
         }
 
         ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
+        if (dataSet.size() == 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly));
+            showErrorDialog(bundle);
+            return;
+        }
+
         StringBuilder sbd = new StringBuilder();
 
         ArrayList<String> message = new ArrayList<String>();
@@ -245,12 +252,21 @@ public class MyActivity extends ActionBarActivity {
             return;
         }
 
+        ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
+
+        if (dataSet.size() == 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly));
+            showErrorDialog(bundle);
+            return;
+        }
+
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
         long mPartId;
         long assemblyId;
         long linkId;
 
-        ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
+
 
         long ts = System.currentTimeMillis();
 
