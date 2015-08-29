@@ -11,15 +11,16 @@
         android:text="@string/remplir_champs"
         android:id="@+id/txtRemplirChamps" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/edit_greeting"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="@string/bonjour"
-        android:id="@+id/textView"
+        android:hint="Entrer l\'accueil. Ex.: Bonjour, ici"
         android:layout_below="@+id/txtRemplirChamps"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toStartOf="@+id/imageView" />
 
     <EditText
         android:id="@+id/edit_nom"
@@ -27,7 +28,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/edit_nom"
         android:layout_gravity="top"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/edit_greeting"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:autoText="false"
@@ -79,7 +80,7 @@
         android:layout_width="40sp"
         android:layout_height="40sp"
         android:id="@+id/button"
-        android:src="@drawable/ic_perm_phone_msg_white_36dp"
+        android:src="@drawable/ic_message_processing_white_24dp"
         android:clickable="true"
         android:onClick="genererMessage"
         android:layout_gravity="right"
@@ -91,7 +92,7 @@
         android:layout_width="40sp"
         android:layout_height="40sp"
         android:id="@+id/button_save_message_assembly"
-        android:src="@drawable/ic_save_white_24dp"
+        android:src="@drawable/ic_export_white_24dp"
         android:onClick="sauvegarderMessage"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/button_load_message_assembly"
@@ -103,7 +104,7 @@
         android:layout_width="40sp"
         android:layout_height="40sp"
         android:id="@+id/button_load_message_assembly"
-        android:src="@drawable/ic_mode_edit_white_24dp"
+        android:src="@drawable/ic_import_white_24dp"
         android:onClick="chargerAssembly"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -114,24 +115,32 @@
         android:layout_width="40sp"
         android:layout_height="40sp"
         android:id="@+id/button_add_line_to_assembly"
-        android:src="@drawable/ic_add_circle_outline_white_24dp"
+        android:src="@drawable/ic_message_draw_white_24dp"
         android:onClick="ajouterLigne"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/button_add_existing_line_to_assembly"
-        android:layout_toStartOf="@+id/button_add_existing_line_to_assembly"
-        android:layout_marginLeft="5sp"
-        android:layout_marginRight="5sp" />
+        android:layout_toStartOf="@+id/button_add_existing_line_to_assembly" />
 
     <ImageView
         android:layout_width="40sp"
         android:layout_height="40sp"
         android:id="@+id/button_add_existing_line_to_assembly"
         android:onClick="ajouterLigneExistante"
-        android:src="@drawable/ic_add_circle_white_24dp"
+        android:src="@drawable/ic_message_text_white_24dp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/button"
         android:layout_toStartOf="@+id/button"
         android:layout_marginLeft="5sp"
         android:layout_marginRight="5sp" />
+
+    <ImageView
+        android:layout_width="35sp"
+        android:layout_height="35sp"
+        android:id="@+id/imageView"
+        android:src="@drawable/ic_import_white_24dp"
+        android:layout_alignTop="@+id/edit_greeting"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="loadExistingGreeting" />
 
 </RelativeLayout>

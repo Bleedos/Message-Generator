@@ -7,7 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
         ArrayList<String> message = intent.getStringArrayListExtra(MyActivity.EXTRA_MESSAGE);
         boolean addDateToMessage = intent.getBooleanExtra(MyActivity.EXTRA_ADD_DATE, false);
 
-        sb.append("Bonjour, ici " + message.get(0));
+        sb.append(message.get(0) + " " + message.get(1));
 
         if (addDateToMessage) {
             GregorianCalendar greg = new GregorianCalendar();
@@ -46,7 +47,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
             sb.append(" " + month[greg.get(GregorianCalendar.MONTH)]);
         }
 
-        sb.append(" " + message.get(1));
+        sb.append(" " + message.get(2));
 
         text = sb.toString();
 
@@ -68,7 +69,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up ImageView, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
@@ -89,7 +90,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
         TextView txtContenuMsg = (TextView) findViewById(R.id.contenu_message);
         txtContenuMsg.setText(text);
 
-        Button btn = (Button) findViewById(R.id.bouton_jouer);
+        ImageView btn = (ImageView) findViewById(R.id.button_play);
         btn.setEnabled(true);
     }
 
@@ -103,19 +104,23 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
 
     public void arreterMessage(View view) {
-        Button btnArreter = (Button) findViewById(R.id.bouton_arreter);
+        ImageView btnArreter = (ImageView) findViewById(R.id.button_stop);
         btnArreter.setEnabled(false);
-        Button btnJouer = (Button) findViewById(R.id.bouton_jouer);
+        btnArreter.setAlpha(0.5f);
+        ImageView btnJouer = (ImageView) findViewById(R.id.button_play);
         btnJouer.setEnabled(true);
+        btnJouer.setAlpha(1f);
         MyApplication myapp = (MyApplication) getApplication();
         myapp.bus.post("STOP");
     }
 
     public void jouerMessage(View view) {
-        Button btnArreter = (Button) findViewById(R.id.bouton_arreter);
+        ImageView btnArreter = (ImageView) findViewById(R.id.button_stop);
         btnArreter.setEnabled(true);
-        Button btnJouer = (Button) findViewById(R.id.bouton_jouer);
+        btnArreter.setAlpha(1f);
+        ImageView btnJouer = (ImageView) findViewById(R.id.button_play);
         btnJouer.setEnabled(false);
+        btnJouer.setAlpha(0.5f);
         convertTextToSpeech(text);
     }
 }

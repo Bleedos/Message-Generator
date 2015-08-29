@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 
 public class MessagePartEdit extends ActionBarActivity {
 
@@ -15,6 +17,14 @@ public class MessagePartEdit extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_part_edit);
+
+        Intent intent = getIntent();
+        String messagePart = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART);
+
+        if (messagePart != null) {
+            EditText messagePartEdit = (EditText) findViewById(R.id.message_part_edit);
+            messagePartEdit.setText(messagePart);
+        }
     }
 
     @Override

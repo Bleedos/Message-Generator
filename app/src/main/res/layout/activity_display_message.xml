@@ -14,25 +14,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/bouton_arreter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="@string/button_arreter"
+    <ImageView
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:id="@+id/button_stop"
+        android:src="@drawable/ic_stop_white_24dp"
         android:onClick="arreterMessage"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/bouton_jouer"
-        android:layout_toStartOf="@+id/bouton_jouer" />
+        android:layout_toLeftOf="@+id/button_play"
+        android:layout_toStartOf="@+id/button_play" />
 
-    <Button
-        android:id="@+id/bouton_jouer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="@string/button_play"
+    <ImageView
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:id="@+id/button_play"
         android:onClick="jouerMessage"
-        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_play_white_24dp"
+        android:layout_alignTop="@+id/button_stop"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

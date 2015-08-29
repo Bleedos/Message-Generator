@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.shebdev.sclermont.myfirstapp.MyActivity;
 import com.shebdev.sclermont.myfirstapp.R;
 
 import java.util.ArrayList;
@@ -94,8 +95,12 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
         ViewHolder vh = new ViewHolder(v, new MessagePartRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
             public void onClickMessagePart(TextView txtView, int position) {
                 mDataset.get(position).append("bob");
+                // TODO: appel du Activity avec la méthode "forressult",
+                // au retour, updater le dataset à la position
+                // voir comment updater la rangée dans la bd ou linker les items ici directement à la
+                // bd s,ils existent déjà.
                 notifyItemChanged(position);
-            };
+            }
             public void onClickMoveDown(ImageView imgView, int position) {
                 if (position < mDataset.size()-1) {
                     StringBuilder tmp = mDataset.get(position+1);
@@ -104,7 +109,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
                     notifyItemChanged(position);
                     notifyItemChanged(position + 1);
                 }
-            };
+            }
             public void onClickMoveUp(ImageView imgView, int position) {
                 if (position > 0) {
                     StringBuilder tmp = mDataset.get(position-1);
@@ -113,7 +118,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
                     notifyItemChanged(position);
                     notifyItemChanged(position-1);
                 }
-            };
+            }
             public void onClickDelete(ImageView imgView, int position) {
                 mDataset.remove(position);
                 notifyItemRemoved(position);

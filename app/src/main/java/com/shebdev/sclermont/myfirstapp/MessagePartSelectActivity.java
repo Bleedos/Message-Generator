@@ -1,5 +1,6 @@
 package com.shebdev.sclermont.myfirstapp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.shebdev.sclermont.myfirstapp.adapter.MessageAssemblyListRecyclerAdapter;
 import com.shebdev.sclermont.myfirstapp.adapter.MessagePartSelectRecyclerAdapter;
-import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyData;
 import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
 import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
 
@@ -25,22 +24,18 @@ public class MessagePartSelectActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        boolean loadGreeting = intent.getBooleanExtra(MyActivity.EXTRA_LOAD_GREETING, false);
+
         setContentView(R.layout.activity_message_part_select);
-        ArrayList<StringBuilder> list = new ArrayList<StringBuilder>();
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
-        ArrayList<MessagePartData> mpdList = dbHelper.getAllMessagePart();
-        for (MessagePartData mpd : mpdList) {
-            list.add(new StringBuilder(mpd.getText()));
-            // TODO: Au lieu d'ajouter juste les "title", ajouter l'objet au complet et modifier l'adapter
-            // pour recevoir les obj au complet.  le dataset devra tout contenir car sur un click, on pourra
-            // vouloir obtenir une information non affichée et s'en servir
-        }
+        ArrayList<MessagePartData> mpdList = dbHelper.getAllMessagePart(loadGreeting);
         mRecyclerView = (RecyclerView) findViewById(R.id.message_part_select_recycler_view);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MessagePartSelectRecyclerAdapter(mpdList);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
     @Override

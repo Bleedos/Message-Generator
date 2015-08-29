@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.shebdev.sclermont.myfirstapp.adapter.MessagePartRecyclerAdapter;
 import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyData;
@@ -28,13 +27,16 @@ import java.util.ArrayList;
 public class MyActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.shebdev.sclermont.myfirstapp.MESSAGE";
+    public final static String EXTRA_MESSAGE_PART = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART";
     public final static String EXTRA_ADD_DATE = "com.shebdev.sclermont.myfirstapp.ADD_DATE";
+    public final static String EXTRA_LOAD_GREETING = "com.shebdev.sclermont.myfirstapp.LOAD_GREETING";
     public final static String ERROR_MESSAGE = "com.shebdev.sclermont.myfirstapp.ERROR_MESSAGE";
     public static final String PREFS_NAME = "MyPrefsFile";
 
     private static final int REQUEST_CODE_ASSEMBLY_LIST = 444;
     private static final int REQUEST_CODE_MESSAGE_PART_EDIT = 555;
     private static final int REQUEST_CODE_MESSAGE_PART_SELECT = 666;
+    private static final int REQUEST_CODE_GREETING_SELECT = 777;
     private RecyclerView mRecyclerView;
     private MessagePartRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -124,6 +126,13 @@ public class MyActivity extends ActionBarActivity {
                 //Toast.makeText(this, "load existing assembly", Toast.LENGTH_LONG).show();
                 ArrayList<StringBuilder> dset = loadAssemblyLinkData(assemblyId);
                 mAdapter = new MessagePartRecyclerAdapter(dset, assemblyId);
+
+                MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
+                ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, true);
+                if (dataSet.size() > 0) {
+                    MessagePartData mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
+                    ((EditText) findViewById(R.id.edit_greeting)).setText(mpd.getText());
+                }
             }
 
             mRecyclerView.setAdapter(mAdapter);
@@ -135,9 +144,16 @@ public class MyActivity extends ActionBarActivity {
     public void genererMessage(View view) {
 
         Intent intent = new Intent(this, DisplayMessageActivity.class);
+        EditText editGreeting = (EditText) findViewById(R.id.edit_greeting);
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
-        EditText editAssemblytitle = (EditText) findViewById(R.id.edit_assembly_title);
         CheckBox addDateToMessage = (CheckBox) findViewById(R.id.checkbox_add_date);
+
+        if (editGreeting == null || editGreeting.length() == 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_greeting));
+            showErrorDialog(bundle);
+            return;
+        }
 
         if (editNom == null || editNom.length() == 0) {
             Bundle bundle = new Bundle();
@@ -157,6 +173,7 @@ public class MyActivity extends ActionBarActivity {
         StringBuilder sbd = new StringBuilder();
 
         ArrayList<String> message = new ArrayList<String>();
+        message.add(editGreeting.getText().toString());
         message.add(editNom.getText().toString());
         for (StringBuilder sb : dataSet) {
             sbd.append(sb.toString());
@@ -184,18 +201,31 @@ public class MyActivity extends ActionBarActivity {
         startActivityForResult(intent, REQUEST_CODE_MESSAGE_PART_SELECT);
     }
 
+    public void loadExistingGreeting(View view) {
+        Intent intent = new Intent(this, MessagePartSelectActivity.class);
+        intent.putExtra(EXTRA_LOAD_GREETING, true);
+        startActivityForResult(intent, REQUEST_CODE_GREETING_SELECT);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        String messagePart;
+
         // Check which request we're responding to
         if (data != null && resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_MESSAGE_PART_SELECT:
-                    String message = data.getStringExtra("message");
-                    mAdapter.addLine(new StringBuilder(message));
+                    messagePart = data.getStringExtra("message");
+                    mAdapter.addLine(new StringBuilder(messagePart));
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
+                case REQUEST_CODE_GREETING_SELECT:
+                    messagePart = data.getStringExtra("message");
+                    ((EditText) findViewById(R.id.edit_greeting)).setText(messagePart);
+                    break;
                 case REQUEST_CODE_MESSAGE_PART_EDIT:
-                    String messagePart = data.getStringExtra("messagePart");
+                    messagePart = data.getStringExtra("messagePart");
                     mAdapter.addLine(new StringBuilder(messagePart));
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
@@ -209,6 +239,14 @@ public class MyActivity extends ActionBarActivity {
                         editAssemblyTitle.setText(mad.getTitle());
                         editAssemblyDescription.setText(mad.getDescription());
                         mAdapter.changeMDataSet(loadAssemblyLinkData(assemblyId));
+
+                        // TODO: Voir a integrer mieux le load des assembly en rapoort a l'accueil
+                        // Voir ici et dans onResume
+                        ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, true);
+                        if (dataSet.size() > 0) {
+                            MessagePartData mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
+                            ((EditText) findViewById(R.id.edit_greeting)).setText(mpd.getText());
+                        }
                     }
                     break;
                 default:
@@ -220,7 +258,7 @@ public class MyActivity extends ActionBarActivity {
     private ArrayList<StringBuilder> loadAssemblyLinkData(long assemblyId) {
         ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
-        ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId);
+        ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, false);
 
         for (MessageAssemblyLinkData mald : dataSet) {
             //Toast.makeText(this, "mpd::"+mald.getId(), Toast.LENGTH_LONG).show();
@@ -240,15 +278,21 @@ public class MyActivity extends ActionBarActivity {
 
     public void sauvegarderMessage(View view) {
 
+        String editGreeting = ((EditText) findViewById(R.id.edit_greeting)).getText().toString();
         String editAssemblyTitle = ((EditText) findViewById(R.id.edit_assembly_title)).getText().toString();
         String editAssemblyDescription = ((EditText) findViewById(R.id.edit_assembly_description)).getText().toString();
+
+        if (editGreeting == null || editGreeting.length() == 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_greeting));
+            showErrorDialog(bundle);
+            return;
+        }
 
         if (editAssemblyTitle == null || editAssemblyTitle.length() == 0) {
             Bundle bundle = new Bundle();
             bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly_title));
-            DialogFragment newFragment = new ErrorDialogFragment();
-            newFragment.show(getFragmentManager(), "empty_assembly_title");
-            newFragment.setArguments(bundle);
+            showErrorDialog(bundle);
             return;
         }
 
@@ -266,10 +310,6 @@ public class MyActivity extends ActionBarActivity {
         long assemblyId;
         long linkId;
 
-
-
-        long ts = System.currentTimeMillis();
-
         MessageAssemblyData mad = dbHelper.getAssemblyDataWhereTitleIs(editAssemblyTitle);
         if (mad == null) {
             assemblyId = dbHelper.createPartAssembly(editAssemblyTitle, editAssemblyDescription);
@@ -282,17 +322,39 @@ public class MyActivity extends ActionBarActivity {
         }
         long po = 1l;
 
+
+        MessagePartData mpd = dbHelper.getMessagePartWhereTextIs(editGreeting, true);
+        if (mpd == null) {
+            mPartId = dbHelper.createMessagePart(editGreeting, true);
+        }
+        else {
+            mPartId = mpd.get_id();
+        }
+
+        // TODO: Voir si on met ça dans une méthode du helper de BD ou dans une méthode private ici
+        MessageAssemblyLinkData mald = dbHelper.getAssemblyLinkDataWhereAssemblyIdPartId(String.valueOf(assemblyId),
+                String.valueOf(mPartId));
+        if (mald == null) {
+            // Check if there was already a greeting for that assembly
+            ArrayList<MessageAssemblyLinkData> assemblyGreeting = dbHelper.getAssemblyLinkData(assemblyId, true);
+            if (assemblyGreeting.size() > 0) {
+                // TODO: Mettre un indicateur dans le assembly link pour identifier les liens pour l'accueil à la place de mettre 0
+                dbHelper.deletePartAssemblyLink(((MessageAssemblyLinkData) assemblyGreeting.get(0)).getId());
+            }
+            linkId = dbHelper.createPartAssemblyLink(assemblyId, mPartId, 0l);
+        }
+
         // TODO: Utiliser les MessagePartData directement dans la liste pour mieux gérer la persistance en bd
         ArrayList<Long> listIdLink = new ArrayList<Long>();
         for (StringBuilder sb : dataSet) {
-            MessagePartData mpd = dbHelper.getMessagePartWhereTextIs(sb.toString());
+            mpd = dbHelper.getMessagePartWhereTextIs(sb.toString(), false);
             if (mpd == null) {
-                mPartId = dbHelper.createMessagePart(sb.toString());
+                mPartId = dbHelper.createMessagePart(sb.toString(), false);
             }
             else {
                 mPartId = mpd.get_id();
             }
-            MessageAssemblyLinkData mald = dbHelper.getAssemblyLinkDataWhereAssemblyIdPartId(String.valueOf(assemblyId),
+            mald = dbHelper.getAssemblyLinkDataWhereAssemblyIdPartId(String.valueOf(assemblyId),
                     String.valueOf(mPartId));
             if (mald == null) {
                 linkId = dbHelper.createPartAssemblyLink(assemblyId, mPartId, po);
@@ -308,10 +370,10 @@ public class MyActivity extends ActionBarActivity {
         }
 
         // Faire un cleanup de link inutiles
-        ArrayList<MessageAssemblyLinkData> almald = dbHelper.getAssemblyLinkData(assemblyId);
-        for(MessageAssemblyLinkData mald : almald) {
-            if (!listIdLink.contains(mald.getId())) {
-                dbHelper.deletePartAssemblyLink(mald.getId());
+        ArrayList<MessageAssemblyLinkData> almald = dbHelper.getAssemblyLinkData(assemblyId, false);
+        for(MessageAssemblyLinkData maldCleanup : almald) {
+            if (!listIdLink.contains(maldCleanup.getId())) {
+                dbHelper.deletePartAssemblyLink(maldCleanup.getId());
             }
         }
 
@@ -326,8 +388,6 @@ public class MyActivity extends ActionBarActivity {
 //        //message.add(editAccueil.getText().toString());
 //        message.add(editNom.getText().toString());
 //        message.add(editFinMsg.getText().toString());
-
-
     }
 
     public void openSearch() {

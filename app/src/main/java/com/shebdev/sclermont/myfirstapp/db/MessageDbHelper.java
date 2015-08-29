@@ -14,24 +14,33 @@ import java.util.ArrayList;
 public class MessageDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "Message.db";
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
+    private static final String BOOLEAN_TYPE =" BOOLEAN";
+    private static final String NOT_NULL = " NOT NULL";
+    private static final String DEFAULT = " DEFAULT";
+    private static final String CHECK_IN_0_1 = " CHECK (${column_name} IN (0,1))";
+    private static final String COLUMN_NAME_TOKEN = "${column_name}";
     private static final String COMMA_SEP = ",";
     private static final String SQL_CREATE_MESSAGE_PART =
             "CREATE TABLE " + MessageContract.MessagePart.TABLE_NAME + " (" +
                     MessageContract.MessagePart._ID + " INTEGER PRIMARY KEY," +
                     MessageContract.MessagePart.COLUMN_NAME_PART_ID + TEXT_TYPE + COMMA_SEP +
-                    MessageContract.MessagePart.COLUMN_NAME_TXT + TEXT_TYPE + " )";
+                    MessageContract.MessagePart.COLUMN_NAME_TXT + TEXT_TYPE +
+                    MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + BOOLEAN_TYPE + NOT_NULL +
+                    CHECK_IN_0_1.replace(COLUMN_NAME_TOKEN, MessageContract.MessagePart.COLUMN_NAME_IS_GREETING) +
+                    ")";
 
     private static final String SQL_CREATE_PART_ASSEMBLY =
             "CREATE TABLE " + MessageContract.MessagePartAssembly.TABLE_NAME + " (" +
                     MessageContract.MessagePartAssembly._ID + " INTEGER PRIMARY KEY," +
                     MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_ID + TEXT_TYPE + COMMA_SEP +
                     MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE + TEXT_TYPE + COMMA_SEP +
-                    MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION + TEXT_TYPE + " )";
+                    MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION + TEXT_TYPE +
+                    " )";
 
     private static final String SQL_CREATE_PART_ASSEMBLY_LINK =
             "CREATE TABLE " + MessageContract.MessagePartAssemblyLink.TABLE_NAME + " (" +
@@ -39,7 +48,14 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                     MessageContract.MessagePartAssemblyLink.COLUMN_NAME_LINK_ID + TEXT_TYPE + COMMA_SEP +
                     MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID + INTEGER_TYPE + COMMA_SEP +
                     MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID + INTEGER_TYPE + COMMA_SEP +
-                    MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER + INTEGER_TYPE + " )";
+                    MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER + INTEGER_TYPE +
+                    " )";
+
+    private static final String SQL_ALTER_MESSAGE_PART_V2_TO_V3 =
+            "ALTER TABLE " + MessageContract.MessagePart.TABLE_NAME + " ADD COLUMN " +
+                    MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + BOOLEAN_TYPE + NOT_NULL +
+                    CHECK_IN_0_1.replace(COLUMN_NAME_TOKEN, MessageContract.MessagePart.COLUMN_NAME_IS_GREETING) +
+                    DEFAULT + " 0";
 
     private static final String SQL_DELETE_MESSAGE_PART =
             "DROP TABLE IF EXISTS " + MessageContract.MessagePart.TABLE_NAME;
@@ -52,22 +68,35 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL(SQL_CREATE_MESSAGE_PART);
         db.execSQL(SQL_CREATE_PART_ASSEMBLY);
         db.execSQL(SQL_CREATE_PART_ASSEMBLY_LINK);
     }
+
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_MESSAGE_PART);
-        onCreate(db);
+        switch (oldVersion) {
+            case 2:
+                db.execSQL(SQL_ALTER_MESSAGE_PART_V2_TO_V3);
+                break;
+            default:
+                db.execSQL(SQL_DELETE_MESSAGE_PART);
+                db.execSQL(SQL_DELETE_PART_ASSEMBLY);
+                db.execSQL(SQL_DELETE_PART_ASSEMBLY_LINK);
+                onCreate(db);
+                break;
+        }
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Don't try to preserve db info on downgrade.  Just recreate database.
+        db.execSQL(SQL_DELETE_MESSAGE_PART);
         db.execSQL(SQL_DELETE_PART_ASSEMBLY);
         db.execSQL(SQL_CREATE_PART_ASSEMBLY_LINK);
+        onCreate(db);
     }
 
 
-    public long createMessagePart(String text) {
+    public long createMessagePart(String text, boolean isGreeting) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -75,6 +104,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(MessageContract.MessagePart.COLUMN_NAME_PART_ID, System.currentTimeMillis());
         values.put(MessageContract.MessagePart.COLUMN_NAME_TXT, text);
+        values.put(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING, isGreeting ? 1 : 0);
 
         // Insert the new row, returning the primary key value of the new row
         return db.insert(MessageContract.MessagePart.TABLE_NAME, null, values);
@@ -101,7 +131,8 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         String[] projection = {
                 MessageContract.MessagePart._ID,
                 MessageContract.MessagePart.COLUMN_NAME_PART_ID,
-                MessageContract.MessagePart.COLUMN_NAME_TXT
+                MessageContract.MessagePart.COLUMN_NAME_TXT,
+                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING
         };
 
         // How you want the results sorted in the resulting Cursor
@@ -125,29 +156,44 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         mpd.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)));
         mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
         mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
+        mpd.setIsGreeting(c.getInt(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING)) == 1 ? true : false);
         c.close();
 
         return mpd;
     }
 
-    public MessagePartData getMessagePartWhereTextIs(String text) {
+    public MessagePartData getMessagePartWhereTextIs(String text, boolean selectGreeting) {
 
         MessagePartData mpd = new MessagePartData();
         SQLiteDatabase db = this.getReadableDatabase();
+        String whereCols;
+        String[] whereVals;
 
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         String[] projection = {
                 MessageContract.MessagePart._ID,
                 MessageContract.MessagePart.COLUMN_NAME_PART_ID,
-                MessageContract.MessagePart.COLUMN_NAME_TXT
+                MessageContract.MessagePart.COLUMN_NAME_TXT,
+                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING
         };
 
         // How you want the results sorted in the resulting Cursor
         String sortOrder =
                 MessageContract.MessagePart.COLUMN_NAME_TXT + " ASC";
-        String whereCols = MessageContract.MessagePart.COLUMN_NAME_TXT + " = ?";
-        String[] whereVals = { text };
+
+        if (selectGreeting) {
+            whereCols = MessageContract.MessagePart.COLUMN_NAME_TXT + " = ? AND " +
+                    MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + " = ?";
+            whereVals = new String[2];
+            whereVals[0] = text;
+            whereVals[1] = String.valueOf(1);
+        }
+        else {
+            whereCols = MessageContract.MessagePart.COLUMN_NAME_TXT + " = ?";
+            whereVals = new String[1];
+            whereVals[0] = text;
+        }
 
         Cursor c = db.query(
                 MessageContract.MessagePart.TABLE_NAME,  // The table to query
@@ -164,6 +210,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
             mpd.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)));
             mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
             mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
+            mpd.setIsGreeting(c.getInt(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING)) == 1 ? true : false);
         }
         else {
             mpd = null;
@@ -268,33 +315,41 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         db.delete(MessageContract.MessagePartAssemblyLink.TABLE_NAME, selection, selectionArgs);
 
         // TODO: il faudrait peut etre faire le menage dans les assembly si ne contien plus aucune ligne
-        // TODO: meme chose a la sauvegarde, si aucune ligne, on affiche une erreur au lieu de sauvegarder du vide
     }
 
 
 
-    public ArrayList<MessagePartData> getAllMessagePart() {
+    public ArrayList<MessagePartData> getAllMessagePart(boolean loadGreeting) {
 
         ArrayList<MessagePartData> messagePartDatas = new ArrayList<MessagePartData>();
         SQLiteDatabase db = this.getReadableDatabase();
+        String whereCols = MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + " = ?";
+        String[] whereVals = new String[1];
 
         // Define a projection that specifies which columns from the database
 // you will actually use after this query.
         String[] projection = {
                 MessageContract.MessagePart._ID,
                 MessageContract.MessagePart.COLUMN_NAME_PART_ID,
-                MessageContract.MessagePart.COLUMN_NAME_TXT
+                MessageContract.MessagePart.COLUMN_NAME_TXT,
+                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING
         };
 
 // How you want the results sorted in the resulting Cursor
         String sortOrder =
                 MessageContract.MessagePart.COLUMN_NAME_TXT + " DESC";
+        if (loadGreeting) {
+            whereVals[0] = String.valueOf(1);
+        }
+        else {
+            whereVals[0] = String.valueOf(0);
+        }
 
         Cursor c = db.query(
                 MessageContract.MessagePart.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
-                null,                                // The columns for the WHERE clause
-                null,                            // The values for the WHERE clause
+                whereCols,                                // The columns for the WHERE clause
+                whereVals,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
@@ -307,6 +362,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                 mpd.set_id(c.getLong(c.getColumnIndexOrThrow(MessageContract.MessagePart._ID)));
                 mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
                 mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
+                mpd.setIsGreeting(c.getInt(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING)) == 1 ? true : false);
 
                 messagePartDatas.add(mpd);
             } while (c.moveToNext());
@@ -460,10 +516,12 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         return MessageAssemblyDatas;
     }
 
-    public ArrayList<MessageAssemblyLinkData> getAssemblyLinkData(long id) {
+    public ArrayList<MessageAssemblyLinkData> getAssemblyLinkData(long id, boolean selectGreeting) {
 
         ArrayList<MessageAssemblyLinkData> msgAssemDatas = new ArrayList<MessageAssemblyLinkData>();
         SQLiteDatabase db = this.getReadableDatabase();
+        StringBuilder whereCols = new StringBuilder();
+        String[] whereVals = new String[2];
 
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
@@ -477,13 +535,22 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         // How you want the results sorted in the resulting Cursor
         String sortOrder =
                 MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER + " ASC";
-        String whereCols = MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID + " = ?";
-        String[] whereVals = { Long.toString(id) };
+
+        whereCols.append(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID + " = ? AND ");
+        whereCols.append(MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ORDER);
+        whereVals[0] = Long.toString(id);
+        whereVals[1] = Long.toString(0l);
+        if (selectGreeting) {
+            whereCols.append(" = ?");
+        }
+        else {
+            whereCols.append(" > ?");
+        }
 
         Cursor c = db.query(
                 MessageContract.MessagePartAssemblyLink.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
-                whereCols,                                // The columns for the WHERE clause
+                whereCols.toString(),                                // The columns for the WHERE clause
                 whereVals,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups

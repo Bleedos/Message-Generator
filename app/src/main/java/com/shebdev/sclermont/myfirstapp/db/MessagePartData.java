@@ -8,6 +8,7 @@ public class MessagePartData {
     private long _id;
     private String partId;
     private String text;
+    private boolean isGreeting;
 
     public long get_id() {
         return _id;
@@ -32,4 +33,13 @@ public class MessagePartData {
     public void setText(String text) {
         this.text = text;
     }
+
+    public boolean isGreeting() {
+        return isGreeting;
+    }
+
+    public void setIsGreeting(boolean isGreeting) {
+        this.isGreeting = isGreeting;
+    }
+
 }
