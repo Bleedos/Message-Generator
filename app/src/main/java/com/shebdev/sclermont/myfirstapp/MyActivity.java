@@ -28,6 +28,7 @@ public class MyActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.shebdev.sclermont.myfirstapp.MESSAGE";
     public final static String EXTRA_MESSAGE_PART = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART";
+    public final static String EXTRA_MESSAGE_POSITION = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_POSITION";
     public final static String EXTRA_ADD_DATE = "com.shebdev.sclermont.myfirstapp.ADD_DATE";
     public final static String EXTRA_LOAD_GREETING = "com.shebdev.sclermont.myfirstapp.LOAD_GREETING";
     public final static String ERROR_MESSAGE = "com.shebdev.sclermont.myfirstapp.ERROR_MESSAGE";
@@ -232,7 +233,7 @@ public class MyActivity extends ActionBarActivity {
                     break;
                 case REQUEST_CODE_MESSAGE_PART_EDIT:
                     messagePart = data.getStringExtra("messagePart");
-                    int position = data.getIntExtra("position", 0);
+                    int position = data.getIntExtra(EXTRA_MESSAGE_POSITION, 0);
                     mAdapter.editLine(messagePart, position);
                     break;
                 case REQUEST_CODE_ASSEMBLY_LIST:

@@ -8,10 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import java.util.ArrayList;
-
 
 public class MessagePartEdit extends ActionBarActivity {
+
+    private int mPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,7 @@ public class MessagePartEdit extends ActionBarActivity {
 
         Intent intent = getIntent();
         String messagePart = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART);
+        mPosition = intent.getIntExtra(MyActivity.EXTRA_MESSAGE_POSITION, -1);
 
         if (messagePart != null) {
             EditText messagePartEdit = (EditText) findViewById(R.id.message_part_edit);
@@ -57,6 +58,7 @@ public class MessagePartEdit extends ActionBarActivity {
         EditText messagePart = (EditText) findViewById(R.id.message_part_edit);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("messagePart",messagePart.getText().toString());
+        returnIntent.putExtra(MyActivity.EXTRA_MESSAGE_POSITION, mPosition);
         setResult(RESULT_OK, returnIntent);
         finish();
     }

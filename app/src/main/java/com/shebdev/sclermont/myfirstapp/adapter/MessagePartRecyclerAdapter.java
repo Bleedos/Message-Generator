@@ -99,6 +99,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
             public void onClickMessagePart(TextView txtView, int position) {
                 Intent intent = new Intent(txtView.getContext(), MessagePartEdit.class);
                 intent.putExtra(MyActivity.EXTRA_MESSAGE_PART, txtView.getText());
+                intent.putExtra(MyActivity.EXTRA_MESSAGE_POSITION, position);
                 ((Activity)txtView.getContext()).startActivityForResult(intent, MyActivity.REQUEST_CODE_MESSAGE_PART_EDIT);
             }
             public void onClickMoveDown(ImageView imgView, int position) {
