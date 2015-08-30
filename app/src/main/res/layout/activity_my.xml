@@ -137,7 +137,7 @@
         android:layout_width="35sp"
         android:layout_height="35sp"
         android:id="@+id/imageView"
-        android:src="@drawable/ic_import_white_24dp"
+        android:src="@drawable/ic_message_draw_white_24dp"
         android:layout_alignTop="@+id/edit_greeting"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

@@ -1,12 +1,16 @@
 package com.shebdev.sclermont.myfirstapp;
 
 import android.app.Application;
+import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
+import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 /**

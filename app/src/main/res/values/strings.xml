@@ -36,8 +36,10 @@
     <string name="empty_assembly">Veuillez ajouter au moins une entrée dans la liste des messages</string>
     <string name="empty_assembly_description">Veuillez entrer la description de l\'assemblage</string>
     <string name="OK">OK</string>
-    <string name="title_activity_message_part_edit">MessagePartEdit</string>
-    <string name="title_activity_message_assembly_list">MessageAssemblyListActivity</string>
-    <string name="title_activity_message_part_select">MessagePartSelectActivity</string>
+    <string name="title_activity_message_part_edit">Éditer partie message</string>
+    <string name="title_activity_message_assembly_list">Assemblages de messages</string>
+    <string name="title_activity_message_part_select">Choisir partie message</string>
     <string name="add_date_to_message">Ajouter la date du jour au message</string>
+    <string name="choose_assembly">Choisissez  un assemblage parmi ceux déjà enregistrés</string>
+    <string name="message_part_select_header">Choisissez une partie de message parmi celles déjà enregistrées</string>
 </resources>

@@ -34,9 +34,10 @@ public class MyActivity extends ActionBarActivity {
     public static final String PREFS_NAME = "MyPrefsFile";
 
     private static final int REQUEST_CODE_ASSEMBLY_LIST = 444;
-    private static final int REQUEST_CODE_MESSAGE_PART_EDIT = 555;
+    private static final int REQUEST_CODE_MESSAGE_PART_ADD = 555;
     private static final int REQUEST_CODE_MESSAGE_PART_SELECT = 666;
     private static final int REQUEST_CODE_GREETING_SELECT = 777;
+    public static final int REQUEST_CODE_MESSAGE_PART_EDIT = 888;
     private RecyclerView mRecyclerView;
     private MessagePartRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -193,7 +194,7 @@ public class MyActivity extends ActionBarActivity {
 
     public void ajouterLigne(View view) {
         Intent intent = new Intent(this, MessagePartEdit.class);
-        startActivityForResult(intent, REQUEST_CODE_MESSAGE_PART_EDIT);
+        startActivityForResult(intent, REQUEST_CODE_MESSAGE_PART_ADD);
     }
 
     public void ajouterLigneExistante(View view) {
@@ -224,10 +225,15 @@ public class MyActivity extends ActionBarActivity {
                     messagePart = data.getStringExtra("message");
                     ((EditText) findViewById(R.id.edit_greeting)).setText(messagePart);
                     break;
-                case REQUEST_CODE_MESSAGE_PART_EDIT:
+                case REQUEST_CODE_MESSAGE_PART_ADD:
                     messagePart = data.getStringExtra("messagePart");
                     mAdapter.addLine(new StringBuilder(messagePart));
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
+                    break;
+                case REQUEST_CODE_MESSAGE_PART_EDIT:
+                    messagePart = data.getStringExtra("messagePart");
+                    int position = data.getIntExtra("position", 0);
+                    mAdapter.editLine(messagePart, position);
                     break;
                 case REQUEST_CODE_ASSEMBLY_LIST:
                     long assemblyId = data.getLongExtra("assemblyId", -1l);

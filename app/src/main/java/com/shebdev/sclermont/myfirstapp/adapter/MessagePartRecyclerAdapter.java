@@ -1,5 +1,7 @@
 package com.shebdev.sclermont.myfirstapp.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.shebdev.sclermont.myfirstapp.MessagePartEdit;
 import com.shebdev.sclermont.myfirstapp.MyActivity;
 import com.shebdev.sclermont.myfirstapp.R;
 
@@ -48,7 +51,6 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
             mMoveUpImageView.setOnClickListener(this);
             mDeleteImageView.setOnClickListener(this);
             mTextView.setOnClickListener(this);
-
         }
 
         @Override
@@ -56,7 +58,6 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
 //            Toast.makeText(v.getContext(),
 //                    "click "+v.getClass().getCanonicalName() + "::"+v.getId(),
 //                    Toast.LENGTH_LONG).show();
-            
             if (v instanceof TextView) {
                 mListener.onClickMessagePart((TextView) v, getPosition());
             }
@@ -74,6 +75,8 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
                 }
             }
         }
+
+
 
         public static interface IMyViewHolderClicks {
             public void onClickMessagePart(TextView txtView, int position);
@@ -94,12 +97,9 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v, new MessagePartRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
             public void onClickMessagePart(TextView txtView, int position) {
-                mDataset.get(position).append("bob");
-                // TODO: appel du Activity avec la méthode "forressult",
-                // au retour, updater le dataset à la position
-                // voir comment updater la rangée dans la bd ou linker les items ici directement à la
-                // bd s,ils existent déjà.
-                notifyItemChanged(position);
+                Intent intent = new Intent(txtView.getContext(), MessagePartEdit.class);
+                intent.putExtra(MyActivity.EXTRA_MESSAGE_PART, txtView.getText());
+                ((Activity)txtView.getContext()).startActivityForResult(intent, MyActivity.REQUEST_CODE_MESSAGE_PART_EDIT);
             }
             public void onClickMoveDown(ImageView imgView, int position) {
                 if (position < mDataset.size()-1) {
@@ -147,6 +147,11 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
         notifyItemInserted(mDataset.size());
     }
 
+    public void editLine(String sb, int position) {
+        mDataset.get(position).replace(0, mDataset.get(position).length(), sb);
+        notifyItemChanged(position);
+    }
+
     public ArrayList<StringBuilder> getMDataset() {
         return mDataset;
     }
@@ -163,5 +168,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
     public void setAssemblyId(long assemblyId) {
         this.assemblyId = assemblyId;
     }
+
+
 
 }

@@ -81,7 +81,7 @@ public class MessagePartSelectRecyclerAdapter extends RecyclerView.Adapter<Messa
                 returnIntent.putExtra("message",(mDataset.get(position).getText()));
                 ((Activity)txtView.getContext()).setResult(((Activity)txtView.getContext()).RESULT_OK, returnIntent);
                 ((Activity)txtView.getContext()).finish();
-            };
+            }
             public void onClickDelete(ImageView imgView, int position) {
                 MessageDbHelper dbHelper = new MessageDbHelper(imgView.getContext());
                 dbHelper.deletePartAssemblyLinkFromMessagePartId(mDataset.get(position).get_id());
