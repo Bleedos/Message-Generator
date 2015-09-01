@@ -40,7 +40,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
             GregorianCalendar greg = new GregorianCalendar();
 
             String[] dayOWeek = {"dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
-            String[] month = {"janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août"};
+            String[] month = {"janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre","décembre"};
 
             sb.append(", aujourd'hui " + dayOWeek[greg.get(GregorianCalendar.DAY_OF_WEEK) - 1]);
             sb.append(" le " + (greg.get(GregorianCalendar.DAY_OF_MONTH)));

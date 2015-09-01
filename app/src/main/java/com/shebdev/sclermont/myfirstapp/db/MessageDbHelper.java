@@ -29,7 +29,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + MessageContract.MessagePart.TABLE_NAME + " (" +
                     MessageContract.MessagePart._ID + " INTEGER PRIMARY KEY," +
                     MessageContract.MessagePart.COLUMN_NAME_PART_ID + TEXT_TYPE + COMMA_SEP +
-                    MessageContract.MessagePart.COLUMN_NAME_TXT + TEXT_TYPE +
+                    MessageContract.MessagePart.COLUMN_NAME_TXT + TEXT_TYPE + COMMA_SEP +
                     MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + BOOLEAN_TYPE + NOT_NULL +
                     CHECK_IN_0_1.replace(COLUMN_NAME_TOKEN, MessageContract.MessagePart.COLUMN_NAME_IS_GREETING) +
                     ")";
