@@ -16,6 +16,7 @@ public final class MessageContract  {
         public static final String COLUMN_NAME_PART_ID = "partid";
         public static final String COLUMN_NAME_TXT = "txt";
         public static final String COLUMN_NAME_IS_GREETING = "isgreeting";
+        public static final String COLUMN_NAME_AUDIO_FILE_NAME = "audiofilename";
     }
 
     public static abstract class MessagePartAssembly implements BaseColumns {

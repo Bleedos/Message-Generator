@@ -9,6 +9,7 @@ public class MessagePartData {
     private String partId;
     private String text;
     private boolean isGreeting;
+    private String audioFileName;
 
     public long get_id() {
         return _id;
@@ -42,4 +43,11 @@ public class MessagePartData {
         this.isGreeting = isGreeting;
     }
 
+    public String getAudioFileName() {
+        return audioFileName;
+    }
+
+    public void setAudioFileName(String audioFileName) {
+        this.audioFileName = audioFileName;
+    }
 }

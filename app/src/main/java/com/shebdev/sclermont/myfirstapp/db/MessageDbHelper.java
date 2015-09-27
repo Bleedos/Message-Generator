@@ -14,11 +14,12 @@ import java.util.ArrayList;
 public class MessageDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "Message.db";
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
+    private static final String INTEGER_PRIMARY_KEY = " INTEGER PRIMARY KEY";
     private static final String BOOLEAN_TYPE =" BOOLEAN";
     private static final String NOT_NULL = " NOT NULL";
     private static final String DEFAULT = " DEFAULT";
@@ -27,16 +28,17 @@ public class MessageDbHelper extends SQLiteOpenHelper {
     private static final String COMMA_SEP = ",";
     private static final String SQL_CREATE_MESSAGE_PART =
             "CREATE TABLE " + MessageContract.MessagePart.TABLE_NAME + " (" +
-                    MessageContract.MessagePart._ID + " INTEGER PRIMARY KEY," +
+                    MessageContract.MessagePart._ID + INTEGER_PRIMARY_KEY + COMMA_SEP +
                     MessageContract.MessagePart.COLUMN_NAME_PART_ID + TEXT_TYPE + COMMA_SEP +
                     MessageContract.MessagePart.COLUMN_NAME_TXT + TEXT_TYPE + COMMA_SEP +
-                    MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + BOOLEAN_TYPE + NOT_NULL +
+                    MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + BOOLEAN_TYPE + NOT_NULL + COMMA_SEP +
+                    MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME + TEXT_TYPE +
                     CHECK_IN_0_1.replace(COLUMN_NAME_TOKEN, MessageContract.MessagePart.COLUMN_NAME_IS_GREETING) +
                     ")";
 
     private static final String SQL_CREATE_PART_ASSEMBLY =
             "CREATE TABLE " + MessageContract.MessagePartAssembly.TABLE_NAME + " (" +
-                    MessageContract.MessagePartAssembly._ID + " INTEGER PRIMARY KEY," +
+                    MessageContract.MessagePartAssembly._ID + INTEGER_PRIMARY_KEY + COMMA_SEP +
                     MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_ID + TEXT_TYPE + COMMA_SEP +
                     MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_TITLE + TEXT_TYPE + COMMA_SEP +
                     MessageContract.MessagePartAssembly.COLUMN_NAME_ASSEMBLY_DESCRIPTION + TEXT_TYPE +
@@ -44,7 +46,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_PART_ASSEMBLY_LINK =
             "CREATE TABLE " + MessageContract.MessagePartAssemblyLink.TABLE_NAME + " (" +
-                    MessageContract.MessagePartAssemblyLink._ID + " INTEGER PRIMARY KEY," +
+                    MessageContract.MessagePartAssemblyLink._ID + INTEGER_PRIMARY_KEY + COMMA_SEP +
                     MessageContract.MessagePartAssemblyLink.COLUMN_NAME_LINK_ID + TEXT_TYPE + COMMA_SEP +
                     MessageContract.MessagePartAssemblyLink.COLUMN_NAME_ASSEMBLY_ID + INTEGER_TYPE + COMMA_SEP +
                     MessageContract.MessagePartAssemblyLink.COLUMN_NAME_PART_ID + INTEGER_TYPE + COMMA_SEP +
@@ -56,6 +58,10 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                     MessageContract.MessagePart.COLUMN_NAME_IS_GREETING + BOOLEAN_TYPE + NOT_NULL +
                     CHECK_IN_0_1.replace(COLUMN_NAME_TOKEN, MessageContract.MessagePart.COLUMN_NAME_IS_GREETING) +
                     DEFAULT + " 0";
+
+    private static final String SQL_ALTER_MESSAGE_PART_V3_TO_V4 =
+            "ALTER TABLE " + MessageContract.MessagePart.TABLE_NAME + " ADD COLUMN " +
+                    MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME + TEXT_TYPE;
 
     private static final String SQL_DELETE_MESSAGE_PART =
             "DROP TABLE IF EXISTS " + MessageContract.MessagePart.TABLE_NAME;
@@ -77,6 +83,8 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         switch (oldVersion) {
             case 2:
                 db.execSQL(SQL_ALTER_MESSAGE_PART_V2_TO_V3);
+            case 3:
+                db.execSQL(SQL_ALTER_MESSAGE_PART_V3_TO_V4);
                 break;
             default:
                 db.execSQL(SQL_DELETE_MESSAGE_PART);
@@ -96,7 +104,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public long createMessagePart(String text, boolean isGreeting) {
+    public long createMessagePart(String text, boolean isGreeting, String audioFileName) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -105,9 +113,24 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         values.put(MessageContract.MessagePart.COLUMN_NAME_PART_ID, System.currentTimeMillis());
         values.put(MessageContract.MessagePart.COLUMN_NAME_TXT, text);
         values.put(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING, isGreeting ? 1 : 0);
+        values.put(MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME, audioFileName);
 
         // Insert the new row, returning the primary key value of the new row
         return db.insert(MessageContract.MessagePart.TABLE_NAME, null, values);
+    }
+
+    public int updateMessagePartAudioFileName(long id, String audioFileName) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selection = MessageContract.MessagePart._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        ContentValues values = new ContentValues();
+        values.put(MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME, audioFileName);
+
+        // updating row
+        return db.update(MessageContract.MessagePart.TABLE_NAME, values, selection, selectionArgs);
     }
 
     public void deleteMessagePart(long id) {
@@ -132,7 +155,8 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                 MessageContract.MessagePart._ID,
                 MessageContract.MessagePart.COLUMN_NAME_PART_ID,
                 MessageContract.MessagePart.COLUMN_NAME_TXT,
-                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING
+                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING,
+                MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME
         };
 
         // How you want the results sorted in the resulting Cursor
@@ -157,6 +181,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
         mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
         mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
         mpd.setIsGreeting(c.getInt(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING)) == 1 ? true : false);
+        mpd.setAudioFileName(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME)));
         c.close();
 
         return mpd;
@@ -175,7 +200,8 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                 MessageContract.MessagePart._ID,
                 MessageContract.MessagePart.COLUMN_NAME_PART_ID,
                 MessageContract.MessagePart.COLUMN_NAME_TXT,
-                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING
+                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING,
+                MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME
         };
 
         // How you want the results sorted in the resulting Cursor
@@ -211,6 +237,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
             mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
             mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
             mpd.setIsGreeting(c.getInt(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING)) == 1 ? true : false);
+            mpd.setAudioFileName(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME)));
         }
         else {
             mpd = null;
@@ -332,7 +359,8 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                 MessageContract.MessagePart._ID,
                 MessageContract.MessagePart.COLUMN_NAME_PART_ID,
                 MessageContract.MessagePart.COLUMN_NAME_TXT,
-                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING
+                MessageContract.MessagePart.COLUMN_NAME_IS_GREETING,
+                MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME
         };
 
 // How you want the results sorted in the resulting Cursor
@@ -363,6 +391,7 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                 mpd.setPartId(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_PART_ID)));
                 mpd.setText(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_TXT)));
                 mpd.setIsGreeting(c.getInt(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_IS_GREETING)) == 1 ? true : false);
+                mpd.setAudioFileName(c.getString(c.getColumnIndexOrThrow(MessageContract.MessagePart.COLUMN_NAME_AUDIO_FILE_NAME)));
 
                 messagePartDatas.add(mpd);
             } while (c.moveToNext());

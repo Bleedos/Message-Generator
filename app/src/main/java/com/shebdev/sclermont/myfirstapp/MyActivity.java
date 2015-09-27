@@ -28,7 +28,10 @@ public class MyActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.shebdev.sclermont.myfirstapp.MESSAGE";
     public final static String EXTRA_MESSAGE_PART = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART";
-    public final static String EXTRA_MESSAGE_POSITION = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_POSITION";
+    public final static String EXTRA_MESSAGE_PART_AUDIO_FILE = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_AUDIO_FILE";
+    public final static String EXTRA_MESSAGE_PART_POSITION = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_POSITION";
+    public final static String EXTRA_MESSAGE_PART_ASSEMBLY_ID = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_ASSEMBLY_ID";
+    public final static String EXTRA_MESSAGE_PART_ORDER = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_ORDER";
     public final static String EXTRA_ADD_DATE = "com.shebdev.sclermont.myfirstapp.ADD_DATE";
     public final static String EXTRA_LOAD_GREETING = "com.shebdev.sclermont.myfirstapp.LOAD_GREETING";
     public final static String ERROR_MESSAGE = "com.shebdev.sclermont.myfirstapp.ERROR_MESSAGE";
@@ -213,6 +216,7 @@ public class MyActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         String messagePart;
+        String audioFile;
 
         // Check which request we're responding to
         if (data != null && resultCode == RESULT_OK) {
@@ -228,12 +232,17 @@ public class MyActivity extends ActionBarActivity {
                     break;
                 case REQUEST_CODE_MESSAGE_PART_ADD:
                     messagePart = data.getStringExtra("messagePart");
+                    // TODO: Récupérer nom fichier audio et l'ajouter a l'enregistrement si nécessaire seulement
+                    audioFile = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
+                    // TODO: Je n'ai plus le choix, le dataset de l'adapter doit etre une liste de "MessagePartData" pour pouvoir avoir le nom de fichier audio car si on reordonne ca fout le bordel vu que les fichiers audio sont nommes avec l'ass_id+l'order+un timestamp
                     mAdapter.addLine(new StringBuilder(messagePart));
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
                 case REQUEST_CODE_MESSAGE_PART_EDIT:
                     messagePart = data.getStringExtra("messagePart");
-                    int position = data.getIntExtra(EXTRA_MESSAGE_POSITION, 0);
+                    // TODO: Récupérer nom fichier audio et le mettre à jour si nécessaire seulement
+                    audioFile = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
+                    int position = data.getIntExtra(EXTRA_MESSAGE_PART_POSITION, 0);
                     mAdapter.editLine(messagePart, position);
                     break;
                 case REQUEST_CODE_ASSEMBLY_LIST:
@@ -332,10 +341,11 @@ public class MyActivity extends ActionBarActivity {
 
         MessagePartData mpd = dbHelper.getMessagePartWhereTextIs(editGreeting, true);
         if (mpd == null) {
-            mPartId = dbHelper.createMessagePart(editGreeting, true);
+            mPartId = dbHelper.createMessagePart(editGreeting, true, "");
         }
         else {
             mPartId = mpd.get_id();
+            //dbHelper.updateMessagePartAudioFileName()
         }
 
         // TODO: Voir si on met ça dans une méthode du helper de BD ou dans une méthode private ici
@@ -356,10 +366,11 @@ public class MyActivity extends ActionBarActivity {
         for (StringBuilder sb : dataSet) {
             mpd = dbHelper.getMessagePartWhereTextIs(sb.toString(), false);
             if (mpd == null) {
-                mPartId = dbHelper.createMessagePart(sb.toString(), false);
+                mPartId = dbHelper.createMessagePart(sb.toString(), false, "");
             }
             else {
                 mPartId = mpd.get_id();
+                //dbHelper.updateMessagePartAudioFileName()
             }
             mald = dbHelper.getAssemblyLinkDataWhereAssemblyIdPartId(String.valueOf(assemblyId),
                     String.valueOf(mPartId));

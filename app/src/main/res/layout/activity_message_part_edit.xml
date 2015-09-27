@@ -16,7 +16,7 @@
         android:gravity="top"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/entete_msg_edit"
+        android:layout_below="@+id/entete_msg_edit"
         android:layout_above="@+id/bouton_annuler_msg_edit"
         android:autoText="false"
         android:inputType="text|textMultiLine|textLongMessage|textAutoComplete|textAutoCorrect" />
@@ -42,5 +42,46 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/message_part_edit"
         android:layout_alignEnd="@+id/message_part_edit" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REC"
+        android:id="@+id/button_record_audio"
+        android:onClick="startRecording"
+        android:layout_below="@+id/message_part_edit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:nestedScrollingEnabled="false" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STPREC"
+        android:id="@+id/button2"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/bouton_annuler_msg_edit"
+        android:layout_toStartOf="@+id/bouton_annuler_msg_edit"
+        android:onClick="stopRecording" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLAY"
+        android:id="@+id/button3"
+        android:layout_alignBottom="@+id/message_part_edit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="startPlaying" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STPPLAY"
+        android:id="@+id/button4"
+        android:layout_alignTop="@+id/button3"
+        android:layout_toRightOf="@+id/button_record_audio"
+        android:layout_toEndOf="@+id/button_record_audio"
+        android:onClick="stopPlaying" />
 
 </RelativeLayout>

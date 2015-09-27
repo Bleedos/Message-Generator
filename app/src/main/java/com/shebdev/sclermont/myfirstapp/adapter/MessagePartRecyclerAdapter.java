@@ -20,6 +20,7 @@ import java.util.ArrayList;
  */
 public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePartRecyclerAdapter.ViewHolder> {
 
+    // TODO: Changer pour une liste de MessagePartData ou quelquechose du genre.  Si l'id du mpd est null, c'est un message pas encore en bd.  c'est ce qui va permettre de gerer si on cree un nouveau message.  si id pas null, on pourra verifier si le message a changé en bd ou si le nom du fichier audio a changé
     private ArrayList<StringBuilder> mDataset;
     private long assemblyId;
 
@@ -99,7 +100,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
             public void onClickMessagePart(TextView txtView, int position) {
                 Intent intent = new Intent(txtView.getContext(), MessagePartEdit.class);
                 intent.putExtra(MyActivity.EXTRA_MESSAGE_PART, txtView.getText());
-                intent.putExtra(MyActivity.EXTRA_MESSAGE_POSITION, position);
+                intent.putExtra(MyActivity.EXTRA_MESSAGE_PART_POSITION, position);
                 ((Activity)txtView.getContext()).startActivityForResult(intent, MyActivity.REQUEST_CODE_MESSAGE_PART_EDIT);
             }
             public void onClickMoveDown(ImageView imgView, int position) {
