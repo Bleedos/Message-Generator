@@ -11,6 +11,14 @@ public class MessagePartData {
     private boolean isGreeting;
     private String audioFileName;
 
+    public MessagePartData() {
+    }
+
+    public MessagePartData(String text, String audioFileName) {
+        this.setText(text);
+        this.setAudioFileName(audioFileName);
+    }
+
     public long get_id() {
         return _id;
     }

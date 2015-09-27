@@ -26,7 +26,8 @@ import java.util.ArrayList;
 
 public class MyActivity extends ActionBarActivity {
 
-    public final static String EXTRA_MESSAGE = "com.shebdev.sclermont.myfirstapp.MESSAGE";
+    public final static String EXTRA_GENERATED_MESSAGE = "com.shebdev.sclermont.myfirstapp.MESSAGE";
+    public final static String EXTRA_AUDIO_FILE_NAME_LIST = "com.shebdev.sclermont.myfirstapp.EXTRA_AUDIO_FILE_NAME_LIST";
     public final static String EXTRA_MESSAGE_PART = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART";
     public final static String EXTRA_MESSAGE_PART_AUDIO_FILE = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_AUDIO_FILE";
     public final static String EXTRA_MESSAGE_PART_POSITION = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_POSITION";
@@ -45,13 +46,12 @@ public class MyActivity extends ActionBarActivity {
     private RecyclerView mRecyclerView;
     private MessagePartRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private String greetingAudioFileName; // TODO: Voir à gerer via les preferences quand on va sauvegarder les autres preferences comme le dernier assemblyId chargé
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
-
-
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.phone);
@@ -124,12 +124,12 @@ public class MyActivity extends ActionBarActivity {
             mRecyclerView.setLayoutManager(mLayoutManager);
 
             if (assemblyId < 0) {
-                ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
+                ArrayList<MessagePartData> dset = new ArrayList<>();
                 mAdapter = new MessagePartRecyclerAdapter(dset, -1l);
             }
             else {
                 //Toast.makeText(this, "load existing assembly", Toast.LENGTH_LONG).show();
-                ArrayList<StringBuilder> dset = loadAssemblyLinkData(assemblyId);
+                ArrayList<MessagePartData> dset = loadAssemblyLinkData(assemblyId);
                 mAdapter = new MessagePartRecyclerAdapter(dset, assemblyId);
 
                 MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
@@ -167,7 +167,7 @@ public class MyActivity extends ActionBarActivity {
             return;
         }
 
-        ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
+        ArrayList<MessagePartData> dataSet = mAdapter.getMDataset();
         if (dataSet.size() == 0) {
             Bundle bundle = new Bundle();
             bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly));
@@ -175,17 +175,20 @@ public class MyActivity extends ActionBarActivity {
             return;
         }
 
-        StringBuilder sbd = new StringBuilder();
+        StringBuilder generatedMessage = new StringBuilder();
 
-        ArrayList<String> message = new ArrayList<String>();
+        ArrayList<String> message = new ArrayList<>();
+        ArrayList<String> audioFileNameList = new ArrayList<>();
         message.add(editGreeting.getText().toString());
         message.add(editNom.getText().toString());
-        for (StringBuilder sb : dataSet) {
-            sbd.append(sb.toString());
-            sbd.append(" ");
+        for (MessagePartData mpd : dataSet) {
+            generatedMessage.append(mpd.getText());
+            generatedMessage.append(" ");
+            audioFileNameList.add(mpd.getAudioFileName());
         }
-        message.add(sbd.toString());
-        intent.putExtra(EXTRA_MESSAGE, message);
+        message.add(generatedMessage.toString());
+        intent.putExtra(EXTRA_GENERATED_MESSAGE, message);
+        intent.putExtra(EXTRA_AUDIO_FILE_NAME_LIST, audioFileNameList);
         intent.putExtra(EXTRA_ADD_DATE, addDateToMessage.isChecked());
         startActivity(intent);
 
@@ -216,14 +219,14 @@ public class MyActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         String messagePart;
-        String audioFile;
+        MessagePartData mpd;
 
         // Check which request we're responding to
         if (data != null && resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_MESSAGE_PART_SELECT:
-                    messagePart = data.getStringExtra("message");
-                    mAdapter.addLine(new StringBuilder(messagePart));
+                    mpd = new MessagePartData(data.getStringExtra("message"), null);
+                    mAdapter.addLine(mpd);
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
                 case REQUEST_CODE_GREETING_SELECT:
@@ -231,19 +234,19 @@ public class MyActivity extends ActionBarActivity {
                     ((EditText) findViewById(R.id.edit_greeting)).setText(messagePart);
                     break;
                 case REQUEST_CODE_MESSAGE_PART_ADD:
-                    messagePart = data.getStringExtra("messagePart");
+                    mpd = new MessagePartData(data.getStringExtra("message"),
+                            data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE));
                     // TODO: Récupérer nom fichier audio et l'ajouter a l'enregistrement si nécessaire seulement
-                    audioFile = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
                     // TODO: Je n'ai plus le choix, le dataset de l'adapter doit etre une liste de "MessagePartData" pour pouvoir avoir le nom de fichier audio car si on reordonne ca fout le bordel vu que les fichiers audio sont nommes avec l'ass_id+l'order+un timestamp
-                    mAdapter.addLine(new StringBuilder(messagePart));
+                    mAdapter.addLine(mpd);
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
                 case REQUEST_CODE_MESSAGE_PART_EDIT:
-                    messagePart = data.getStringExtra("messagePart");
+                    mpd = new MessagePartData(data.getStringExtra("message"),
+                            data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE));
                     // TODO: Récupérer nom fichier audio et le mettre à jour si nécessaire seulement
-                    audioFile = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
                     int position = data.getIntExtra(EXTRA_MESSAGE_PART_POSITION, 0);
-                    mAdapter.editLine(messagePart, position);
+                    mAdapter.editLine(mpd, position);
                     break;
                 case REQUEST_CODE_ASSEMBLY_LIST:
                     long assemblyId = data.getLongExtra("assemblyId", -1l);
@@ -260,7 +263,7 @@ public class MyActivity extends ActionBarActivity {
                         // Voir ici et dans onResume
                         ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, true);
                         if (dataSet.size() > 0) {
-                            MessagePartData mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
+                            mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
                             ((EditText) findViewById(R.id.edit_greeting)).setText(mpd.getText());
                         }
                     }
@@ -271,8 +274,8 @@ public class MyActivity extends ActionBarActivity {
         }
     }
 
-    private ArrayList<StringBuilder> loadAssemblyLinkData(long assemblyId) {
-        ArrayList<StringBuilder> dset = new ArrayList<StringBuilder>();
+    private ArrayList<MessagePartData> loadAssemblyLinkData(long assemblyId) {
+        ArrayList<MessagePartData> dset = new ArrayList<>();
         MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
         ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, false);
 
@@ -280,7 +283,7 @@ public class MyActivity extends ActionBarActivity {
             //Toast.makeText(this, "mpd::"+mald.getId(), Toast.LENGTH_LONG).show();
             MessagePartData mpd = dbHelper.getMessagePart(Long.parseLong(mald.getPartId()));
 
-            dset.add(new StringBuilder(mpd.getText()));
+            dset.add(mpd);
         }
 
         return dset;
@@ -312,7 +315,7 @@ public class MyActivity extends ActionBarActivity {
             return;
         }
 
-        ArrayList<StringBuilder> dataSet = mAdapter.getMDataset();
+        ArrayList<MessagePartData> dataSet = mAdapter.getMDataset();
 
         if (dataSet.size() == 0) {
             Bundle bundle = new Bundle();
@@ -362,15 +365,15 @@ public class MyActivity extends ActionBarActivity {
         }
 
         // TODO: Utiliser les MessagePartData directement dans la liste pour mieux gérer la persistance en bd
-        ArrayList<Long> listIdLink = new ArrayList<Long>();
-        for (StringBuilder sb : dataSet) {
-            mpd = dbHelper.getMessagePartWhereTextIs(sb.toString(), false);
-            if (mpd == null) {
-                mPartId = dbHelper.createMessagePart(sb.toString(), false, "");
+        ArrayList<Long> listIdLink = new ArrayList<>();
+        for (MessagePartData mpdFromDataSet : dataSet) {
+            MessagePartData messagePartData = dbHelper.getMessagePartWhereTextIs(mpdFromDataSet.toString(), false);
+            if (messagePartData == null) {
+                mPartId = dbHelper.createMessagePart(mpdFromDataSet.toString(), false, mpdFromDataSet.getAudioFileName());
             }
             else {
-                mPartId = mpd.get_id();
-                //dbHelper.updateMessagePartAudioFileName()
+                mPartId = messagePartData.get_id();
+                dbHelper.updateMessagePartAudioFileName(mPartId, mpdFromDataSet.getAudioFileName());
             }
             mald = dbHelper.getAssemblyLinkDataWhereAssemblyIdPartId(String.valueOf(assemblyId),
                     String.valueOf(mPartId));

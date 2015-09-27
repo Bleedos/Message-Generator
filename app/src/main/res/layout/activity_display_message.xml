@@ -34,4 +34,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <ImageView
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:id="@+id/button_play_voice_recording"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/button_stop"
+        android:layout_toStartOf="@+id/button_stop"
+        android:onClick="playVoiceRecordings"
+        android:src="@drawable/ic_play_white_24dp" />
+
 </RelativeLayout>

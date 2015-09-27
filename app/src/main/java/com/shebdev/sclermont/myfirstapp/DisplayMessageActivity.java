@@ -1,27 +1,23 @@
 package com.shebdev.sclermont.myfirstapp;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.shebdev.sclermont.myfirstapp.db.MessageContract;
-import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 
 public class DisplayMessageActivity extends ActionBarActivity {
 
-
+    ArrayList<String> audioFileNameList;
     String text;
 
     @Override
@@ -31,7 +27,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
             // Get the message from the intent
         StringBuilder sb = new StringBuilder();
         Intent intent = getIntent();
-        ArrayList<String> message = intent.getStringArrayListExtra(MyActivity.EXTRA_MESSAGE);
+        ArrayList<String> message = intent.getStringArrayListExtra(MyActivity.EXTRA_GENERATED_MESSAGE);
+        audioFileNameList = intent.getStringArrayListExtra(MyActivity.EXTRA_AUDIO_FILE_NAME_LIST);
+
         boolean addDateToMessage = intent.getBooleanExtra(MyActivity.EXTRA_ADD_DATE, false);
 
         sb.append(message.get(0) + " " + message.get(1));
@@ -122,5 +120,48 @@ public class DisplayMessageActivity extends ActionBarActivity {
         btnJouer.setEnabled(false);
         btnJouer.setAlpha(0.5f);
         convertTextToSpeech(text);
+    }
+
+    public void playVoiceRecordings(View view) {
+
+        MediaPlayer mp;
+        MediaPlayer firstPlayer = null;
+        MediaPlayer previousPlayer = null;
+        File audioFile;
+        for (String audioFileName : audioFileNameList) {
+
+            audioFile = new File(getFilesDir() + "/" + audioFileName);
+
+            if (audioFile.exists()) {
+
+                mp = new MediaPlayer();
+                try {
+                    mp.setDataSource(getFilesDir().getPath() + "/" + audioFileName);
+                    mp.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (previousPlayer == null) {
+                    firstPlayer = mp;
+                } else {
+                    previousPlayer.setNextMediaPlayer(mp);
+                }
+                previousPlayer = mp;
+            }
+        }
+
+        firstPlayer.start();
+        /*MediaPlayer mp2 = new MediaPlayer();
+            mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
+            mp2.setDataSource(mFileNameEnd);
+            mp2.prepare();
+            mPlayer.setNextMediaPlayer(mp2);
+
+            MediaPlayer mp3 = new MediaPlayer();
+            mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
+            mp3.setDataSource(mFileNameEnd);
+            mp3.prepare();
+            mp2.setNextMediaPlayer(mp3);*/
     }
 }

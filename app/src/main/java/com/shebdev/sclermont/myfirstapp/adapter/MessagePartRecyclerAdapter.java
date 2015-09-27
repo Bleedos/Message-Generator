@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.shebdev.sclermont.myfirstapp.MessagePartEdit;
 import com.shebdev.sclermont.myfirstapp.MyActivity;
 import com.shebdev.sclermont.myfirstapp.R;
+import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
 
 import java.util.ArrayList;
 
@@ -21,11 +22,11 @@ import java.util.ArrayList;
 public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePartRecyclerAdapter.ViewHolder> {
 
     // TODO: Changer pour une liste de MessagePartData ou quelquechose du genre.  Si l'id du mpd est null, c'est un message pas encore en bd.  c'est ce qui va permettre de gerer si on cree un nouveau message.  si id pas null, on pourra verifier si le message a changé en bd ou si le nom du fichier audio a changé
-    private ArrayList<StringBuilder> mDataset;
+    private ArrayList<MessagePartData> mDataset;
     private long assemblyId;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MessagePartRecyclerAdapter(ArrayList<StringBuilder> mDatasetValue, long assemblyIdValue) {
+    public MessagePartRecyclerAdapter(ArrayList<MessagePartData> mDatasetValue, long assemblyIdValue) {
         mDataset = mDatasetValue;
         assemblyId = assemblyIdValue;
     }
@@ -105,7 +106,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
             }
             public void onClickMoveDown(ImageView imgView, int position) {
                 if (position < mDataset.size()-1) {
-                    StringBuilder tmp = mDataset.get(position+1);
+                    MessagePartData tmp = mDataset.get(position+1);
                     mDataset.set(position+1, mDataset.get(position));
                     mDataset.set(position, tmp);
                     notifyItemChanged(position);
@@ -114,7 +115,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
             }
             public void onClickMoveUp(ImageView imgView, int position) {
                 if (position > 0) {
-                    StringBuilder tmp = mDataset.get(position-1);
+                    MessagePartData tmp = mDataset.get(position-1);
                     mDataset.set(position-1, mDataset.get(position));
                     mDataset.set(position, tmp);
                     notifyItemChanged(position);
@@ -134,7 +135,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position));
+        holder.mTextView.setText(mDataset.get(position).getText());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -144,21 +145,21 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
     }
 
     // Methodes utilitaires
-    public void addLine(StringBuilder sb) {
-        mDataset.add(sb);
+    public void addLine(MessagePartData mpd) {
+        mDataset.add(mpd);
         notifyItemInserted(mDataset.size());
     }
 
-    public void editLine(String sb, int position) {
-        mDataset.get(position).replace(0, mDataset.get(position).length(), sb);
+    public void editLine(MessagePartData mpd, int position) {
+        mDataset.set(position, mpd);
         notifyItemChanged(position);
     }
 
-    public ArrayList<StringBuilder> getMDataset() {
+    public ArrayList<MessagePartData> getMDataset() {
         return mDataset;
     }
 
-    public void changeMDataSet(ArrayList<StringBuilder> mDatasetValue) {
+    public void changeMDataSet(ArrayList<MessagePartData> mDatasetValue) {
         mDataset = mDatasetValue;
         notifyDataSetChanged();
     }
