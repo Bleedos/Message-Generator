@@ -97,9 +97,11 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
     public void okMessageEdit(View view) {
         EditText messagePart = (EditText) findViewById(R.id.message_part_edit);
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("messagePart", messagePart.getText().toString());
-        returnIntent.putExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE, mFileName);
+        returnIntent.putExtra(MyActivity.EXTRA_MESSAGE_PART, messagePart.getText().toString());
         returnIntent.putExtra(MyActivity.EXTRA_MESSAGE_PART_POSITION, mPosition);
+        if (new File(getFilesDir() + "/" + mFileName).exists()) {
+            returnIntent.putExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE, mFileName);
+        }
         setResult(RESULT_OK, returnIntent);
         finish();
     }
@@ -156,88 +158,6 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
         }
     }
 
-    public void startPlaying(View view) {
 
-        //mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        String mFileNameEnd;
-//
-//        File dir = new File(getFilesDir().getPath());
-//        File[] fileList = dir.listFiles();
-
-        File audioFile = new File(getFilesDir() + "/" + mFileName);
-
-        if (audioFile.exists()) {
-
-            try {
-                // TODO: Voir si ca pourrait faire la job
-                // http://developer.android.com/reference/android/media/SoundPool.html
-                //mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
-                mPlayer = new MediaPlayer();
-                //mPlayer.setOnCompletionListener(this);
-                //mPlayer.setDataSource(mFileNameEnd);
-                mPlayer.setDataSource(getFilesDir().getPath() + "/" + mFileName);
-                mPlayer.prepare();
-
-                // TODO: Se servir de getDuration pour préparer un fadeout à la fin
-                // Voir http://stackoverflow.com/questions/6884590/android-how-to-create-fade-in-fade-out-sound-effects-for-any-music-file-that-my
-                //mPlayer.getDuration()
-
-            /*MediaPlayer mp2 = new MediaPlayer();
-            mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
-            mp2.setDataSource(mFileNameEnd);
-            mp2.prepare();
-            mPlayer.setNextMediaPlayer(mp2);
-
-            MediaPlayer mp3 = new MediaPlayer();
-            mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
-            mp3.setDataSource(mFileNameEnd);
-            mp3.prepare();
-            mp2.setNextMediaPlayer(mp3);*/
-
-                mPlayer.start();
-            } catch (IOException e) {
-                Log.e("TATATAT", "prepare() failed");
-            }
-        }
-    }
-/*
-    private ArrayList<MediaPlayer> mPlayerList = new ArrayList<MediaPlayer>();
-    public void playSound4FileList(ArrayList<String> fileList)
-    {
-        mPlayerList.clear();
-        for (String fileName : fileList)
-        {
-            try {
-                MediaPlayer mPlayerT = new MediaPlayer();
-
-                AssetFileDescriptor descriptor = context.getAssets().openFd(fileName);
-                mPlayerT.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
-                descriptor.close();
-
-                mPlayerT.prepare();
-                mPlayerT.setVolume(1f, 1f);
-                mPlayerT.setLooping(false);
-
-                mPlayerList.add(mPlayerT);
-
-            } catch (Exception e) {
-            }
-
-        }
-        for (int i=0; i<mPlayerList.size()-1; i++) //Do not include last element
-        {
-            mPlayerList.get(i).setNextMediaPlayer(mPlayerList.get(i+1));
-
-        }
-
-        mPlayerList.get(0).start();
-    }*/
-
-    public void stopPlaying(View view) {
-        if (mPlayer != null) {
-            mPlayer.release();
-            mPlayer = null;
-        }
-    }
 
 }

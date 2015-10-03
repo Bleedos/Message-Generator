@@ -2,13 +2,17 @@ package com.shebdev.sclermont.myfirstapp.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.shebdev.sclermont.myfirstapp.MyActivity;
+import com.shebdev.sclermont.myfirstapp.MyApplication;
 import com.shebdev.sclermont.myfirstapp.R;
 import com.shebdev.sclermont.myfirstapp.db.MessageDbHelper;
 import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
@@ -78,7 +82,7 @@ public class MessagePartSelectRecyclerAdapter extends RecyclerView.Adapter<Messa
         ViewHolder vh = new ViewHolder(v, new MessagePartSelectRecyclerAdapter.ViewHolder.IMyViewHolderClicks() {
             public void onClickMessagePart(TextView txtView, int position) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("message",(mDataset.get(position).getText()));
+                returnIntent.putExtra(MyActivity.EXTRA_MESSAGE_PART,(mDataset.get(position).getText()));
                 ((Activity)txtView.getContext()).setResult(((Activity)txtView.getContext()).RESULT_OK, returnIntent);
                 ((Activity)txtView.getContext()).finish();
             }
@@ -99,6 +103,13 @@ public class MessagePartSelectRecyclerAdapter extends RecyclerView.Adapter<Messa
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.mTextView.setText(mDataset.get(position).getText());
+        holder.mTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, MyApplication.RECYCLER_VIEW_TEXT_SIZE);
+        if (position % 2 == 0) {
+            holder.itemView.setBackgroundColor(MyApplication.EVEN_BACKGROUND_COLOR);
+        }
+        else {
+            holder.itemView.setBackgroundColor(MyApplication.ODD_BACKGROUND_COLOR);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

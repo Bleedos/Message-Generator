@@ -21,6 +21,10 @@ public class MyApplication extends Application {
     public static Bus bus = new Bus(ThreadEnforcer.MAIN);
     TextToSpeech tts;
 
+    public static float RECYCLER_VIEW_TEXT_SIZE = 20.0f;
+    public static int EVEN_BACKGROUND_COLOR = 0xFF212121;
+    public static int ODD_BACKGROUND_COLOR = 0xFF424242;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -36,7 +40,7 @@ public class MyApplication extends Application {
                         //Log.e("error", "This Language is not supported");
                     }
                     else{
-                        tts.setPitch(0.7f);
+                        tts.setPitch(0.85f);
                         //convertTextToSpeech(text);
                     }
                 }

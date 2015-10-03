@@ -19,6 +19,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     ArrayList<String> audioFileNameList;
     String text;
+    MediaPlayer mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,16 +153,13 @@ public class DisplayMessageActivity extends ActionBarActivity {
         }
 
         firstPlayer.start();
-        /*MediaPlayer mp2 = new MediaPlayer();
-            mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
-            mp2.setDataSource(mFileNameEnd);
-            mp2.prepare();
-            mPlayer.setNextMediaPlayer(mp2);
+        mPlayer = firstPlayer;
+    }
 
-            MediaPlayer mp3 = new MediaPlayer();
-            mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
-            mp3.setDataSource(mFileNameEnd);
-            mp3.prepare();
-            mp2.setNextMediaPlayer(mp3);*/
+    public void stopVoiceRecordings(View view) {
+        if (mPlayer != null) {
+            mPlayer.release();
+            mPlayer = null;
+        }
     }
 }

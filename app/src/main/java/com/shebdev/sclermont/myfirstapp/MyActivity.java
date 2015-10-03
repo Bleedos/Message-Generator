@@ -225,16 +225,16 @@ public class MyActivity extends ActionBarActivity {
         if (data != null && resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_MESSAGE_PART_SELECT:
-                    mpd = new MessagePartData(data.getStringExtra("message"), null);
+                    mpd = new MessagePartData(data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART), null);
                     mAdapter.addLine(mpd);
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
                 case REQUEST_CODE_GREETING_SELECT:
-                    messagePart = data.getStringExtra("message");
+                    messagePart = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART);
                     ((EditText) findViewById(R.id.edit_greeting)).setText(messagePart);
                     break;
                 case REQUEST_CODE_MESSAGE_PART_ADD:
-                    mpd = new MessagePartData(data.getStringExtra("message"),
+                    mpd = new MessagePartData(data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART),
                             data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE));
                     // TODO: Récupérer nom fichier audio et l'ajouter a l'enregistrement si nécessaire seulement
                     // TODO: Je n'ai plus le choix, le dataset de l'adapter doit etre une liste de "MessagePartData" pour pouvoir avoir le nom de fichier audio car si on reordonne ca fout le bordel vu que les fichiers audio sont nommes avec l'ass_id+l'order+un timestamp
@@ -242,7 +242,7 @@ public class MyActivity extends ActionBarActivity {
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
                 case REQUEST_CODE_MESSAGE_PART_EDIT:
-                    mpd = new MessagePartData(data.getStringExtra("message"),
+                    mpd = new MessagePartData(data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART),
                             data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE));
                     // TODO: Récupérer nom fichier audio et le mettre à jour si nécessaire seulement
                     int position = data.getIntExtra(EXTRA_MESSAGE_PART_POSITION, 0);
@@ -348,6 +348,7 @@ public class MyActivity extends ActionBarActivity {
         }
         else {
             mPartId = mpd.get_id();
+            // TODO: Gerer audio pour les greetings aussi
             //dbHelper.updateMessagePartAudioFileName()
         }
 
@@ -367,9 +368,9 @@ public class MyActivity extends ActionBarActivity {
         // TODO: Utiliser les MessagePartData directement dans la liste pour mieux gérer la persistance en bd
         ArrayList<Long> listIdLink = new ArrayList<>();
         for (MessagePartData mpdFromDataSet : dataSet) {
-            MessagePartData messagePartData = dbHelper.getMessagePartWhereTextIs(mpdFromDataSet.toString(), false);
+            MessagePartData messagePartData = dbHelper.getMessagePartWhereTextIs(mpdFromDataSet.getText(), false);
             if (messagePartData == null) {
-                mPartId = dbHelper.createMessagePart(mpdFromDataSet.toString(), false, mpdFromDataSet.getAudioFileName());
+                mPartId = dbHelper.createMessagePart(mpdFromDataSet.getText(), false, mpdFromDataSet.getAudioFileName());
             }
             else {
                 mPartId = messagePartData.get_id();
@@ -419,4 +420,7 @@ public class MyActivity extends ActionBarActivity {
         System.out.println("Open settings");
     }
 
+    public MessagePartRecyclerAdapter getMAdapter() {
+        return mAdapter;
+    }
 }

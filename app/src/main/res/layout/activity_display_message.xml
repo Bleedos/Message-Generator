@@ -34,14 +34,27 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageView
-        android:layout_width="40sp"
-        android:layout_height="40sp"
-        android:id="@+id/button_play_voice_recording"
-        android:layout_alignParentBottom="true"
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jouer voix"
+        android:id="@+id/button3"
+        android:layout_alignTop="@+id/button_stop"
         android:layout_toLeftOf="@+id/button_stop"
         android:layout_toStartOf="@+id/button_stop"
         android:onClick="playVoiceRecordings"
-        android:src="@drawable/ic_play_white_24dp" />
+        android:textSize="9sp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Arrêter voix"
+        android:id="@+id/button4"
+        android:layout_alignTop="@+id/button3"
+        android:layout_toLeftOf="@+id/button3"
+        android:layout_toStartOf="@+id/button3"
+        android:onClick="stopVoiceRecordings"
+        android:textSize="9sp" />
 
 </RelativeLayout>

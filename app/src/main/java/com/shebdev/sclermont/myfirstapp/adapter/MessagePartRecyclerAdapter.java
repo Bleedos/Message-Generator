@@ -3,6 +3,7 @@ package com.shebdev.sclermont.myfirstapp.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.shebdev.sclermont.myfirstapp.MessagePartEdit;
 import com.shebdev.sclermont.myfirstapp.MyActivity;
+import com.shebdev.sclermont.myfirstapp.MyApplication;
 import com.shebdev.sclermont.myfirstapp.R;
 import com.shebdev.sclermont.myfirstapp.db.MessagePartData;
 
@@ -102,7 +104,8 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
                 Intent intent = new Intent(txtView.getContext(), MessagePartEdit.class);
                 intent.putExtra(MyActivity.EXTRA_MESSAGE_PART, txtView.getText());
                 intent.putExtra(MyActivity.EXTRA_MESSAGE_PART_POSITION, position);
-                ((Activity)txtView.getContext()).startActivityForResult(intent, MyActivity.REQUEST_CODE_MESSAGE_PART_EDIT);
+                intent.putExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE, ((MyActivity) txtView.getContext()).getMAdapter().getMDataset().get(position).getAudioFileName());
+                ((Activity) txtView.getContext()).startActivityForResult(intent, MyActivity.REQUEST_CODE_MESSAGE_PART_EDIT);
             }
             public void onClickMoveDown(ImageView imgView, int position) {
                 if (position < mDataset.size()-1) {
@@ -136,6 +139,13 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.mTextView.setText(mDataset.get(position).getText());
+        holder.mTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, MyApplication.RECYCLER_VIEW_TEXT_SIZE);
+        if (position % 2 == 0) {
+            holder.itemView.setBackgroundColor(MyApplication.EVEN_BACKGROUND_COLOR);
+        }
+        else {
+            holder.itemView.setBackgroundColor(MyApplication.ODD_BACKGROUND_COLOR);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
