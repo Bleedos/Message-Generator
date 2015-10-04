@@ -1,5 +1,6 @@
 package com.shebdev.sclermont.myfirstapp;
 
+import android.graphics.PorterDuff;
 import android.media.MediaRecorder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -186,15 +187,44 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
     }
 
     public void recordNameVoiceSegment(View view) {
-
+        toggleButtonColor(view);
+        if (view.isActivated()) {
+            stopRecording();
+        }
+        else {
+            startRecording("name.3gp");
+        }
     }
 
     public void recordTodayVoiceSegment(View view) {
-
+        toggleButtonColor(view);
+        if (view.isActivated()) {
+            stopRecording();
+        }
+        else {
+            startRecording("today.3gp");
+        }
     }
 
     public void recordLeVoiceSegment(View view) {
+        toggleButtonColor(view);
+        if (view.isActivated()) {
+            stopRecording();
+        }
+        else {
+            startRecording("le.3gp");
+        }
+    }
 
+    private void toggleButtonColor(View view) {
+        if (view.isActivated()) {
+            view.getBackground().setColorFilter(0xFF5A595B, PorterDuff.Mode.MULTIPLY);
+            view.setActivated(false);
+        }
+        else {
+            view.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+            view.setActivated(true);
+        }
     }
 
     private void startRecording(String fileName) {
