@@ -429,6 +429,11 @@ public class MyActivity extends ActionBarActivity {
 //        message.add(editFinMsg.getText().toString());
     }
 
+    public void setStaticAudioRecordings(View view) {
+        Intent intent = new Intent(this, StaticAudioRecordingsActivity.class);
+        startActivity(intent);
+    }
+
     public void openSearch() {
         System.out.println("Open search");
     }
@@ -436,6 +441,8 @@ public class MyActivity extends ActionBarActivity {
     public void openSettings() {
         System.out.println("Open settings");
     }
+
+
 
     public MessagePartRecyclerAdapter getMAdapter() {
         return mAdapter;

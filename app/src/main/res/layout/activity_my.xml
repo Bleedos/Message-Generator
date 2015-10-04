@@ -166,6 +166,7 @@
         android:layout_toRightOf="@+id/edit_nom"
         android:layout_toEndOf="@+id/edit_nom"
         android:src="@drawable/ic_perm_phone_msg_white_36dp"
-        android:layout_above="@+id/edit_assembly_title" />
+        android:layout_above="@+id/edit_assembly_title"
+        android:onClick="setStaticAudioRecordings" />
 
 </RelativeLayout>

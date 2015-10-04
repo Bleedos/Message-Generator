@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+import java.util.Locale;
 
 
 public class DisplayMessageActivity extends ActionBarActivity {
@@ -21,6 +23,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
     ArrayList<String> audioFileNameList;
     String text;
     LinkedList<MediaPlayer> mediaPlayerList = new LinkedList<>();
+    SimpleDateFormat sdfStart = new SimpleDateFormat("EEEE", Locale.CANADA_FRENCH);
+    SimpleDateFormat sdfFinish = new SimpleDateFormat("d MMMM", Locale.CANADA_FRENCH);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +42,13 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
         if (addDateToMessage) {
             GregorianCalendar greg = new GregorianCalendar();
-
-            String[] dayOWeek = {"dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
-            String[] month = {"janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre","décembre"};
-
-            sb.append(", aujourd'hui " + dayOWeek[greg.get(GregorianCalendar.DAY_OF_WEEK) - 1]);
-            sb.append(" le " + (greg.get(GregorianCalendar.DAY_OF_MONTH)));
-            sb.append(" " + month[greg.get(GregorianCalendar.MONTH)]);
+            sb.append(", aujourd'hui ");
+            sb.append(sdfStart.format(greg.getTime()));
+            sb.append(" le ");
+            sb.append(sdfFinish.format(greg.getTime()));
         }
 
-        sb.append(" " + message.get(2));
+        sb.append(", " + message.get(2));
 
         text = sb.toString();
 
