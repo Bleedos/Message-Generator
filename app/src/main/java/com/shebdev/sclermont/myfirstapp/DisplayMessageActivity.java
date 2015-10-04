@@ -25,6 +25,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
     LinkedList<MediaPlayer> mediaPlayerList = new LinkedList<>();
     SimpleDateFormat sdfStart = new SimpleDateFormat("EEEE", Locale.CANADA_FRENCH);
     SimpleDateFormat sdfFinish = new SimpleDateFormat("d MMMM", Locale.CANADA_FRENCH);
+    boolean addDateToMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
         ArrayList<String> message = intent.getStringArrayListExtra(MyActivity.EXTRA_GENERATED_MESSAGE);
         audioFileNameList = intent.getStringArrayListExtra(MyActivity.EXTRA_AUDIO_FILE_NAME_LIST);
 
-        boolean addDateToMessage = intent.getBooleanExtra(MyActivity.EXTRA_ADD_DATE, false);
+        addDateToMessage = intent.getBooleanExtra(MyActivity.EXTRA_ADD_DATE, false);
 
         sb.append(message.get(0) + " " + message.get(1));
 
@@ -133,6 +134,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
         MediaPlayer firstPlayer = null;
         MediaPlayer previousPlayer = null;
         File audioFile;
+        int insertPosition = 1;
+        // TODO: utiliser la méthode privée pour insérer dans la liste et chainer les player?
         for (String audioFileName : audioFileNameList) {
 
             audioFile = new File(getFilesDir() + "/" + audioFileName);
@@ -157,6 +160,17 @@ public class DisplayMessageActivity extends ActionBarActivity {
             }
         }
 
+        insertAudioFileAt(insertPosition, "name.3gp");
+
+        if (addDateToMessage) {
+            GregorianCalendar greg = new GregorianCalendar();
+            insertAudioFileAt(insertPosition, "today.3gp");
+            insertAudioFileAt(insertPosition, "day_of_week_"+greg.get(GregorianCalendar.DAY_OF_WEEK)+".3gp");
+            insertAudioFileAt(insertPosition, "le.3gp");
+            insertAudioFileAt(insertPosition, "day_"+greg.get(GregorianCalendar.DAY_OF_MONTH)+".3gp");
+            insertAudioFileAt(insertPosition, "month_"+greg.get(GregorianCalendar.MONTH)+".3gp");
+        }
+
         firstPlayer.start();
     }
 
@@ -169,6 +183,33 @@ public class DisplayMessageActivity extends ActionBarActivity {
                 mp = null;
                 mediaPlayerList.remove();
             }
+        }
+    }
+
+    private void insertAudioFileAt(int position, String audioFileName) {
+        File audioFile = new File(getFilesDir() + "/" + audioFileName);
+        if (audioFile.exists()) {
+            MediaPlayer newMediaPlayer = new MediaPlayer();
+            MediaPlayer previousMediaPlayer;
+            MediaPlayer nextMediaPlayer;
+            try {
+                newMediaPlayer.setDataSource(getFilesDir().getPath() + "/" + audioFileName);
+                newMediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            previousMediaPlayer = mediaPlayerList.get(position);
+            if (mediaPlayerList.size() > position) {
+                nextMediaPlayer = mediaPlayerList.get(position+1);
+                newMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
+                // TODO: gerer ça en dehors d'ici ça pourrait être n'importe quoi le prochain index
+                if (mediaPlayerList.size() > (position+1)) {
+                    position++;
+                }
+            }
+            mediaPlayerList.add(position, newMediaPlayer);
+            previousMediaPlayer.setNextMediaPlayer(newMediaPlayer);
+
         }
     }
 }
