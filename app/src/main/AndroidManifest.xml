@@ -11,6 +11,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -53,6 +56,14 @@
         <activity
             android:name=".MessagePartSelectActivity"
             android:label="@string/title_activity_message_part_select"
+            android:parentActivityName=".MyActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shebdev.sclermont.myfirstapp.MyActivity" />
+        </activity>
+        <activity
+            android:name=".StaticAudioRecordingsActivity"
+            android:label="@string/title_activity_static_audio_recordings"
             android:parentActivityName=".MyActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

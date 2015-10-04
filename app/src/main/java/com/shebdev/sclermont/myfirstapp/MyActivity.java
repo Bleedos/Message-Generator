@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.shebdev.sclermont.myfirstapp.adapter.MessagePartRecyclerAdapter;
 import com.shebdev.sclermont.myfirstapp.db.MessageAssemblyData;
@@ -33,15 +34,15 @@ public class MyActivity extends ActionBarActivity {
     public final static String EXTRA_MESSAGE_PART_POSITION = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_POSITION";
     public final static String EXTRA_MESSAGE_PART_ASSEMBLY_ID = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_ASSEMBLY_ID";
     public final static String EXTRA_MESSAGE_PART_ORDER = "com.shebdev.sclermont.myfirstapp.MESSAGE_PART_ORDER";
+    public final static String EXTRA_LOAD_GREETING = "com.shebdev.sclermont.myfirstapp.EXTRA_LOAD_GREETING";
     public final static String EXTRA_ADD_DATE = "com.shebdev.sclermont.myfirstapp.ADD_DATE";
-    public final static String EXTRA_LOAD_GREETING = "com.shebdev.sclermont.myfirstapp.LOAD_GREETING";
     public final static String ERROR_MESSAGE = "com.shebdev.sclermont.myfirstapp.ERROR_MESSAGE";
     public static final String PREFS_NAME = "MyPrefsFile";
 
     private static final int REQUEST_CODE_ASSEMBLY_LIST = 444;
     private static final int REQUEST_CODE_MESSAGE_PART_ADD = 555;
     private static final int REQUEST_CODE_MESSAGE_PART_SELECT = 666;
-    private static final int REQUEST_CODE_GREETING_SELECT = 777;
+    private static final int REQUEST_CODE_GREETING_ADD_EDIT_SELECT = 777;
     public static final int REQUEST_CODE_MESSAGE_PART_EDIT = 888;
     private RecyclerView mRecyclerView;
     private MessagePartRecyclerAdapter mAdapter;
@@ -137,6 +138,7 @@ public class MyActivity extends ActionBarActivity {
                 if (dataSet.size() > 0) {
                     MessagePartData mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
                     ((EditText) findViewById(R.id.edit_greeting)).setText(mpd.getText());
+                    greetingAudioFileName = mpd.getAudioFileName();
                 }
             }
 
@@ -149,7 +151,7 @@ public class MyActivity extends ActionBarActivity {
     public void genererMessage(View view) {
 
         Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editGreeting = (EditText) findViewById(R.id.edit_greeting);
+        TextView editGreeting = (TextView) findViewById(R.id.edit_greeting);
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
         CheckBox addDateToMessage = (CheckBox) findViewById(R.id.checkbox_add_date);
 
@@ -176,9 +178,13 @@ public class MyActivity extends ActionBarActivity {
         }
 
         StringBuilder generatedMessage = new StringBuilder();
+        ArrayList<String> audioFileNameList = new ArrayList<>();
+
+        if (greetingAudioFileName != null && greetingAudioFileName.length() > 0) {
+            audioFileNameList.add(greetingAudioFileName);
+        }
 
         ArrayList<String> message = new ArrayList<>();
-        ArrayList<String> audioFileNameList = new ArrayList<>();
         message.add(editGreeting.getText().toString());
         message.add(editNom.getText().toString());
         for (MessagePartData mpd : dataSet) {
@@ -209,10 +215,22 @@ public class MyActivity extends ActionBarActivity {
         startActivityForResult(intent, REQUEST_CODE_MESSAGE_PART_SELECT);
     }
 
+    public void editGreeting(View view) {
+        Intent intent = new Intent(this, MessagePartEdit.class);
+        intent.putExtra(MyActivity.EXTRA_MESSAGE_PART, ((TextView)findViewById(R.id.edit_greeting)).getText());
+        intent.putExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE, greetingAudioFileName);
+        startActivityForResult(intent, REQUEST_CODE_GREETING_ADD_EDIT_SELECT);
+    }
+
+    public void addGreeting(View view) {
+        Intent intent = new Intent(this, MessagePartEdit.class);
+        startActivityForResult(intent, REQUEST_CODE_GREETING_ADD_EDIT_SELECT);
+    }
+
     public void loadExistingGreeting(View view) {
         Intent intent = new Intent(this, MessagePartSelectActivity.class);
         intent.putExtra(EXTRA_LOAD_GREETING, true);
-        startActivityForResult(intent, REQUEST_CODE_GREETING_SELECT);
+        startActivityForResult(intent, REQUEST_CODE_GREETING_ADD_EDIT_SELECT);
     }
 
     @Override
@@ -229,22 +247,20 @@ public class MyActivity extends ActionBarActivity {
                     mAdapter.addLine(mpd);
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
-                case REQUEST_CODE_GREETING_SELECT:
+                case REQUEST_CODE_GREETING_ADD_EDIT_SELECT:
                     messagePart = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART);
-                    ((EditText) findViewById(R.id.edit_greeting)).setText(messagePart);
+                    ((TextView) findViewById(R.id.edit_greeting)).setText(messagePart);
+                    greetingAudioFileName = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
                     break;
                 case REQUEST_CODE_MESSAGE_PART_ADD:
                     mpd = new MessagePartData(data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART),
                             data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE));
-                    // TODO: Récupérer nom fichier audio et l'ajouter a l'enregistrement si nécessaire seulement
-                    // TODO: Je n'ai plus le choix, le dataset de l'adapter doit etre une liste de "MessagePartData" pour pouvoir avoir le nom de fichier audio car si on reordonne ca fout le bordel vu que les fichiers audio sont nommes avec l'ass_id+l'order+un timestamp
                     mAdapter.addLine(mpd);
                     mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, mAdapter.getItemCount());
                     break;
                 case REQUEST_CODE_MESSAGE_PART_EDIT:
                     mpd = new MessagePartData(data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART),
                             data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE));
-                    // TODO: Récupérer nom fichier audio et le mettre à jour si nécessaire seulement
                     int position = data.getIntExtra(EXTRA_MESSAGE_PART_POSITION, 0);
                     mAdapter.editLine(mpd, position);
                     break;
@@ -264,7 +280,8 @@ public class MyActivity extends ActionBarActivity {
                         ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, true);
                         if (dataSet.size() > 0) {
                             mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
-                            ((EditText) findViewById(R.id.edit_greeting)).setText(mpd.getText());
+                            ((TextView) findViewById(R.id.edit_greeting)).setText(mpd.getText());
+                            greetingAudioFileName = mpd.getAudioFileName();
                         }
                     }
                     break;
@@ -297,7 +314,7 @@ public class MyActivity extends ActionBarActivity {
 
     public void sauvegarderMessage(View view) {
 
-        String editGreeting = ((EditText) findViewById(R.id.edit_greeting)).getText().toString();
+        String editGreeting = ((TextView) findViewById(R.id.edit_greeting)).getText().toString();
         String editAssemblyTitle = ((EditText) findViewById(R.id.edit_assembly_title)).getText().toString();
         String editAssemblyDescription = ((EditText) findViewById(R.id.edit_assembly_description)).getText().toString();
 
@@ -344,12 +361,12 @@ public class MyActivity extends ActionBarActivity {
 
         MessagePartData mpd = dbHelper.getMessagePartWhereTextIs(editGreeting, true);
         if (mpd == null) {
-            mPartId = dbHelper.createMessagePart(editGreeting, true, "");
+            mPartId = dbHelper.createMessagePart(editGreeting, true, greetingAudioFileName);
         }
         else {
             mPartId = mpd.get_id();
             // TODO: Gerer audio pour les greetings aussi
-            //dbHelper.updateMessagePartAudioFileName()
+            dbHelper.updateMessagePartAudioFileName(mPartId, greetingAudioFileName);
         }
 
         // TODO: Voir si on met ça dans une méthode du helper de BD ou dans une méthode private ici

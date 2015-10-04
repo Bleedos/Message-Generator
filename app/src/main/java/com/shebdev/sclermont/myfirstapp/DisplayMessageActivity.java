@@ -13,13 +13,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 
 public class DisplayMessageActivity extends ActionBarActivity {
 
     ArrayList<String> audioFileNameList;
     String text;
-    MediaPlayer mPlayer;
+    LinkedList<MediaPlayer> mediaPlayerList = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
         MyApplication myapp = (MyApplication) getApplication();
         myapp.bus.post("STOP");
+
+        stopVoiceRecordings(null);
     }
 
     @Override
@@ -149,17 +152,22 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     previousPlayer.setNextMediaPlayer(mp);
                 }
                 previousPlayer = mp;
+                mediaPlayerList.add(mp);
             }
         }
 
         firstPlayer.start();
-        mPlayer = firstPlayer;
     }
 
     public void stopVoiceRecordings(View view) {
-        if (mPlayer != null) {
-            mPlayer.release();
-            mPlayer = null;
+        MediaPlayer mp;
+        if (mediaPlayerList.size() > 0) {
+            while (mediaPlayerList.size() > 0) {
+                mp = mediaPlayerList.getFirst();
+                mp.release();
+                mp = null;
+                mediaPlayerList.remove();
+            }
         }
     }
 }

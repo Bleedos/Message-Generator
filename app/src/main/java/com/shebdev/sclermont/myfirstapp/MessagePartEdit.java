@@ -31,10 +31,6 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
 
         setContentView(R.layout.activity_message_part_edit);
 
-//        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        playerFileIterator = 1;
-//        mFileName += "/3.3gp";
-
         Intent intent = getIntent();
         String messagePart = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART);
         mPosition = intent.getIntExtra(MyActivity.EXTRA_MESSAGE_PART_POSITION, -1);
@@ -45,7 +41,7 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
         }
 
         mFileName = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
-        if (mFileName == null) {
+        if (mFileName == null || mFileName.length() == 0) {
             String assemblyId = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_ASSEMBLY_ID);
             String messagePartOrder = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_ORDER);
             mFileName = (assemblyId==null?0:assemblyId) + "_" +

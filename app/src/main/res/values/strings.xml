@@ -42,4 +42,5 @@
     <string name="add_date_to_message">Ajouter la date du jour au message</string>
     <string name="choose_assembly">Choisissez  un assemblage parmi ceux déjà enregistrés</string>
     <string name="message_part_select_header">Choisissez une partie de message parmi celles déjà enregistrées</string>
+    <string name="title_activity_static_audio_recordings">StaticAudioRecordingsActivity</string>
 </resources>

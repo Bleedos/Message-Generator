@@ -11,16 +11,19 @@
         android:text="@string/remplir_champs"
         android:id="@+id/txtRemplirChamps" />
 
-    <EditText
+    <TextView
         android:id="@+id/edit_greeting"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="Entrer l\'accueil. Ex.: Bonjour, ici"
-        android:layout_below="@+id/txtRemplirChamps"
+        android:layout_height="40sp"
+        android:hint="@string/edit_accueil"
+        android:editable="false"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/imageView"
-        android:layout_toStartOf="@+id/imageView" />
+        android:layout_below="@+id/txtRemplirChamps"
+        android:layout_alignRight="@+id/txtRemplirChamps"
+        android:layout_alignEnd="@+id/txtRemplirChamps"
+        android:textSize="19sp"
+        android:onClick="editGreeting" />
 
     <EditText
         android:id="@+id/edit_nom"
@@ -28,11 +31,13 @@
         android:layout_height="wrap_content"
         android:hint="@string/edit_nom"
         android:layout_gravity="top"
-        android:layout_below="@+id/edit_greeting"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:autoText="false"
-        android:inputType="text|textCapWords|textPersonName|textAutoComplete|textAutoCorrect" />
+        android:inputType="text|textCapWords|textPersonName|textAutoComplete|textAutoCorrect"
+        android:layout_below="@+id/edit_greeting"
+        android:layout_alignRight="@+id/edit_greeting"
+        android:layout_alignEnd="@+id/edit_greeting" />
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -137,10 +142,30 @@
         android:layout_width="35sp"
         android:layout_height="35sp"
         android:id="@+id/imageView"
-        android:src="@drawable/ic_message_draw_white_24dp"
-        android:layout_alignTop="@+id/edit_greeting"
+        android:src="@drawable/ic_message_text_white_24dp"
+        android:onClick="loadExistingGreeting"
+        android:layout_alignTop="@+id/imageView2"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="loadExistingGreeting" />
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="35sp"
+        android:layout_height="35sp"
+        android:id="@+id/imageView2"
+        android:layout_above="@+id/edit_nom"
+        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toStartOf="@+id/imageView"
+        android:src="@drawable/ic_message_draw_white_24dp"
+        android:onClick="addGreeting" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView3"
+        android:layout_alignTop="@+id/edit_nom"
+        android:layout_toRightOf="@+id/edit_nom"
+        android:layout_toEndOf="@+id/edit_nom"
+        android:src="@drawable/ic_perm_phone_msg_white_36dp"
+        android:layout_above="@+id/edit_assembly_title" />
 
 </RelativeLayout>
