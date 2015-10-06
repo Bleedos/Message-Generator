@@ -1,6 +1,7 @@
 package com.shebdev.sclermont.myfirstapp;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -131,19 +132,24 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
 
     public void startRecording(View view) {
 
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(getFilesDir().getPath() + "/" + mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        try {
-            mRecorder.prepare();
-        } catch (IOException e) {
-            Log.e("TAGGGG", "prepare() failed");
+        if (view.isActivated()) {
+            stopRecording(null);
         }
+        else {
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setOutputFile(getFilesDir().getPath() + "/" + mFileName);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-        mRecorder.start();
+            try {
+                mRecorder.prepare();
+            } catch (IOException e) {
+                Log.e("TAGGGG", "prepare() failed");
+            }
+            mRecorder.start();
+        }
+        toggleButtonColor(view);
     }
 
     public void stopRecording(View view) {
@@ -151,6 +157,17 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
             mRecorder.stop();
             mRecorder.release();
             mRecorder = null;
+        }
+    }
+
+    private void toggleButtonColor(View view) {
+        if (view.isActivated()) {
+            view.getBackground().setColorFilter(0xFF5A595B, PorterDuff.Mode.MULTIPLY);
+            view.setActivated(false);
+        }
+        else {
+            view.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+            view.setActivated(true);
         }
     }
 

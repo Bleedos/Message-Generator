@@ -51,7 +51,7 @@
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="160sp"
-        android:id="@+id/gridView3"
+        android:id="@+id/dayOfWeekGridView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:numColumns="3"
@@ -63,22 +63,22 @@
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="280sp"
-        android:id="@+id/gridView"
+        android:id="@+id/dayOfMonthGridView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:numColumns="6"
         android:columnWidth="30dp"
         android:clickable="false"
-        android:layout_below="@+id/gridView3" />
+        android:layout_below="@+id/dayOfWeekGridView" />
 
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="180sp"
-        android:id="@+id/gridView2"
+        android:id="@+id/monthGridView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/gridView"
+        android:layout_below="@+id/dayOfMonthGridView"
         android:numColumns="3"
         android:nestedScrollingEnabled="false" />
 

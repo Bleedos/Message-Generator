@@ -19,9 +19,9 @@ import java.util.Locale;
 
 public class StaticAudioRecordingsActivity extends AppCompatActivity {
 
-    GridView daysOfWeekGridView;
-    GridView daysGridView;
-    GridView monthsGridView;
+    GridView dayOfWeekGridView;
+    GridView dayOfMonthGridView;
+    GridView monthGridView;
     private MediaRecorder mRecorder = null;
     private static final SimpleDateFormat sdfMonths = new SimpleDateFormat("MMMM", Locale.CANADA_FRENCH);
     private static final SimpleDateFormat sdfDaysOfWeek = new SimpleDateFormat("EEEE", Locale.CANADA_FRENCH);
@@ -31,9 +31,9 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_static_audio_recordings);
 
-        daysOfWeekGridView = (GridView) findViewById(R.id.gridView3);
-        daysGridView = (GridView) findViewById(R.id.gridView);
-        monthsGridView = (GridView) findViewById(R.id.gridView2);
+        dayOfWeekGridView = (GridView) findViewById(R.id.dayOfWeekGridView);
+        dayOfMonthGridView = (GridView) findViewById(R.id.dayOfMonthGridView);
+        monthGridView = (GridView) findViewById(R.id.monthGridView);
 
         String[] daysOfWeek = new String[7];
         GregorianCalendar greg = new GregorianCalendar();
@@ -45,9 +45,9 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         ArrayAdapter<String> daysOfWeekAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, daysOfWeek);
 
-        daysOfWeekGridView.setAdapter(daysOfWeekAdapter);
+        dayOfWeekGridView.setAdapter(daysOfWeekAdapter);
 
-        daysOfWeekGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        dayOfWeekGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
@@ -84,9 +84,9 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, monthDays);
 
-        daysGridView.setAdapter(daysAdapter);
+        dayOfMonthGridView.setAdapter(daysAdapter);
 
-        daysGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        dayOfMonthGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
@@ -123,9 +123,9 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         ArrayAdapter<String> monthsAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, months);
 
-        monthsGridView.setAdapter(monthsAdapter);
+        monthGridView.setAdapter(monthsAdapter);
 
-        monthsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        monthGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
@@ -187,35 +187,36 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
     }
 
     public void recordNameVoiceSegment(View view) {
-        toggleButtonColor(view);
         if (view.isActivated()) {
             stopRecording();
         }
         else {
             startRecording("name.3gp");
         }
+        toggleButtonColor(view);
     }
 
     public void recordTodayVoiceSegment(View view) {
-        toggleButtonColor(view);
         if (view.isActivated()) {
             stopRecording();
         }
         else {
             startRecording("today.3gp");
         }
+        toggleButtonColor(view);
     }
 
     public void recordLeVoiceSegment(View view) {
-        toggleButtonColor(view);
         if (view.isActivated()) {
             stopRecording();
         }
         else {
             startRecording("le.3gp");
         }
+        toggleButtonColor(view);
     }
 
+    // TODO: Centraliser
     private void toggleButtonColor(View view) {
         if (view.isActivated()) {
             view.getBackground().setColorFilter(0xFF5A595B, PorterDuff.Mode.MULTIPLY);

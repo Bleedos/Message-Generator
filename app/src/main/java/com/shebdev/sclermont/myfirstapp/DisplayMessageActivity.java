@@ -135,6 +135,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
         MediaPlayer previousPlayer = null;
         File audioFile;
         int insertPosition = 1;
+
         // TODO: utiliser la méthode privée pour insérer dans la liste et chainer les player?
         for (String audioFileName : audioFileNameList) {
 
@@ -150,25 +151,38 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
 
-                if (previousPlayer == null) {
+                if (firstPlayer == null) {
                     firstPlayer = mp;
-                } else {
-                    previousPlayer.setNextMediaPlayer(mp);
                 }
-                previousPlayer = mp;
                 mediaPlayerList.add(mp);
             }
         }
 
-        insertAudioFileAt(insertPosition, "name.3gp");
+        insertPosition = insertAudioFileAt(insertPosition, "name.3gp");
 
         if (addDateToMessage) {
             GregorianCalendar greg = new GregorianCalendar();
-            insertAudioFileAt(insertPosition, "today.3gp");
-            insertAudioFileAt(insertPosition, "day_of_week_"+greg.get(GregorianCalendar.DAY_OF_WEEK)+".3gp");
-            insertAudioFileAt(insertPosition, "le.3gp");
-            insertAudioFileAt(insertPosition, "day_"+greg.get(GregorianCalendar.DAY_OF_MONTH)+".3gp");
-            insertAudioFileAt(insertPosition, "month_"+greg.get(GregorianCalendar.MONTH)+".3gp");
+            insertPosition = insertAudioFileAt(insertPosition, "today.3gp");
+            insertPosition = insertAudioFileAt(insertPosition, "day_of_week_"+greg.get(GregorianCalendar.DAY_OF_WEEK)+".3gp");
+            insertPosition = insertAudioFileAt(insertPosition, "le.3gp");
+            insertPosition = insertAudioFileAt(insertPosition, "day_"+greg.get(GregorianCalendar.DAY_OF_MONTH)+".3gp");
+            insertPosition = insertAudioFileAt(insertPosition, "month_"+greg.get(GregorianCalendar.MONTH)+".3gp");
+        }
+
+        MediaPlayer mpItem1 = null;
+        MediaPlayer mpItem2 = null;
+        for (int i = 0; i < mediaPlayerList.size(); i++) {
+            mpItem1 = mediaPlayerList.get(i);
+            if ((i+1) < mediaPlayerList.size()) {
+                mpItem2 = mediaPlayerList.get(i+1);
+            }
+            if (i == 0) {
+                firstPlayer.setNextMediaPlayer(mpItem2);
+            }
+            else {
+                mpItem1.setNextMediaPlayer(mpItem2);
+            }
+            mpItem2 = null;
         }
 
         firstPlayer.start();
@@ -186,30 +200,23 @@ public class DisplayMessageActivity extends ActionBarActivity {
         }
     }
 
-    private void insertAudioFileAt(int position, String audioFileName) {
+    private int insertAudioFileAt(int position, String audioFileName) {
         File audioFile = new File(getFilesDir() + "/" + audioFileName);
         if (audioFile.exists()) {
             MediaPlayer newMediaPlayer = new MediaPlayer();
-            MediaPlayer previousMediaPlayer;
-            MediaPlayer nextMediaPlayer;
             try {
                 newMediaPlayer.setDataSource(getFilesDir().getPath() + "/" + audioFileName);
                 newMediaPlayer.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            previousMediaPlayer = mediaPlayerList.get(position);
-            if (mediaPlayerList.size() > position) {
-                nextMediaPlayer = mediaPlayerList.get(position+1);
-                newMediaPlayer.setNextMediaPlayer(nextMediaPlayer);
-                // TODO: gerer ça en dehors d'ici ça pourrait être n'importe quoi le prochain index
-                if (mediaPlayerList.size() > (position+1)) {
-                    position++;
-                }
-            }
             mediaPlayerList.add(position, newMediaPlayer);
-            previousMediaPlayer.setNextMediaPlayer(newMediaPlayer);
+            // TODO: gerer ça en dehors d'ici ça pourrait être n'importe quoi le prochain index
+            if (mediaPlayerList.size() > position) {
+                position++;
+            }
 
         }
+        return position;
     }
 }

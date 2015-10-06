@@ -55,15 +55,4 @@
         android:nestedScrollingEnabled="false"
         android:textSize="9sp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STPREC"
-        android:id="@+id/button2"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/bouton_annuler_msg_edit"
-        android:layout_toStartOf="@+id/bouton_annuler_msg_edit"
-        android:onClick="stopRecording"
-        android:textSize="9sp" />
-
 </RelativeLayout>
