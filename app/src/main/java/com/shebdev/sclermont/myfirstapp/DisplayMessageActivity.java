@@ -26,6 +26,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
     SimpleDateFormat sdfStart = new SimpleDateFormat("EEEE", Locale.CANADA_FRENCH);
     SimpleDateFormat sdfFinish = new SimpleDateFormat("d MMMM", Locale.CANADA_FRENCH);
     boolean addDateToMessage;
+    MediaPlayer firstPlayer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,62 +131,64 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     public void playVoiceRecordings(View view) {
 
-        MediaPlayer mp;
-        MediaPlayer firstPlayer = null;
-        MediaPlayer previousPlayer = null;
-        File audioFile;
-        int insertPosition = 1;
+        if (firstPlayer == null) {
+            MediaPlayer mp;
+            File audioFile;
+            int insertPosition = 1;
 
-        // TODO: utiliser la méthode privée pour insérer dans la liste et chainer les player?
-        for (String audioFileName : audioFileNameList) {
+            // TODO: utiliser la méthode privée pour insérer dans la liste et chainer les player?
+            for (String audioFileName : audioFileNameList) {
 
-            audioFile = new File(getFilesDir() + "/" + audioFileName);
+                audioFile = new File(getFilesDir() + "/" + audioFileName);
 
-            if (audioFile.exists()) {
+                if (audioFile.exists()) {
 
-                mp = new MediaPlayer();
-                try {
-                    mp.setDataSource(getFilesDir().getPath() + "/" + audioFileName);
-                    mp.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    mp = new MediaPlayer();
+                    try {
+                        mp.setDataSource(getFilesDir().getPath() + "/" + audioFileName);
+                        mp.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (firstPlayer == null) {
+                        firstPlayer = mp;
+                    }
+                    mediaPlayerList.add(mp);
                 }
+            }
 
-                if (firstPlayer == null) {
-                    firstPlayer = mp;
+            insertPosition = insertAudioFileAt(insertPosition, "name.3gp");
+
+            if (addDateToMessage) {
+                GregorianCalendar greg = new GregorianCalendar();
+                insertPosition = insertAudioFileAt(insertPosition, "today.3gp");
+                insertPosition = insertAudioFileAt(insertPosition, "day_of_week_" + greg.get(GregorianCalendar.DAY_OF_WEEK) + ".3gp");
+                insertPosition = insertAudioFileAt(insertPosition, "le.3gp");
+                insertPosition = insertAudioFileAt(insertPosition, "day_" + greg.get(GregorianCalendar.DAY_OF_MONTH) + ".3gp");
+                insertPosition = insertAudioFileAt(insertPosition, "month_" + greg.get(GregorianCalendar.MONTH) + ".3gp");
+            }
+
+            MediaPlayer mpItem1 = null;
+            MediaPlayer mpItem2 = null;
+            for (int i = 0; i < mediaPlayerList.size(); i++) {
+                mpItem1 = mediaPlayerList.get(i);
+                if ((i + 1) < mediaPlayerList.size()) {
+                    mpItem2 = mediaPlayerList.get(i + 1);
                 }
-                mediaPlayerList.add(mp);
+                if (i == 0) {
+                    firstPlayer.setNextMediaPlayer(mpItem2);
+                } else {
+                    mpItem1.setNextMediaPlayer(mpItem2);
+                }
+                mpItem2 = null;
             }
+
+            firstPlayer.start();
         }
-
-        insertPosition = insertAudioFileAt(insertPosition, "name.3gp");
-
-        if (addDateToMessage) {
-            GregorianCalendar greg = new GregorianCalendar();
-            insertPosition = insertAudioFileAt(insertPosition, "today.3gp");
-            insertPosition = insertAudioFileAt(insertPosition, "day_of_week_"+greg.get(GregorianCalendar.DAY_OF_WEEK)+".3gp");
-            insertPosition = insertAudioFileAt(insertPosition, "le.3gp");
-            insertPosition = insertAudioFileAt(insertPosition, "day_"+greg.get(GregorianCalendar.DAY_OF_MONTH)+".3gp");
-            insertPosition = insertAudioFileAt(insertPosition, "month_"+greg.get(GregorianCalendar.MONTH)+".3gp");
+        else {
+            stopVoiceRecordings(null);
         }
-
-        MediaPlayer mpItem1 = null;
-        MediaPlayer mpItem2 = null;
-        for (int i = 0; i < mediaPlayerList.size(); i++) {
-            mpItem1 = mediaPlayerList.get(i);
-            if ((i+1) < mediaPlayerList.size()) {
-                mpItem2 = mediaPlayerList.get(i+1);
-            }
-            if (i == 0) {
-                firstPlayer.setNextMediaPlayer(mpItem2);
-            }
-            else {
-                mpItem1.setNextMediaPlayer(mpItem2);
-            }
-            mpItem2 = null;
-        }
-
-        firstPlayer.start();
     }
 
     public void stopVoiceRecordings(View view) {
@@ -198,6 +201,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                 mediaPlayerList.remove();
             }
         }
+        firstPlayer = null;
     }
 
     private int insertAudioFileAt(int position, String audioFileName) {
