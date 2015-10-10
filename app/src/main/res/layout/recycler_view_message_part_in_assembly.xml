@@ -6,10 +6,13 @@
         android:id="@+id/recycler_view_text"
         android:textSize="18sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/recycler_view_move_down"
-        android:layout_toStartOf="@+id/recycler_view_move_down" />
+        android:layout_toStartOf="@+id/recycler_view_move_down"
+        android:paddingLeft="3sp"
+        android:paddingTop="5sp"
+        android:paddingBottom="5sp" />
     <ImageView
         android:id="@+id/recycler_view_move_down"
         android:layout_width="35sp"
@@ -17,7 +20,9 @@
         android:src="@drawable/ic_arrow_down_bold_circle_white_24dp"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/recycler_view_move_up"
-        android:layout_toStartOf="@+id/recycler_view_move_up" />
+        android:layout_toStartOf="@+id/recycler_view_move_up"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp" />
     <ImageView
         android:id="@+id/recycler_view_move_up"
         android:layout_width="35sp"
@@ -28,7 +33,9 @@
         android:layout_toStartOf="@+id/recycler_view_image"
         android:layout_alignParentRight="false"
         android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="false" />
+        android:layout_alignParentLeft="false"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp" />
     <ImageView
         android:id="@+id/recycler_view_image"
         android:layout_width="35sp"
@@ -39,6 +46,8 @@
         android:layout_alignParentLeft="false"
         android:layout_alignParentTop="false"
         android:layout_alignWithParentIfMissing="false"
-        android:cropToPadding="false" />
+        android:cropToPadding="false"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp" />
 
 </RelativeLayout>

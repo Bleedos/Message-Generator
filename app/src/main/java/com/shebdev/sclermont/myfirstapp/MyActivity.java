@@ -120,7 +120,7 @@ public class MyActivity extends ActionBarActivity {
         if (mAdapter == null) {
 
             //Toast.makeText(this, "adapter null", Toast.LENGTH_LONG).show();
-            mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+            mRecyclerView = (RecyclerView) findViewById(R.id.message_assembly_recycler_view);
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -137,7 +137,7 @@ public class MyActivity extends ActionBarActivity {
                 ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, true);
                 if (dataSet.size() > 0) {
                     MessagePartData mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
-                    ((EditText) findViewById(R.id.edit_greeting)).setText(mpd.getText());
+                    ((TextView) findViewById(R.id.text_greeting)).setText(mpd.getText());
                     greetingAudioFileName = mpd.getAudioFileName();
                 }
             }
@@ -151,7 +151,7 @@ public class MyActivity extends ActionBarActivity {
     public void genererMessage(View view) {
 
         Intent intent = new Intent(this, DisplayMessageActivity.class);
-        TextView editGreeting = (TextView) findViewById(R.id.edit_greeting);
+        TextView editGreeting = (TextView) findViewById(R.id.text_greeting);
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
         CheckBox addDateToMessage = (CheckBox) findViewById(R.id.checkbox_add_date);
 
@@ -217,7 +217,7 @@ public class MyActivity extends ActionBarActivity {
 
     public void editGreeting(View view) {
         Intent intent = new Intent(this, MessagePartEdit.class);
-        intent.putExtra(MyActivity.EXTRA_MESSAGE_PART, ((TextView)findViewById(R.id.edit_greeting)).getText());
+        intent.putExtra(MyActivity.EXTRA_MESSAGE_PART, ((TextView)findViewById(R.id.text_greeting)).getText());
         intent.putExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE, greetingAudioFileName);
         startActivityForResult(intent, REQUEST_CODE_GREETING_ADD_EDIT_SELECT);
     }
@@ -249,7 +249,7 @@ public class MyActivity extends ActionBarActivity {
                     break;
                 case REQUEST_CODE_GREETING_ADD_EDIT_SELECT:
                     messagePart = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART);
-                    ((TextView) findViewById(R.id.edit_greeting)).setText(messagePart);
+                    ((TextView) findViewById(R.id.text_greeting)).setText(messagePart);
                     greetingAudioFileName = data.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
                     break;
                 case REQUEST_CODE_MESSAGE_PART_ADD:
@@ -280,7 +280,7 @@ public class MyActivity extends ActionBarActivity {
                         ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, true);
                         if (dataSet.size() > 0) {
                             mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
-                            ((TextView) findViewById(R.id.edit_greeting)).setText(mpd.getText());
+                            ((TextView) findViewById(R.id.text_greeting)).setText(mpd.getText());
                             greetingAudioFileName = mpd.getAudioFileName();
                         }
                     }
@@ -314,7 +314,7 @@ public class MyActivity extends ActionBarActivity {
 
     public void sauvegarderMessage(View view) {
 
-        String editGreeting = ((TextView) findViewById(R.id.edit_greeting)).getText().toString();
+        String editGreeting = ((TextView) findViewById(R.id.text_greeting)).getText().toString();
         String editAssemblyTitle = ((EditText) findViewById(R.id.edit_assembly_title)).getText().toString();
         String editAssemblyDescription = ((EditText) findViewById(R.id.edit_assembly_description)).getText().toString();
 
