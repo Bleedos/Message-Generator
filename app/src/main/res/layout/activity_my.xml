@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/text_greeting"
         android:layout_width="fill_parent"
-        android:layout_height="40sp"
+        android:layout_height="wrap_content"
         android:hint="@string/edit_accueil"
         android:editable="false"
         android:textSize="18sp"
@@ -16,11 +16,11 @@
         android:layout_below="@+id/edit_assembly_description"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:paddingStart="4sp"
-        android:layout_toLeftOf="@+id/button_record_static_audio"
-        android:layout_toStartOf="@+id/button_record_static_audio"
+        android:paddingLeft="4sp"
+        android:layout_toStartOf="@+id/button_add_new_greeting"
         android:singleLine="false"
-        android:phoneNumber="false" />
+        android:phoneNumber="false"
+        android:layout_toLeftOf="@+id/button_add_new_greeting" />
 
     <EditText
         android:id="@+id/edit_nom"
@@ -33,8 +33,8 @@
         android:autoText="false"
         android:inputType="text|textCapWords|textPersonName|textAutoComplete|textAutoCorrect"
         android:layout_below="@+id/text_greeting"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/text_greeting"
+        android:layout_alignEnd="@+id/text_greeting" />
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,8 +56,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
-        android:layout_toLeftOf="@+id/button_record_static_audio"
-        android:layout_toStartOf="@+id/button_record_static_audio" />
+        android:layout_toLeftOf="@+id/button_save_message_assembly"
+        android:layout_toStartOf="@+id/button_save_message_assembly" />
     <EditText
         android:id="@+id/edit_assembly_description"
         android:layout_width="fill_parent"
@@ -68,19 +68,21 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/edit_assembly_title"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/button_record_static_audio"
-        android:layout_toStartOf="@+id/button_record_static_audio" />
+        android:layout_toLeftOf="@+id/button_save_message_assembly"
+        android:layout_toStartOf="@+id/button_save_message_assembly" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/message_assembly_recycler_view"
         android:scrollbars="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/button_save_message_assembly"
-        android:layout_below="@+id/checkbox_add_date"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="10sp" />
+        android:layout_marginLeft="10sp"
+        android:layout_toStartOf="@+id/button_generate_message"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/button_generate_message"
+        android:layout_below="@+id/space" />
 
     <!-- TODO: ramener les strings partout @string/... -->
 
@@ -103,11 +105,9 @@
         android:id="@+id/button_save_message_assembly"
         android:src="@drawable/ic_content_save_all_white_24dp"
         android:onClick="sauvegarderMessage"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/button_load_message_assembly"
-        android:layout_toEndOf="@+id/button_load_message_assembly"
-        android:layout_marginLeft="5sp"
-        android:layout_marginRight="5sp" />
+        android:layout_below="@+id/edit_assembly_title"
+        android:layout_alignRight="@+id/button_load_existing_greeting"
+        android:layout_alignEnd="@+id/button_load_existing_greeting" />
 
     <ImageView
         android:layout_width="40sp"
@@ -115,10 +115,9 @@
         android:id="@+id/button_load_message_assembly"
         android:src="@drawable/ic_import_white_24dp"
         android:onClick="chargerAssembly"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginRight="5sp" />
+        android:layout_above="@+id/edit_assembly_description"
+        android:layout_alignLeft="@+id/button_save_message_assembly"
+        android:layout_alignStart="@+id/button_save_message_assembly" />
 
     <ImageView
         android:layout_width="40sp"
@@ -126,9 +125,9 @@
         android:id="@+id/button_add_line_to_assembly"
         android:src="@drawable/ic_note_plus_white_24dp"
         android:onClick="ajouterLigne"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/button_add_existing_line_to_assembly"
-        android:layout_toStartOf="@+id/button_add_existing_line_to_assembly" />
+        android:layout_alignTop="@+id/message_assembly_recycler_view"
+        android:layout_toRightOf="@+id/message_assembly_recycler_view"
+        android:layout_toEndOf="@+id/message_assembly_recycler_view" />
 
     <ImageView
         android:layout_width="40sp"
@@ -136,11 +135,9 @@
         android:id="@+id/button_add_existing_line_to_assembly"
         android:onClick="ajouterLigneExistante"
         android:src="@drawable/ic_note_white_24dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/button_generate_message"
-        android:layout_toStartOf="@+id/button_generate_message"
-        android:layout_marginLeft="5sp"
-        android:layout_marginRight="5sp" />
+        android:layout_below="@+id/button_add_line_to_assembly"
+        android:layout_alignRight="@+id/button_load_existing_greeting"
+        android:layout_alignEnd="@+id/button_load_existing_greeting" />
 
     <ImageView
         android:layout_width="35sp"
@@ -168,8 +165,30 @@
         android:id="@+id/button_record_static_audio"
         android:src="@drawable/ic_microphone_variant_white_24dp"
         android:onClick="setStaticAudioRecordings"
-        android:layout_alignBottom="@+id/edit_assembly_description"
-        android:layout_alignRight="@+id/button_load_existing_greeting"
-        android:layout_alignEnd="@+id/button_load_existing_greeting" />
+        android:layout_below="@+id/button_load_existing_greeting"
+        android:layout_toEndOf="@+id/text_greeting"
+        android:layout_toRightOf="@+id/text_greeting" />
+
+    <Space
+        android:layout_width="20px"
+        android:layout_height="20px"
+        android:background="#dc0b0b"
+        android:layout_below="@+id/button_record_static_audio"
+        android:layout_alignLeft="@+id/message_assembly_recycler_view"
+        android:layout_alignStart="@+id/message_assembly_recycler_view"
+        android:id="@+id/space" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cliquez sur le bouton + à droite pour ajouter une nouvelle partie de message.\n\nCliquez sur l&apos;autre bouton à droite pour ajouter une partie de message existante."
+        android:id="@+id/text_message_part_instructions"
+        android:elegantTextHeight="false"
+        android:layout_below="@+id/space"
+        android:layout_alignLeft="@+id/space"
+        android:layout_alignStart="@+id/space"
+        android:textSize="17dp"
+        android:layout_alignRight="@+id/message_assembly_recycler_view"
+        android:layout_alignEnd="@+id/message_assembly_recycler_view" />
 
 </RelativeLayout>

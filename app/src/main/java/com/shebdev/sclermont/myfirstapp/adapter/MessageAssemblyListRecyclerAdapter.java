@@ -45,10 +45,6 @@ public class MessageAssemblyListRecyclerAdapter extends RecyclerView.Adapter<Mes
 
         @Override
         public void onClick(View v) {
-//            Toast.makeText(v.getContext(),
-//                    "click "+v.getClass().getCanonicalName() + "::"+v.getId(),
-//                    Toast.LENGTH_LONG).show();
-
             if (v instanceof TextView) {
                 mListener.onClickMessageAssembly((TextView) v, getPosition());
             }

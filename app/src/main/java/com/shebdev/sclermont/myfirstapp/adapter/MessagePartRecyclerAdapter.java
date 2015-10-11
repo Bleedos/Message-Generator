@@ -80,8 +80,6 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
             }
         }
 
-
-
         public static interface IMyViewHolderClicks {
             public void onClickMessagePart(TextView txtView, int position);
             public void onClickMoveDown(ImageView imgView, int position);
@@ -128,6 +126,7 @@ public class MessagePartRecyclerAdapter extends RecyclerView.Adapter<MessagePart
             public void onClickDelete(ImageView imgView, int position) {
                 mDataset.remove(position);
                 notifyItemRemoved(position);
+                ((MyActivity) imgView.getContext()).adapterChanged();
             }
         });
         return vh;

@@ -288,6 +288,7 @@ public class MyActivity extends ActionBarActivity {
                 default:
                     break;
             }
+            adapterChanged();
         }
     }
 
@@ -446,5 +447,14 @@ public class MyActivity extends ActionBarActivity {
 
     public MessagePartRecyclerAdapter getMAdapter() {
         return mAdapter;
+    }
+
+    public void adapterChanged() {
+        if (mAdapter != null && mAdapter.getItemCount() > 0) {
+            findViewById(R.id.text_message_part_instructions).setVisibility(View.INVISIBLE);
+        }
+        else {
+            findViewById(R.id.text_message_part_instructions).setVisibility(View.VISIBLE);
+        }
     }
 }
