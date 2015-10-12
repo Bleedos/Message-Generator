@@ -181,7 +181,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cliquez sur le bouton + à droite pour ajouter une nouvelle partie de message.\n\nCliquez sur l&apos;autre bouton à droite pour ajouter une partie de message existante."
+        android:text="Cliquez sur le bouton + à droite pour ajouter une nouvelle partie de message.\n\nCliquez sur l&apos;autre bouton à droite pour ajouter une partie de message existante.\n\nLorsqu&apos;il y a des entrées dans cette liste, cliquez sur une entrée pour en modifier le texte."
         android:id="@+id/text_message_part_instructions"
         android:elegantTextHeight="false"
         android:layout_below="@+id/space"
@@ -190,5 +190,198 @@
         android:textSize="17dp"
         android:layout_alignRight="@+id/message_assembly_recycler_view"
         android:layout_alignEnd="@+id/message_assembly_recycler_view" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#1b1717"
+        android:alpha="0.8"
+        android:id="@+id/layout_tutorial">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suivant"
+            android:id="@+id/button_next_step_turorial"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="42dp"
+            android:layout_marginEnd="42dp"
+            android:layout_marginBottom="41dp"
+            android:onClick="tutorialNextStep" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_load"
+            android:src="@drawable/ic_keyboard_arrow_right_white_24dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/pointer_save"
+            android:layout_alignStart="@+id/pointer_save"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/text_turorial"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="31dp"
+            android:layout_marginStart="31dp"
+            android:layout_toLeftOf="@+id/pointer_load"
+            android:layout_toStartOf="@+id/pointer_load"
+            android:layout_above="@+id/button_next_step_turorial"
+            android:layout_alignTop="@+id/pointer_message_title" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_save"
+            android:src="@drawable/ic_keyboard_arrow_right_white_24dp"
+            android:layout_below="@+id/pointer_load"
+            android:layout_toLeftOf="@+id/pointer_existing_greeting"
+            android:layout_toStartOf="@+id/pointer_existing_greeting"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_existing_greeting"
+            android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+            android:layout_below="@+id/pointer_save"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_new_greeting"
+            android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+            android:layout_below="@+id/pointer_save"
+            android:layout_toRightOf="@+id/text_turorial"
+            android:layout_toEndOf="@+id/text_turorial"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_static_recordings"
+            android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+            android:layout_below="@+id/pointer_existing_greeting"
+            android:layout_toRightOf="@+id/text_turorial"
+            android:layout_toEndOf="@+id/text_turorial"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_new_message_part"
+            android:src="@drawable/ic_keyboard_arrow_right_white_24dp"
+            android:layout_below="@+id/pointer_static_recordings"
+            android:layout_alignLeft="@+id/pointer_static_recordings"
+            android:layout_alignStart="@+id/pointer_static_recordings"
+            android:layout_marginTop="63dp"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_existing_message_part"
+            android:src="@drawable/ic_keyboard_arrow_right_white_24dp"
+            android:layout_below="@+id/pointer_new_message_part"
+            android:layout_toRightOf="@+id/text_turorial"
+            android:layout_toEndOf="@+id/text_turorial"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_generate_message"
+            android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+            android:layout_alignBottom="@+id/button_next_step_turorial"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_add_date"
+            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:layout_below="@+id/pointer_name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_message_title"
+            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:layout_alignBottom="@+id/pointer_save"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_message_description"
+            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:layout_alignTop="@+id/pointer_new_greeting"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_greeting"
+            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:layout_below="@+id/pointer_message_description"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_name"
+            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:layout_below="@+id/pointer_greeting"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/pointer_message_part_list"
+            android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+            android:layout_below="@+id/pointer_existing_message_part"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Première utilisation"
+            android:id="@+id/text_first_use"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/text_turorial"
+            android:layout_alignStart="@+id/text_turorial"
+            android:layout_toLeftOf="@+id/pointer_load"
+            android:layout_toStartOf="@+id/pointer_load"
+            android:textStyle="bold"
+            android:textColor="#5ed1f5" />
+    </RelativeLayout>
 
 </RelativeLayout>

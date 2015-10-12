@@ -43,4 +43,21 @@
     <string name="choose_assembly">Choisissez  un assemblage parmi ceux déjà enregistrés</string>
     <string name="message_part_select_header">Choisissez une partie de message parmi celles déjà enregistrées</string>
     <string name="title_activity_static_audio_recordings">StaticAudioRecordingsActivity</string>
+
+    <string name="tutorial_welcome">Bonjour!  Prenez le temps de lire ces quelques instructions.</string>
+    <string name="tutorial_message_title">Cliquez ici pour entrer le titre du message.</string>
+    <string name="tutorial_message_description">Cliquez ici pour entrer la description du message.</string>
+    <string name="tutorial_message_greeting">Cliquez ici pour entrer l\'accueil du message.  Par exemple, "Bonjour, ici".  Une fois le texte entré, cliquez à nouveau dessus pour le modifier.</string>
+    <string name="tutorial_add_new_greeting">Cliquez ici pour ajouter un nouveau texte d\'accueil.</string>
+    <string name="tutorial_add_existing_greeting">Cliquez ici pour choisir un texte d\'accueil déjà existant.</string>
+    <string name="tutorial_name">Cliquez ici pour entrer votre nom.</string>
+    <string name="tutorial_date">Cliquez ici pour que la date du jour soit ajoutée au message.</string>
+    <string name="tutorial_static_voice_recordings">Cliquez ici pour modifier les enregistrements de voix statiques comme les jours de la semaine, les mois et les nombres de 1 à 31.</string>
+    <string name="tutorial_message_part_list">Ici seront listés les parties de votre message.  Pensez à découper votre message en parties que vous pourrez réutiliser d\'un message à l\'autre. Si un bout de phrase revient dans tous vos messages, faites-en une partie de message.  Par exemple, "Merci et bonne journée.".</string>
+    <string name="tutorial_add_new_message_part">Cliquez ici pour ajouter une nouvelle partie de message.  Par exemple, "je suis au bureau mais dans l\'impossibilité de prendre votre appel...".</string>
+    <string name="tutorial_add_existing_message_part">Cliquez ici pour choisir une partie de message déjà existante.</string>
+    <string name="tutorial_generate_message">Cliquez ici pour générer le message que vous venez de composer.  Il sera affiché dans un nouvel écran.</string>
+    <string name="tutorial_save_message">Quand vous êtes satisfait, cliquez ici pour sauvegarder votre message</string>
+    <string name="tutorial_load_message">Cliquez ici pour charger un message existant</string>
+
 </resources>

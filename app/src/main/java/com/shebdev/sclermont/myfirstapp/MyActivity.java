@@ -49,6 +49,8 @@ public class MyActivity extends ActionBarActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private String greetingAudioFileName; // TODO: Voir à gerer via les preferences quand on va sauvegarder les autres preferences comme le dernier assemblyId chargé
 
+    private int tutorialStep = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,8 @@ public class MyActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.phone);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+        ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_welcome);
     }
 
     @Override
@@ -311,6 +315,83 @@ public class MyActivity extends ActionBarActivity {
         DialogFragment newFragment = new ErrorDialogFragment();
         newFragment.show(getFragmentManager(), "error_message");
         newFragment.setArguments(bundle);
+    }
+
+    public void tutorialNextStep(View view) {
+        switch (tutorialStep) {
+            case 1:
+                findViewById(R.id.pointer_message_title).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_message_title);
+                break;
+            case 2:
+                findViewById(R.id.pointer_message_title).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_message_description).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_message_description);
+                break;
+            case 3:
+                findViewById(R.id.pointer_message_description).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_greeting).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_message_greeting);
+                break;
+            case 4:
+                findViewById(R.id.pointer_greeting).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_new_greeting).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_add_new_greeting);
+                break;
+            case 5:
+                findViewById(R.id.pointer_new_greeting).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_existing_greeting).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_add_existing_greeting);
+                break;
+            case 6:
+                findViewById(R.id.pointer_existing_greeting).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_name).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_name);
+                break;
+            case 7:
+                findViewById(R.id.pointer_name).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_add_date).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_date);
+                break;
+            case 8:
+                findViewById(R.id.pointer_add_date).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_static_recordings).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_static_voice_recordings);
+                break;
+            case 9:
+                findViewById(R.id.pointer_static_recordings).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_message_part_list).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_message_part_list);
+                break;
+            case 10:
+                findViewById(R.id.pointer_message_part_list).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_new_message_part).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_add_new_message_part);
+                break;
+            case 11:
+                findViewById(R.id.pointer_new_message_part).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_existing_message_part).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_add_existing_message_part);
+                break;
+            case 12:
+                findViewById(R.id.pointer_existing_message_part).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_generate_message).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_generate_message);
+                break;
+            case 13:
+                findViewById(R.id.pointer_generate_message).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_save).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_save_message);
+                break;
+            case 14:
+                findViewById(R.id.pointer_save).setVisibility(View.INVISIBLE);
+                findViewById(R.id.pointer_load).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.text_turorial)).setText(R.string.tutorial_load_message);
+                break;
+            default:
+                findViewById(R.id.layout_tutorial).setVisibility(View.INVISIBLE);
+        }
+        tutorialStep++;
     }
 
     public void sauvegarderMessage(View view) {
