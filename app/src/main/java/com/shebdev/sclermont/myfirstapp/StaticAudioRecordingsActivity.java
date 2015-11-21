@@ -33,9 +33,9 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_static_audio_recordings);
 
-        setBaseColor(findViewById(R.id.btn_record_name), "name.3gp", 0xFF00AA00, 0xFF5A595B);
-        setBaseColor(findViewById(R.id.btn_record_today), "today.3gp", 0xFF00AA00, 0xFF5A595B);
-        setBaseColor(findViewById(R.id.btn_record_french_le), "le.3gp", 0xFF00AA00, 0xFF5A595B);
+        setBaseColor(findViewById(R.id.btn_record_name), MyApplication.NAME_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION, MyApplication.FILE_EXIST_BACKGROUND_COLOR, MyApplication.FILE_NOT_EXIST_BUTTON_BACKGROUND_COLOR);
+        setBaseColor(findViewById(R.id.btn_record_today), MyApplication.TODAY_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION, MyApplication.FILE_EXIST_BACKGROUND_COLOR, MyApplication.FILE_NOT_EXIST_BUTTON_BACKGROUND_COLOR);
+        setBaseColor(findViewById(R.id.btn_record_french_le), MyApplication.FRENCH_LE_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION, MyApplication.FILE_EXIST_BACKGROUND_COLOR, MyApplication.FILE_NOT_EXIST_BUTTON_BACKGROUND_COLOR);
 
 
         dayOfWeekGridView = (GridView) findViewById(R.id.dayOfWeekGridView);
@@ -50,7 +50,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         }
 
         AudioFileCheckArrayAdapter<String> daysOfWeekAdapter = new AudioFileCheckArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, daysOfWeek, "day_of_week_");
+                android.R.layout.simple_list_item_1, daysOfWeek, MyApplication.DAY_OF_WEEK_FILE_NAME_START);
         dayOfWeekGridView.setAdapter(daysOfWeekAdapter);
 
         dayOfWeekGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,7 +58,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 if (v.isActivated()) {
-                    v.setBackgroundColor(0xFF00AA00);
+                    v.setBackgroundColor(MyApplication.FILE_EXIST_BACKGROUND_COLOR);
                     v.setActivated(false);
                     for (int i = 0; i < 7; i++) {
                         if (i != position) {
@@ -68,7 +68,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                     }
                     stopRecording();
                 } else {
-                    v.setBackgroundColor(0xFFFF0000);
+                    v.setBackgroundColor(MyApplication.RECORDING_BACKGROUND_COLOR);
                     v.setActivated(true);
                     for (int i = 0; i < 7; i++) {
                         if (i != position) {
@@ -76,7 +76,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                             parent.getChildAt(i).setClickable(true);
                         }
                     }
-                    startRecording("day_of_week_" + position + ".3gp");
+                    startRecording(MyApplication.DAY_OF_WEEK_FILE_NAME_START + position + MyApplication.AUDIO_FILE_EXTENSION);
                 }
             }
         });
@@ -88,7 +88,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         }
 
         AudioFileCheckArrayAdapter<String> daysAdapter = new AudioFileCheckArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, monthDays, "day_");
+                android.R.layout.simple_list_item_1, monthDays, MyApplication.DAY_OF_MONTH_FILE_NAME_START);
 
         dayOfMonthGridView.setAdapter(daysAdapter);
 
@@ -97,7 +97,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 if (v.isActivated()) {
-                    v.setBackgroundColor(0xFF00AA00);
+                    v.setBackgroundColor(MyApplication.FILE_EXIST_BACKGROUND_COLOR);
                     v.setActivated(false);
                     for (int i = 0; i < 31; i++) {
                         if (i != position) {
@@ -107,7 +107,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                     }
                     stopRecording();
                 } else {
-                    v.setBackgroundColor(0xFFFF0000);
+                    v.setBackgroundColor(MyApplication.RECORDING_BACKGROUND_COLOR);
                     v.setActivated(true);
                     for (int i = 0; i < 31; i++) {
                         if (i != position) {
@@ -115,7 +115,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                             parent.getChildAt(i).setClickable(true);
                         }
                     }
-                    startRecording("day_" + (position + 1) + ".3gp");
+                    startRecording(MyApplication.DAY_OF_MONTH_FILE_NAME_START + (position + 1) + MyApplication.AUDIO_FILE_EXTENSION);
                 }
             }
         });
@@ -127,7 +127,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         }
 
         AudioFileCheckArrayAdapter<String> monthsAdapter = new AudioFileCheckArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, months, "month_");
+                android.R.layout.simple_list_item_1, months, MyApplication.MONTH_FILE_NAME_START);
 
         monthGridView.setAdapter(monthsAdapter);
 
@@ -136,7 +136,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 if (v.isActivated()) {
-                    v.setBackgroundColor(0xFF00AA00);
+                    v.setBackgroundColor(MyApplication.FILE_EXIST_BACKGROUND_COLOR);
                     v.setActivated(false);
                     for (int i = 0; i < 12; i++) {
                         if (i != position) {
@@ -146,7 +146,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                     }
                     stopRecording();
                 } else {
-                    v.setBackgroundColor(0xFFFF0000);
+                    v.setBackgroundColor(MyApplication.RECORDING_BACKGROUND_COLOR);
                     v.setActivated(true);
                     for (int i = 0; i < 12; i++) {
                         if (i != position) {
@@ -154,22 +154,11 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                             parent.getChildAt(i).setClickable(true);
                         }
                     }
-                    startRecording("month_" + position + ".3gp");
+                    startRecording(MyApplication.MONTH_FILE_NAME_START + position + MyApplication.AUDIO_FILE_EXTENSION);
                 }
             }
         });
     }
-
-//    @Override
-//    public void onPostCreate(Bundle savedInstanceState) {
-//        super.onPostCreate(savedInstanceState);
-//        // TODO: voir à peut-être modifier setBaseColor pour différencier cette view... aller en
-//        // debug pour voir quelle view on passe
-//        dayOfWeekGridView = (GridView) findViewById(R.id.dayOfWeekGridView);
-//        for (int h = 0; h < 7; h++) {
-//            setBaseColor(dayOfWeekGridView.getChildAt(h), "day_of_week_" + h + ".3gp", 0xFF00AA00, 0xFF5A595B);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -208,7 +197,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
             stopRecording();
         }
         else {
-            startRecording("name.3gp");
+            startRecording(MyApplication.NAME_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION);
         }
         toggleButtonColor(view);
     }
@@ -218,7 +207,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
             stopRecording();
         }
         else {
-            startRecording("today.3gp");
+            startRecording(MyApplication.TODAY_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION);
         }
         toggleButtonColor(view);
     }
@@ -228,7 +217,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
             stopRecording();
         }
         else {
-            startRecording("le.3gp");
+            startRecording(MyApplication.FRENCH_LE_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION);
         }
         toggleButtonColor(view);
     }
@@ -236,11 +225,11 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
     // TODO: Centraliser
     private void toggleButtonColor(View view) {
         if (view.isActivated()) {
-            view.getBackground().setColorFilter(0xFF5A595B, PorterDuff.Mode.MULTIPLY);
+            view.getBackground().setColorFilter(MyApplication.FILE_EXIST_BACKGROUND_COLOR, PorterDuff.Mode.MULTIPLY);
             view.setActivated(false);
         }
         else {
-            view.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+            view.getBackground().setColorFilter(MyApplication.RECORDING_BACKGROUND_COLOR, PorterDuff.Mode.MULTIPLY);
             view.setActivated(true);
         }
     }

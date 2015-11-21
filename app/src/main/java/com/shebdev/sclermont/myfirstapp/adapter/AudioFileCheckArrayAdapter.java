@@ -1,11 +1,11 @@
 package com.shebdev.sclermont.myfirstapp.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
+import com.shebdev.sclermont.myfirstapp.MyApplication;
 
 import java.io.File;
 
@@ -13,8 +13,6 @@ import java.io.File;
  * Created by sclermont on 20/11/15.
  */
 public class AudioFileCheckArrayAdapter<T> extends ArrayAdapter {
-
-    private static final String FILE_EXT = ".3gp";
 
     private String audioFileNameStart;
 
@@ -26,7 +24,8 @@ public class AudioFileCheckArrayAdapter<T> extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
-        setBaseColor(view, audioFileNameStart + position + FILE_EXT,0xFF00AA00,0xFF303030);
+        setBaseColor(view, audioFileNameStart + position + MyApplication.AUDIO_FILE_EXTENSION,
+                MyApplication.FILE_EXIST_BACKGROUND_COLOR, MyApplication.FILE_NOT_EXIST_GRID_BACKGROUND_COLOR);
         return view;
     }
 

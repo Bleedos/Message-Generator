@@ -158,15 +158,15 @@ public class DisplayMessageActivity extends ActionBarActivity {
                 }
             }
 
-            insertPosition = insertAudioFileAt(insertPosition, "name.3gp");
+            insertPosition = insertAudioFileAt(insertPosition, MyApplication.NAME_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION);
 
             if (addDateToMessage) {
                 GregorianCalendar greg = new GregorianCalendar();
-                insertPosition = insertAudioFileAt(insertPosition, "today.3gp");
-                insertPosition = insertAudioFileAt(insertPosition, "day_of_week_" + greg.get(GregorianCalendar.DAY_OF_WEEK) + ".3gp");
-                insertPosition = insertAudioFileAt(insertPosition, "le.3gp");
-                insertPosition = insertAudioFileAt(insertPosition, "day_" + greg.get(GregorianCalendar.DAY_OF_MONTH) + ".3gp");
-                insertPosition = insertAudioFileAt(insertPosition, "month_" + greg.get(GregorianCalendar.MONTH) + ".3gp");
+                insertPosition = insertAudioFileAt(insertPosition, MyApplication.TODAY_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION);
+                insertPosition = insertAudioFileAt(insertPosition, MyApplication.DAY_OF_WEEK_FILE_NAME_START + greg.get(GregorianCalendar.DAY_OF_WEEK) + MyApplication.AUDIO_FILE_EXTENSION);
+                insertPosition = insertAudioFileAt(insertPosition, MyApplication.FRENCH_LE_FILE_NAME + MyApplication.AUDIO_FILE_EXTENSION);
+                insertPosition = insertAudioFileAt(insertPosition, MyApplication.DAY_OF_MONTH_FILE_NAME_START + greg.get(GregorianCalendar.DAY_OF_MONTH) + MyApplication.AUDIO_FILE_EXTENSION);
+                insertPosition = insertAudioFileAt(insertPosition, MyApplication.MONTH_FILE_NAME_START + greg.get(GregorianCalendar.MONTH) + MyApplication.AUDIO_FILE_EXTENSION);
             }
 
             MediaPlayer mpItem1 = null;

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.File;
@@ -39,6 +40,7 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
         if (messagePart != null) {
             EditText messagePartEdit = (EditText) findViewById(R.id.message_part_edit);
             messagePartEdit.setText(messagePart);
+            messagePartEdit.setSelection(messagePart.length());
         }
 
         mFileName = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_AUDIO_FILE);
@@ -47,7 +49,14 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
             String messagePartOrder = intent.getStringExtra(MyActivity.EXTRA_MESSAGE_PART_ORDER);
             mFileName = (assemblyId==null?0:assemblyId) + "_" +
                     (messagePartOrder==null?0:messagePartOrder) +
-                    "_" + System.currentTimeMillis() + ".3gp";
+                    "_" + System.currentTimeMillis() + MyApplication.AUDIO_FILE_EXTENSION;
+        }
+        else {
+            File audioFile = new File(getFilesDir() + "/" + mFileName);
+            if (audioFile.exists()) {
+                View btnView = findViewById(R.id.button_record_audio);
+                btnView.getBackground().setColorFilter(MyApplication.FILE_EXIST_BACKGROUND_COLOR, PorterDuff.Mode.MULTIPLY);
+            }
         }
     }
 
@@ -115,7 +124,7 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
             try {
                 // TODO: Marche pas.  voir si ca pourrait faire la job
                 // http://developer.android.com/reference/android/media/SoundPool.html
-                mFileNameEnd = mFileName + "/" + playerFileIterator++ + ".3gp";
+                mFileNameEnd = mFileName + "/" + playerFileIterator++ + MyApplication.AUDIO_FILE_EXTENSION;
                 mp.reset();
                 mp.setDataSource(mFileNameEnd);
                 mp.prepare();
@@ -162,11 +171,11 @@ public class MessagePartEdit extends ActionBarActivity implements MediaPlayer.On
 
     private void toggleButtonColor(View view) {
         if (view.isActivated()) {
-            view.getBackground().setColorFilter(0xFF5A595B, PorterDuff.Mode.MULTIPLY);
+            view.getBackground().setColorFilter(MyApplication.FILE_EXIST_BACKGROUND_COLOR, PorterDuff.Mode.MULTIPLY);
             view.setActivated(false);
         }
         else {
-            view.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+            view.getBackground().setColorFilter(MyApplication.RECORDING_BACKGROUND_COLOR, PorterDuff.Mode.MULTIPLY);
             view.setActivated(true);
         }
     }

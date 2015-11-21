@@ -24,6 +24,18 @@ public class MyApplication extends Application {
     public static float RECYCLER_VIEW_TEXT_SIZE = 20.0f;
     public static int EVEN_BACKGROUND_COLOR = 0xFF212121;
     public static int ODD_BACKGROUND_COLOR = 0xFF424242;
+    public static int FILE_EXIST_BACKGROUND_COLOR = 0xFF00AA00;
+    public static int FILE_NOT_EXIST_GRID_BACKGROUND_COLOR = 0xFF303030;
+    public static int FILE_NOT_EXIST_BUTTON_BACKGROUND_COLOR = 0xFF5A595B;
+    public static int RECORDING_BACKGROUND_COLOR = 0xFFFF0000;
+
+    public static String DAY_OF_WEEK_FILE_NAME_START = "day_of_week_";
+    public static String DAY_OF_MONTH_FILE_NAME_START = "day_";
+    public static String MONTH_FILE_NAME_START = "month_";
+    public static String NAME_FILE_NAME = "name";
+    public static String TODAY_FILE_NAME = "today";
+    public static String FRENCH_LE_FILE_NAME = "le";
+    public static String AUDIO_FILE_EXTENSION = ".3gp";
 
     @Override
     public void onCreate() {
