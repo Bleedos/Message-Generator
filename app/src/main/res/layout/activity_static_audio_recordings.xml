@@ -10,15 +10,17 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.shebdev.sclermont.myfirstapp.StaticAudioRecordingsActivity">
 
-    <TextView android:text="Cliquez sur un item pour enregistrer votre voix" android:layout_width="wrap_content"
+    <TextView android:text="Cliquez sur un item pour enregistrer votre voix.  Un item en vert a déjà été enregistré.  Vous pouvez le réenregistrer." android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:textSize="18dp"
+        android:layout_marginBottom="25dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enr. nom"
-        android:id="@+id/button5"
+        android:text="Votre nom"
+        android:id="@+id/btn_record_name"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -28,37 +30,35 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enr. aujoud&apos;hui"
-        android:id="@+id/button6"
+        android:text="Mot &quot;aujoud&apos;hui&quot;"
+        android:id="@+id/btn_record_today"
         android:textSize="10sp"
-        android:layout_alignTop="@+id/button5"
-        android:layout_toRightOf="@+id/button5"
-        android:layout_toEndOf="@+id/button5"
-        android:onClick="recordTodayVoiceSegment" />
+        android:onClick="recordTodayVoiceSegment"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enr. le"
-        android:id="@+id/button14"
+        android:text="Mot &quot;le&quot;"
+        android:id="@+id/btn_record_french_le"
         android:textSize="10sp"
-        android:layout_alignBaseline="@+id/button6"
-        android:layout_alignBottom="@+id/button6"
-        android:layout_toRightOf="@+id/button6"
-        android:layout_toEndOf="@+id/button6"
-        android:onClick="recordLeVoiceSegment" />
+        android:onClick="recordLeVoiceSegment"
+        android:layout_below="@+id/textView"
+        android:layout_alignRight="@+id/dayOfWeekGridView"
+        android:layout_alignEnd="@+id/dayOfWeekGridView" />
 
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="160sp"
         android:id="@+id/dayOfWeekGridView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:numColumns="3"
         android:columnWidth="30dp"
         android:clickable="false"
-        android:layout_below="@+id/button14"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <GridView
         android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
         android:numColumns="6"
         android:columnWidth="30dp"
         android:clickable="false"
-        android:layout_below="@+id/dayOfWeekGridView" />
+        android:layout_below="@+id/textView4" />
 
     <GridView
         android:layout_width="wrap_content"
@@ -78,9 +78,57 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/dayOfMonthGridView"
         android:numColumns="3"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:layout_below="@+id/textView5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Texte fixe"
+        android:id="@+id/textView2"
+        android:layout_above="@+id/btn_record_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#3ec6d0"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jours de la semaine"
+        android:id="@+id/textView3"
+        android:textColor="#3ec6d0"
+        android:textStyle="bold"
+        android:layout_below="@+id/btn_record_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jours du mois"
+        android:id="@+id/textView4"
+        android:textColor="#3ec6d0"
+        android:textStyle="bold"
+        android:layout_below="@+id/dayOfWeekGridView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mois"
+        android:id="@+id/textView5"
+        android:textColor="#3ec6d0"
+        android:textStyle="bold"
+        android:layout_below="@+id/dayOfMonthGridView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>
 </ScrollView>

@@ -9,9 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
+import com.shebdev.sclermont.myfirstapp.adapter.AudioFileCheckArrayAdapter;
+
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
@@ -31,6 +33,11 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_static_audio_recordings);
 
+        setBaseColor(findViewById(R.id.btn_record_name), "name.3gp", 0xFF00AA00, 0xFF5A595B);
+        setBaseColor(findViewById(R.id.btn_record_today), "today.3gp", 0xFF00AA00, 0xFF5A595B);
+        setBaseColor(findViewById(R.id.btn_record_french_le), "le.3gp", 0xFF00AA00, 0xFF5A595B);
+
+
         dayOfWeekGridView = (GridView) findViewById(R.id.dayOfWeekGridView);
         dayOfMonthGridView = (GridView) findViewById(R.id.dayOfMonthGridView);
         monthGridView = (GridView) findViewById(R.id.monthGridView);
@@ -42,9 +49,8 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
             daysOfWeek[h] = sdfDaysOfWeek.format(greg.getTime());
         }
 
-        ArrayAdapter<String> daysOfWeekAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, daysOfWeek);
-
+        AudioFileCheckArrayAdapter<String> daysOfWeekAdapter = new AudioFileCheckArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, daysOfWeek, "day_of_week_");
         dayOfWeekGridView.setAdapter(daysOfWeekAdapter);
 
         dayOfWeekGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -52,7 +58,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 if (v.isActivated()) {
-                    v.setBackgroundColor(0xFF303030);
+                    v.setBackgroundColor(0xFF00AA00);
                     v.setActivated(false);
                     for (int i = 0; i < 7; i++) {
                         if (i != position) {
@@ -81,8 +87,8 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
             monthDays[i] = String.valueOf(i+1);
         }
 
-        ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, monthDays);
+        AudioFileCheckArrayAdapter<String> daysAdapter = new AudioFileCheckArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, monthDays, "day_");
 
         dayOfMonthGridView.setAdapter(daysAdapter);
 
@@ -91,7 +97,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 if (v.isActivated()) {
-                    v.setBackgroundColor(0xFF303030);
+                    v.setBackgroundColor(0xFF00AA00);
                     v.setActivated(false);
                     for (int i = 0; i < 31; i++) {
                         if (i != position) {
@@ -120,8 +126,8 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
             months[j] = sdfMonths.format(greg.getTime());
         }
 
-        ArrayAdapter<String> monthsAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, months);
+        AudioFileCheckArrayAdapter<String> monthsAdapter = new AudioFileCheckArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, months, "month_");
 
         monthGridView.setAdapter(monthsAdapter);
 
@@ -130,7 +136,7 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 if (v.isActivated()) {
-                    v.setBackgroundColor(0xFF303030);
+                    v.setBackgroundColor(0xFF00AA00);
                     v.setActivated(false);
                     for (int i = 0; i < 12; i++) {
                         if (i != position) {
@@ -153,6 +159,17 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
             }
         });
     }
+
+//    @Override
+//    public void onPostCreate(Bundle savedInstanceState) {
+//        super.onPostCreate(savedInstanceState);
+//        // TODO: voir à peut-être modifier setBaseColor pour différencier cette view... aller en
+//        // debug pour voir quelle view on passe
+//        dayOfWeekGridView = (GridView) findViewById(R.id.dayOfWeekGridView);
+//        for (int h = 0; h < 7; h++) {
+//            setBaseColor(dayOfWeekGridView.getChildAt(h), "day_of_week_" + h + ".3gp", 0xFF00AA00, 0xFF5A595B);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -225,6 +242,17 @@ public class StaticAudioRecordingsActivity extends AppCompatActivity {
         else {
             view.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
             view.setActivated(true);
+        }
+    }
+
+    // TODO: Centraliser et voir dans simplegridviewadapter
+    private void setBaseColor(View view, String audioFileName, int baseColorExists, int baseColorDoesntExist) {
+        File audioFile = new File(getFilesDir() + "/" + audioFileName);
+        if (audioFile.exists()) {
+            view.getBackground().setColorFilter(baseColorExists, PorterDuff.Mode.MULTIPLY);
+        }
+        else {
+            view.getBackground().setColorFilter(baseColorDoesntExist, PorterDuff.Mode.MULTIPLY);
         }
     }
 
