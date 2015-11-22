@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -99,9 +100,23 @@ public class MyActivity extends ActionBarActivity {
 
         EditText editNom = (EditText) findViewById(R.id.edit_nom);
         EditText editFinMsg = (EditText) findViewById(R.id.edit_assembly_title);
+        CheckBox chkAddDate = (CheckBox) findViewById(R.id.checkbox_add_date);
 
         editor.putString("editNom", editNom.getText().toString());
         editor.putString("editFinMsg", editFinMsg.getText().toString());
+        editor.putBoolean("chkAddDate", chkAddDate.isChecked());
+
+        // Commit the edits!
+        editor.commit();
+    }
+
+    private void saveAssemblyId(long assemblyId) {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putLong("assemblyId", assemblyId);
 
         // Commit the edits!
         editor.commit();
@@ -113,15 +128,10 @@ public class MyActivity extends ActionBarActivity {
 
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        ((EditText) findViewById(R.id.edit_nom)).setText(settings.getString("editNom", ""));
+        ((CheckBox) findViewById(R.id.checkbox_add_date)).setChecked(settings.getBoolean("chkAddDate", false));
 
-        EditText editNom = (EditText) findViewById(R.id.edit_nom);
-        EditText editFinMsg = (EditText) findViewById(R.id.edit_assembly_title);
-
-        editNom.setText(settings.getString("editNom", ""));
-        //editFinMsg.setText(settings.getString("editFinMsg", ""));
         long assemblyId = settings.getLong("assemblyId", -1l);
-
-        //Toast.makeText(this, "AssId" + assemblyId, Toast.LENGTH_LONG).show();
 
         if (mAdapter == null) {
 
@@ -130,22 +140,58 @@ public class MyActivity extends ActionBarActivity {
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
 
+            // TODO: TEST DEBUT
+            mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                @Override
+                public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                    int action = e.getAction();
+                    switch (action) {
+                        case MotionEvent.ACTION_MOVE:
+                            rv.getParent().requestDisallowInterceptTouchEvent(true);
+                            break;
+                    }
+                    return false;
+                }
+
+                @Override
+                public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+                }
+
+            });
+            // TODO: TEST FIN
+
             if (assemblyId < 0) {
                 ArrayList<MessagePartData> dset = new ArrayList<>();
                 mAdapter = new MessagePartRecyclerAdapter(dset, -1l);
+
             }
             else {
                 //Toast.makeText(this, "load existing assembly", Toast.LENGTH_LONG).show();
                 ArrayList<MessagePartData> dset = loadAssemblyLinkData(assemblyId);
                 mAdapter = new MessagePartRecyclerAdapter(dset, assemblyId);
 
+                MessagePartData mpd;
+
                 MessageDbHelper dbHelper = new MessageDbHelper(getBaseContext());
+                MessageAssemblyData mad = dbHelper.getAssemblyData(assemblyId);
+                EditText editAssemblyTitle = (EditText) findViewById(R.id.edit_assembly_title);
+                EditText editAssemblyDescription = (EditText) findViewById(R.id.edit_assembly_description);
+                editAssemblyTitle.setText(mad.getTitle());
+                editAssemblyDescription.setText(mad.getDescription());
+                mAdapter.changeMDataSet(loadAssemblyLinkData(assemblyId));
+
+                // TODO: Voir a integrer mieux le load des assembly en rapoort a l'accueil
+                // Voir ici et dans onResume
                 ArrayList<MessageAssemblyLinkData> dataSet = dbHelper.getAssemblyLinkData(assemblyId, true);
                 if (dataSet.size() > 0) {
-                    MessagePartData mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
+                    mpd = dbHelper.getMessagePart(Long.valueOf(dataSet.get(0).getPartId()));
                     ((TextView) findViewById(R.id.text_greeting)).setText(mpd.getText());
                     greetingAudioFileName = mpd.getAudioFileName();
                 }
+
+                adapterChanged();
+
             }
 
             mRecyclerView.setAdapter(mAdapter);
@@ -289,6 +335,8 @@ public class MyActivity extends ActionBarActivity {
                             ((TextView) findViewById(R.id.text_greeting)).setText(mpd.getText());
                             greetingAudioFileName = mpd.getAudioFileName();
                         }
+
+                        saveAssemblyId(assemblyId);
                     }
                     break;
                 default:
@@ -440,6 +488,7 @@ public class MyActivity extends ActionBarActivity {
                 dbHelper.updatePartAssembly(assemblyId, editAssemblyDescription);
             }
         }
+        saveAssemblyId(assemblyId);
         long po = 1l;
 
 
