@@ -80,14 +80,14 @@
         android:id="@+id/message_assembly_recycler_view"
         android:scrollbars="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignTop="@+id/text_message_part_instructions"
+        android:layout_height="260dp"
         android:layout_alignParentStart="false"
-        android:layout_above="@+id/button_add_line_to_assembly"
         android:layout_marginLeft="15dp"
         android:focusable="false"
-        android:layout_alignRight="@+id/text_message_part_instructions"
-        android:layout_alignEnd="@+id/text_message_part_instructions" />
+        android:layout_below="@+id/textView11"
+        android:layout_marginRight="15dp"
+        android:nestedScrollingEnabled="true"
+        android:focusableInTouchMode="false" />
 
     <!-- TODO: ramener les strings partout @string/... -->
 
@@ -132,7 +132,7 @@
         android:id="@+id/button_add_line_to_assembly"
         android:onClick="ajouterLigne"
         android:text="Nouvelle"
-        android:layout_below="@+id/text_message_part_instructions"
+        android:layout_below="@+id/message_assembly_recycler_view"
         android:layout_alignLeft="@+id/message_assembly_recycler_view"
         android:layout_alignStart="@+id/message_assembly_recycler_view" />
 
@@ -185,7 +185,7 @@
 
         <TextView
         android:layout_width="wrap_content"
-        android:layout_height="180dp"
+        android:layout_height="wrap_content"
         android:text="Cliquez sur le bouton + à droite pour ajouter une nouvelle partie de message.\n\nCliquez sur l&apos;autre bouton à droite pour ajouter une partie de message existante.\n\nLorsqu&apos;il y a des entrées dans cette liste, cliquez sur une entrée pour en modifier le texte."
         android:id="@+id/text_message_part_instructions"
         android:elegantTextHeight="false"
