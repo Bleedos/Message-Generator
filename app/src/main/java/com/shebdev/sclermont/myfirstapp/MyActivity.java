@@ -209,14 +209,14 @@ public class MyActivity extends ActionBarActivity {
 
         if (editGreeting == null || editGreeting.length() == 0) {
             Bundle bundle = new Bundle();
-            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_greeting));
+            bundle.putString(ERROR_MESSAGE, getString(R.string.error_empty_greeting));
             showErrorDialog(bundle);
             return;
         }
 
         if (editNom == null || editNom.length() == 0) {
             Bundle bundle = new Bundle();
-            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_name));
+            bundle.putString(ERROR_MESSAGE, getString(R.string.error_empty_name));
             showErrorDialog(bundle);
             return;
         }
@@ -224,7 +224,7 @@ public class MyActivity extends ActionBarActivity {
         ArrayList<MessagePartData> dataSet = mAdapter.getMDataset();
         if (dataSet.size() == 0) {
             Bundle bundle = new Bundle();
-            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly));
+            bundle.putString(ERROR_MESSAGE, getString(R.string.error_empty_assembly));
             showErrorDialog(bundle);
             return;
         }
@@ -452,14 +452,14 @@ public class MyActivity extends ActionBarActivity {
 
         if (editGreeting == null || editGreeting.length() == 0) {
             Bundle bundle = new Bundle();
-            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_greeting));
+            bundle.putString(ERROR_MESSAGE, getString(R.string.error_empty_greeting));
             showErrorDialog(bundle);
             return;
         }
 
         if (editAssemblyTitle == null || editAssemblyTitle.length() == 0) {
             Bundle bundle = new Bundle();
-            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly_title));
+            bundle.putString(ERROR_MESSAGE, getString(R.string.error_empty_assembly_title));
             showErrorDialog(bundle);
             return;
         }
@@ -468,7 +468,7 @@ public class MyActivity extends ActionBarActivity {
 
         if (dataSet.size() == 0) {
             Bundle bundle = new Bundle();
-            bundle.putString(ERROR_MESSAGE, getString(R.string.empty_assembly));
+            bundle.putString(ERROR_MESSAGE, getString(R.string.error_empty_assembly));
             showErrorDialog(bundle);
             return;
         }
@@ -553,8 +553,8 @@ public class MyActivity extends ActionBarActivity {
 
     public void savePrefs(View view) {
 //        Intent intent = new Intent(this, DisplayMessageActivity.class);
-//        //EditText editAccueil = (EditText) findViewById(R.id.edit_accueil);
-//        EditText editNom = (EditText) findViewById(R.id.edit_nom);
+//        //EditText editAccueil = (EditText) findViewById(R.id.hint_edit_greeting);
+//        EditText editNom = (EditText) findViewById(R.id.hint_edit_name);
 //        EditText editFinMsg = (EditText) findViewById(R.id.edit_assembly_title);
 //        ArrayList<String> message = new ArrayList<String>();
 //        //message.add(editAccueil.getText().toString());

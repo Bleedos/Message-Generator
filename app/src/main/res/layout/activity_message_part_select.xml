@@ -4,9 +4,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.shebdev.sclermont.myfirstapp.MessagePartSelectActivity">
+    tools:context="com.shebdev.sclermont.myfirstapp.MessagePartSelectActivity"
+    style="@style/Base.Theme.AppCompat">
 
-    <TextView android:id="@+id/message_part_select_header" android:text="@string/message_part_select_header" android:layout_width="wrap_content"
+    <TextView android:id="@+id/message_part_select_header" android:text="@string/header_message_part_select" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView

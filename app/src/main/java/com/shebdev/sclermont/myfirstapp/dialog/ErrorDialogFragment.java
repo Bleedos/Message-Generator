@@ -23,9 +23,9 @@ public class ErrorDialogFragment extends DialogFragment {
         String myValue = bundle.getString(MyActivity.ERROR_MESSAGE);
 
         builder.setIcon(R.drawable.ic_error_outline_white_24dp);
-        builder.setTitle(getString(R.string.error_dialog));
+        builder.setTitle(getString(R.string.error_dialog_title));
         builder.setMessage(myValue)
-                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!
                     }

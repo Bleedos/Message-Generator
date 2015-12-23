@@ -1,7 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ScrollView01"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    style="@style/Base.Theme.AppCompat">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -12,7 +13,7 @@
         android:id="@+id/text_greeting"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_accueil"
+        android:hint="@string/hint_edit_greeting"
         android:editable="false"
         android:textSize="18sp"
         android:onClick="editGreeting"
@@ -30,7 +31,7 @@
         android:id="@+id/edit_nom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_nom"
+        android:hint="@string/hint_edit_name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:autoText="false"
@@ -51,7 +52,7 @@
         android:id="@+id/edit_assembly_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_titre_assemblage"
+        android:hint="@string/hint_edit_assembly_title"
         android:layout_gravity="bottom"
         android:gravity="top"
         android:autoText="false"
@@ -66,7 +67,7 @@
         android:id="@+id/edit_assembly_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_description_assemblage"
+        android:hint="@string/hint_edit_assembly_description"
         android:layout_gravity="bottom"
         android:inputType="text|textCapSentences|textAutoComplete|textAutoCorrect"
         android:layout_alignParentStart="true"
@@ -99,7 +100,7 @@
         android:clickable="true"
         android:onClick="genererMessage"
         android:layout_gravity="right"
-        android:text="Générer"
+        android:text="@string/button_generate"
         android:layout_below="@+id/message_assembly_recycler_view"
         android:layout_alignRight="@+id/message_assembly_recycler_view"
         android:layout_alignEnd="@+id/message_assembly_recycler_view" />
@@ -109,7 +110,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/button_save_message_assembly"
         android:onClick="sauvegarderMessage"
-        android:text="Sauvegarder"
+        android:text="@string/button_save"
         android:layout_alignParentTop="false"
         android:layout_alignRight="@+id/text_greeting"
         android:layout_alignEnd="@+id/text_greeting"
@@ -120,7 +121,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/button_load_message_assembly"
         android:onClick="chargerAssembly"
-        android:text="Charger"
+        android:text="@string/button_load"
         android:layout_alignParentTop="false"
         android:layout_toLeftOf="@+id/button_save_message_assembly"
         android:layout_toStartOf="@+id/button_save_message_assembly"
@@ -131,7 +132,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/button_add_line_to_assembly"
         android:onClick="ajouterLigne"
-        android:text="Nouvelle"
+        android:text="@string/button_new_fem"
         android:layout_below="@+id/message_assembly_recycler_view"
         android:layout_alignLeft="@+id/message_assembly_recycler_view"
         android:layout_alignStart="@+id/message_assembly_recycler_view" />
@@ -146,14 +147,14 @@
         android:layout_toEndOf="@+id/textView7"
         android:layout_marginLeft="57dp"
         android:layout_marginStart="57dp"
-        android:text="Charger" />
+        android:text="@string/button_load" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:id="@+id/button_load_existing_greeting"
         android:onClick="loadExistingGreeting"
-        android:text="Charger"
+        android:text="@string/button_load"
         android:layout_alignRight="@+id/message_assembly_recycler_view"
         android:layout_alignEnd="@+id/message_assembly_recycler_view"
         android:layout_alignLeft="@+id/button_save_message_assembly"
@@ -165,7 +166,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/button_add_new_greeting"
         android:onClick="addGreeting"
-        android:text="Nouveau"
+        android:text="@string/button_new"
         android:layout_alignLeft="@+id/button_load_message_assembly"
         android:layout_alignStart="@+id/button_load_message_assembly"
         android:layout_below="@+id/text_greeting" />
@@ -175,7 +176,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/button_record_static_audio"
         android:onClick="setStaticAudioRecordings"
-        android:text="Enregistrer segments statiques"
+        android:text="@string/button_record_static_audio"
         android:textSize="9dp"
         android:layout_below="@+id/textView10"
         android:layout_alignParentRight="false"
@@ -186,7 +187,7 @@
         <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cliquez sur le bouton + à droite pour ajouter une nouvelle partie de message.\n\nCliquez sur l&apos;autre bouton à droite pour ajouter une partie de message existante.\n\nLorsqu&apos;il y a des entrées dans cette liste, cliquez sur une entrée pour en modifier le texte."
+        android:text="@string/hint_message_part_list"
         android:id="@+id/text_message_part_instructions"
         android:elegantTextHeight="false"
         android:textSize="17dp"
@@ -200,7 +201,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Titre et description"
+            android:text="@string/section_title_title_n_description"
             android:id="@+id/textView6"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="false"
@@ -212,7 +213,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Accueil"
+            android:text="@string/section_title_greeting"
             android:id="@+id/textView7"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -225,7 +226,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nom"
+            android:text="@string/section_title_name"
             android:id="@+id/textView8"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -238,7 +239,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date"
+            android:text="@string/section_title_date"
             android:id="@+id/textView9"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -264,7 +265,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Parties de messages"
+            android:text="@string/section_title_message_parts"
             android:id="@+id/textView11"
             android:textSize="18dp"
             android:textStyle="bold"

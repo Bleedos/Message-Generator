@@ -4,11 +4,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.shebdev.sclermont.myfirstapp.MessageAssemblyListActivity">
+    tools:context="com.shebdev.sclermont.myfirstapp.MessageAssemblyListActivity"
+    style="@style/Base.Theme.AppCompat">
 
     <TextView
         android:id="@+id/message_assembly_list_header"
-        android:text="@string/choose_assembly"
+        android:text="@string/header_choose_assembly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

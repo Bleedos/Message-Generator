@@ -1,21 +1,52 @@
 <resources>
-    <string name="app_name">Message Shebnerator</string>
+    <string name="app_name">Générateur de message téléphonique</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="action_search">Search</string>
-    <string name="edit_nom">Entrez votre nom</string>
-    <string name="edit_titre_assemblage">Entrez un titre pour votre message</string>
-    <string name="edit_description_assemblage">Entrez la description de votre message</string>
-    <string name="edit_accueil">Cliquez pour entrer l\'accueil du message</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_search">Rechercher</string>
 
+    <string name="hint_edit_assembly_title">Entrez un titre pour votre message</string>
+    <string name="hint_edit_assembly_description">Entrez la description de votre message</string>
+    <string name="hint_edit_greeting">Cliquez pour entrer l\'accueil du message</string>
+    <string name="hint_edit_name">Entrez votre nom</string>
+    <string name="hint_message_part_list">Cliquez sur le bouton \"Nouvelle\" ici-bas pour ajouter une nouvelle partie de message.\n\nCliquez sur le bouton \"Charger\" pour ajouter une partie de message existante.\n\nLorsqu\'il y a des entrées dans cette liste, cliquez sur une entrée pour en modifier le texte.</string>
 
-    <string name="button_charger">Charger</string>
-    <string name="button_sauvegarder">Sauvegarder</string>
-    <string name="button_play">Jouer</string>
-    <string name="button_arreter">Arrêter</string>
-    <string name="button_generer">Générer</string>
+    <string name="header_static_audio_recordings">Cliquez sur un item pour enregistrer votre voix.  Un item en vert a déjà été enregistré.  Vous pouvez le réenregistrer.</string>
+    <string name="header_message_part_edit">Entrer ici la partie de votre message</string>
+    <string name="header_choose_assembly">Choisissez  un assemblage parmi ceux déjà enregistrés</string>
+    <string name="header_message_part_select">Choisissez une partie de message parmi celles déjà enregistrées</string>
+
+    <string name="section_title_title_n_description">Titre et description</string>
+    <string name="section_title_greeting">Accueil</string>
+    <string name="section_title_name">Nom</string>
+    <string name="section_title_date">Date</string>
+    <string name="section_title_static_audio_recordings">Segments vocaux statiques</string>
+    <string name="section_title_message_parts">Parties de messages</string>
+    <string name="section_title_fixed_text">Texte fixe</string>
+    <string name="section_title_day_of_week">Jours de la semaine</string>
+    <string name="section_title_day_of_month">Jours du mois</string>
+    <string name="section_title_month">Mois</string>
+
+    <string name="button_new">Nouveau</string>
+    <string name="button_new_fem">Nouvelle</string>
+    <string name="button_load">Charger</string>
+    <string name="button_save">Sauvegarder</string>
+    <string name="button_play_voice">Jouer voix</string>
+    <string name="button_stop_voice">Arrêter voix</string>
+    <string name="button_generate">Générer</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_ok">OK</string>
+    <string name="button_your_name">Votre nom</string>
+    <string name="button_today_word">Mot \"aujoud\'hui\"</string>
+    <string name="button_le_french_word">Mot \"le\"</string>
+    <string name="button_record">REC</string>
+    <string name="button_record_static_audio">Enregistrer segments statiques</string>
+
     <string name="title_activity_display_message">Message généré</string>
-
+    <string name="title_activity_message_select">Sélection message</string>
+    <string name="title_activity_static_audio_recordings">Segments audio statiques</string>
+    <string name="title_activity_message_part_edit">Édition partie message</string>
+    <string name="title_activity_message_assembly_list">Assemblages de messages</string>
+    <string name="title_activity_message_part_select">Choix partie message</string>
 
 
     <string name="remplir_champs">Remplir chaque champ</string>
@@ -24,25 +55,17 @@
     <string name="aujoudhui">aujoud\'hui &lt;jour semaine&gt; le &lt;jour mois&gt; &lt;mois&gt; je suis au bureau...</string>
 
     <string name="un_choix">Un choix</string>
-    <string name="title_activity_message_select">MessageSelect</string>
 
-    <string name="entrer_partie_message">Entrer ici la partie de votre message</string>
 
-    <string name="error_dialog">ERREUR!</string>
+    <string name="error_dialog_title">ERREUR!</string>
 
-    <string name="empty_greeting">Veuillez entrer un texte d\'accueil</string>
-    <string name="empty_name">Veuillez entrer un nom</string>
-    <string name="empty_assembly_title">Veuillez entrer un titre pour l\'assemblage</string>
-    <string name="empty_assembly">Veuillez ajouter au moins une entrée dans la liste des messages</string>
-    <string name="empty_assembly_description">Veuillez entrer la description de l\'assemblage</string>
-    <string name="OK">OK</string>
-    <string name="title_activity_message_part_edit">Éditer partie message</string>
-    <string name="title_activity_message_assembly_list">Assemblages de messages</string>
-    <string name="title_activity_message_part_select">Choisir partie message</string>
+    <string name="error_empty_greeting">Veuillez entrer un texte d\'accueil</string>
+    <string name="error_empty_name">Veuillez entrer un nom</string>
+    <string name="error_empty_assembly_title">Veuillez entrer un titre pour l\'assemblage</string>
+    <string name="error_empty_assembly">Veuillez ajouter au moins une entrée dans la liste des messages</string>
+    <string name="error_empty_assembly_description">Veuillez entrer la description de l\'assemblage</string>
+
     <string name="add_date_to_message">Ajouter la date du jour au message</string>
-    <string name="choose_assembly">Choisissez  un assemblage parmi ceux déjà enregistrés</string>
-    <string name="message_part_select_header">Choisissez une partie de message parmi celles déjà enregistrées</string>
-    <string name="title_activity_static_audio_recordings">StaticAudioRecordingsActivity</string>
 
     <string name="tutorial_welcome">Bonjour!  Prenez le temps de lire ces quelques instructions.</string>
     <string name="tutorial_message_title">Cliquez ici pour entrer le titre du message.</string>
