@@ -140,13 +140,16 @@ public class MyActivity extends ActionBarActivity {
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
 
-            // TODO: TEST DEBUT
+            // Pour désactiver le scroll de la page principale quand on scroll dans le recycler view
             mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
                 @Override
                 public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                     int action = e.getAction();
                     switch (action) {
                         case MotionEvent.ACTION_MOVE:
+                        case MotionEvent.ACTION_SCROLL:
+                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_UP:
                             rv.getParent().requestDisallowInterceptTouchEvent(true);
                             break;
                     }
@@ -155,11 +158,9 @@ public class MyActivity extends ActionBarActivity {
 
                 @Override
                 public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
                 }
 
             });
-            // TODO: TEST FIN
 
             if (assemblyId < 0) {
                 ArrayList<MessagePartData> dset = new ArrayList<>();
