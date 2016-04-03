@@ -20,7 +20,8 @@
         android:theme="@style/Theme.AppCompat" >
         <activity
             android:name=".MyActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateAlwaysHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +39,8 @@
         <activity
             android:name=".MessagePartEdit"
             android:label="@string/title_activity_message_part_edit"
-            android:parentActivityName=".MyActivity" >
+            android:parentActivityName=".MyActivity"
+            android:windowSoftInputMode="stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.shebdev.sclermont.myfirstapp.MyActivity" />
